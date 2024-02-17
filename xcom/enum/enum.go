@@ -21,7 +21,7 @@ const (
 
 const (
 	Lock_AdminLogin         string = "admin_login:"
-	Lock_ChangeGoogleSecret string = "change_google_secret_%d_%d_%s"
+	Lock_ChangeGoogleSecret string = "change_google_secret_%d_%s"
 	Lock_UserLogin          string = "user_login:"
 	Lock_UserRegister       string = "user_register:"
 )

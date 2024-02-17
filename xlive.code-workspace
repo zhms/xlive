@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "xadminapi"
+		},
+		{
+			"path": "xclientapi"
+		},
+		{
+			"path": "xcom"
+		}
+	]
+}

@@ -2,3 +2,14 @@
 {"ip":"127.0.0.1","method":"GET","path":"/favicon.ico","req":"","spend":74750,"status":404,"time":"2024-01-18 02:40:41"}
 {"ip":"127.0.0.1","method":"GET","path":"/test/curd.html","req":"","spend":22834,"status":404,"time":"2024-01-31 14:22:31"}
 {"ip":"127.0.0.1","method":"GET","path":"/favicon.ico","req":"","spend":18958,"status":404,"time":"2024-01-31 14:22:31"}
+{"ip":"127.0.0.1","method":"POST","path":"/api/v1/admin_user/user_login","req":"","spend":7433625,"status":200,"time":"2024-02-17 15:31:56"}
+{"ip":"127.0.0.1","method":"POST","path":"/api/v1/admin_user/user_login","req":"","spend":4126833,"status":400,"time":"2024-02-17 15:33:46"}
+{"ip":"127.0.0.1","method":"POST","path":"/api/v1/admin_user/user_login","req":"","spend":3143875,"status":200,"time":"2024-02-17 15:33:51"}
+{"ip":"127.0.0.1","method":"POST","path":"/api/v1/admin_user/user_login","req":"","spend":459000,"status":400,"time":"2024-02-17 15:33:54"}
+{"ip":"127.0.0.1","method":"POST","path":"/api/v1/admin_user/user_login","req":"","spend":11518959,"status":200,"time":"2024-02-17 15:36:39"}
+{"ip":"127.0.0.1","method":"POST","path":"/api/v1/admin_user/user_login","req":"","spend":523875,"status":400,"time":"2024-02-17 15:36:42"}
+{"ip":"127.0.0.1","method":"POST","path":"/api/v1/admin_user/user_login","req":"","spend":6269750,"status":200,"time":"2024-02-17 15:36:46"}
+{"ip":"127.0.0.1","method":"POST","path":"/api/v1/admin_user/user_login","req":"","spend":4588250,"status":200,"time":"2024-02-17 15:37:09"}
+{"ip":"127.0.0.1","method":"POST","path":"/api/v1/admin_user/user_logout","req":"{}","spend":347834,"status":200,"time":"2024-02-17 15:37:14"}
+{"ip":"127.0.0.1","method":"POST","path":"/api/v1/admin_user/user_login","req":"","spend":4632291,"status":200,"time":"2024-02-17 15:37:18"}
+{"ip":"127.0.0.1","method":"GET","path":"/api/v1/admin_user/get_admin_user","req":"","spend":1890125,"status":200,"time":"2024-02-17 15:37:26"}

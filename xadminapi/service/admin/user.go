@@ -90,7 +90,6 @@ func (this *ServiceAdmin) AdminUserLogin(ip string, verifycode string, reqdata *
 
 	tokendata := server.TokenData{}
 	tokendata.SellerId = sellerid
-	tokendata.ChannelId = channelid
 	tokendata.UserId = int(adminuser.Id)
 	tokendata.Account = reqdata.Account
 	tokendata.AuthData = roledata.RoleData
@@ -120,7 +119,7 @@ func (this *ServiceAdmin) AdminUserLogin(ip string, verifycode string, reqdata *
 	}
 	loginlog := model.XAdminLoginLog{}
 	loginlog.SellerId = tokendata.SellerId
-	loginlog.ChannelId = tokendata.ChannelId
+
 	loginlog.Account = tokendata.Account
 	loginlog.Token = token
 	loginlog.LoginIp = ip
@@ -129,11 +128,10 @@ func (this *ServiceAdmin) AdminUserLogin(ip string, verifycode string, reqdata *
 }
 
 type GetAdminUserReq struct {
-	Page      int    `form:"page"`                          // 页码
-	PageSize  int    `form:"page_size"`                     // 每页数量
-	SellerId  int    `validate:"required" json:"seller_id"` // 运营商
-	ChannelId int    `form:"channel_id"`                    // 渠道商
-	Account   string `form:"account"`                       // 账号
+	Page     int    `form:"page"`                          // 页码
+	PageSize int    `form:"page_size"`                     // 每页数量
+	SellerId int    `validate:"required" json:"seller_id"` // 运营商
+	Account  string `form:"account"`                       // 账号
 }
 
 type GetAdminUserRes struct {
@@ -151,7 +149,6 @@ func (this *ServiceAdmin) GetAdminUserList(reqdata *GetAdminUserReq) (total int6
 	}
 	db := server.Db().Model(&model.XAdminUser{})
 	db = utils.DbWhere(db, edb.SellerId+edb.EQ, reqdata.SellerId, int(0))
-	db = utils.DbWhere(db, edb.ChannelId+edb.EQ, reqdata.ChannelId, int(0))
 	db = utils.DbWhere(db, edb.Account+edb.EQ, reqdata.Account, "")
 
 	err = db.Count(&total).Error
@@ -169,13 +166,12 @@ func (this *ServiceAdmin) GetAdminUserList(reqdata *GetAdminUserReq) (total int6
 }
 
 type CreateAdminUserReq struct {
-	SellerId  int    `validate:"required" json:"seller_id"` // 运营商
-	ChannelId int    `json:"channel_id"`                    // 渠道商
-	Account   string `validate:"required" json:"account"`   // 账号
-	Password  string `validate:"required" json:"password"`  // 登录密码
-	RoleName  string `validate:"required" json:"role_name"` // 角色
-	State     int    `validate:"required" json:"state"`     // 状态 1开启,2关闭
-	Memo      string `json:"memo"`                          // 备注
+	SellerId int    `validate:"required" json:"seller_id"` // 运营商
+	Account  string `validate:"required" json:"account"`   // 账号
+	Password string `validate:"required" json:"password"`  // 登录密码
+	RoleName string `validate:"required" json:"role_name"` // 角色
+	State    int    `validate:"required" json:"state"`     // 状态 1开启,2关闭
+	Memo     string `json:"memo"`                          // 备注
 }
 
 // 创建管理员
@@ -188,25 +184,23 @@ func (this *ServiceAdmin) CreateAdminUser(reqdata *CreateAdminUserReq) (merr map
 		return enum.RoleNotFound, nil
 	}
 	err = server.Db().Model(&model.XAdminUser{}).Create(map[string]interface{}{
-		edb.SellerId:  reqdata.SellerId,
-		edb.ChannelId: reqdata.ChannelId,
-		edb.Account:   reqdata.Account,
-		edb.Password:  utils.Md5(reqdata.Password),
-		edb.RoleName:  reqdata.RoleName,
-		edb.State:     reqdata.State,
-		edb.Memo:      reqdata.Memo,
+		edb.SellerId: reqdata.SellerId,
+		edb.Account:  reqdata.Account,
+		edb.Password: utils.Md5(reqdata.Password),
+		edb.RoleName: reqdata.RoleName,
+		edb.State:    reqdata.State,
+		edb.Memo:     reqdata.Memo,
 	}).Error
 	return nil, err
 }
 
 type UpdateAdminUserReq struct {
-	SellerId  int    `validate:"required" json:"seller_id"` // 运营商
-	ChannelId int    `json:"channel_id"`                    // 渠道商
-	Account   string `validate:"required" json:"account"`   // 账号
-	Password  string `json:"password"`                      // 登录密码
-	RoleName  string `json:"role_name"`                     // 角色
-	State     int    `json:"state"`                         // 状态 1开启,2关闭
-	Memo      string `json:"memo"`                          // 备注
+	SellerId int    `validate:"required" json:"seller_id"` // 运营商
+	Account  string `validate:"required" json:"account"`   // 账号
+	Password string `json:"password"`                      // 登录密码
+	RoleName string `json:"role_name"`                     // 角色
+	State    int    `json:"state"`                         // 状态 1开启,2关闭
+	Memo     string `json:"memo"`                          // 备注
 }
 
 // 更新管理员
@@ -229,16 +223,14 @@ func (this *ServiceAdmin) UpdateAdminUser(reqdata *UpdateAdminUserReq) (merr map
 	}
 	db := server.Db().Model(&model.XAdminUser{})
 	db = db.Where(edb.SellerId+edb.EQ, reqdata.SellerId)
-	db = db.Where(edb.ChannelId+edb.EQ, reqdata.ChannelId)
 	db = db.Where(edb.Account+edb.EQ, reqdata.Account)
 	db = db.Updates(updatedata)
 	return nil, db.Error
 }
 
 type DeleteAdminUserReq struct {
-	SellerId  int    `validate:"required" json:"seller_id"` // 运营商
-	ChannelId int    `json:"channel_id"`                    // 渠道商
-	Account   string `validate:"required" json:"account"`   // 账号
+	SellerId int    `validate:"required" json:"seller_id"` // 运营商
+	Account  string `validate:"required" json:"account"`   // 账号
 }
 
 // 删除管理员
@@ -248,16 +240,14 @@ func (this *ServiceAdmin) DeleteAdminUser(reqdata *DeleteAdminUserReq) (rows int
 	}
 	db := server.Db().Model(&model.XAdminUser{})
 	db = db.Where(edb.SellerId+edb.EQ, reqdata.SellerId)
-	db = db.Where(edb.ChannelId+edb.EQ, reqdata.ChannelId)
 	db = db.Where(edb.Account+edb.EQ, reqdata.Account)
 	db = db.Delete(&model.XAdminUser{})
 	return db.RowsAffected, nil, db.Error
 }
 
 type SetLoginGoogleReq struct {
-	SellerId  int    `validate:"required" json:"seller_id"` // 运营商
-	ChannelId int    `json:"channel_id"`                    // 渠道商
-	Account   string `validate:"required" json:"account"`   // 账号
+	SellerId int    `validate:"required" json:"seller_id"` // 运营商
+	Account  string `validate:"required" json:"account"`   // 账号
 }
 
 type SetLoginGoogleRes struct {
@@ -266,7 +256,7 @@ type SetLoginGoogleRes struct {
 
 // 设置登录验证码
 func (this *ServiceAdmin) SetLoginGoogle(verifycode string, tokendata *server.TokenData, reqdata *SetLoginGoogleReq) (googlesecret *SetLoginGoogleRes, merr map[string]interface{}, err error) {
-	locker := fmt.Sprintf(enum.Lock_ChangeGoogleSecret, reqdata.SellerId, reqdata.ChannelId, reqdata.Account)
+	locker := fmt.Sprintf(enum.Lock_ChangeGoogleSecret, reqdata.SellerId, reqdata.Account)
 	if !server.Redis().Lock(locker, 5) {
 		return nil, enum.TooManyRequest, nil
 	}
@@ -274,7 +264,6 @@ func (this *ServiceAdmin) SetLoginGoogle(verifycode string, tokendata *server.To
 	userdata := model.XAdminUser{}
 	db := server.Db().Model(&model.XAdminUser{})
 	db = db.Where(edb.SellerId+edb.EQ, tokendata.SellerId)
-	db = db.Where(edb.ChannelId+edb.EQ, tokendata.ChannelId)
 	db = db.Where(edb.Account+edb.EQ, tokendata.Account)
 	db = db.First(&userdata)
 	if db.Error != nil {
@@ -300,7 +289,6 @@ func (this *ServiceAdmin) SetLoginGoogle(verifycode string, tokendata *server.To
 	secret, _ := utils.NewGoogleSecret(reqdata.Account, reqdata.Account)
 	db = server.Db().Model(&model.XAdminUser{})
 	db = db.Where(edb.SellerId+edb.EQ, reqdata.SellerId)
-	db = db.Where(edb.ChannelId+edb.EQ, reqdata.ChannelId)
 	db = db.Where(edb.Account+edb.EQ, reqdata.Account)
 	db = db.Updates(map[string]interface{}{
 		edb.LoginGoogle: googlesecret,
@@ -309,9 +297,8 @@ func (this *ServiceAdmin) SetLoginGoogle(verifycode string, tokendata *server.To
 }
 
 type SetOptGoogleReq struct {
-	SellerId  int    `validate:"required" json:"seller_id"` // 运营商
-	ChannelId int    `json:"channel_id"`                    // 渠道商
-	Account   string `validate:"required" json:"account"`   // 账号
+	SellerId int    `validate:"required" json:"seller_id"` // 运营商
+	Account  string `validate:"required" json:"account"`   // 账号
 }
 type SetOptGoogleRes struct {
 	Secret string `json:"google_secret"` // 操作验证码
@@ -319,7 +306,7 @@ type SetOptGoogleRes struct {
 
 // 设置操作验证码
 func (this *ServiceAdmin) SetOptGoogle(verifycode string, tokendata *server.TokenData, reqdata *SetOptGoogleReq) (googlesecret *SetOptGoogleRes, merr map[string]interface{}, err error) {
-	locker := fmt.Sprintf(enum.Lock_ChangeGoogleSecret, reqdata.SellerId, reqdata.ChannelId, reqdata.Account)
+	locker := fmt.Sprintf(enum.Lock_ChangeGoogleSecret, reqdata.SellerId, reqdata.Account)
 	if !server.Redis().Lock(locker, 5) {
 		return nil, enum.TooManyRequest, nil
 	}
@@ -327,7 +314,6 @@ func (this *ServiceAdmin) SetOptGoogle(verifycode string, tokendata *server.Toke
 	userdata := model.XAdminUser{}
 	db := server.Db().Model(&model.XAdminUser{})
 	db = db.Where(edb.SellerId+edb.EQ, tokendata.SellerId)
-	db = db.Where(edb.ChannelId+edb.EQ, tokendata.ChannelId)
 	db = db.Where(edb.Account+edb.EQ, tokendata.Account)
 	db = db.First(&userdata)
 	if db.Error != nil {
@@ -352,7 +338,6 @@ func (this *ServiceAdmin) SetOptGoogle(verifycode string, tokendata *server.Toke
 	secret, _ := utils.NewGoogleSecret(reqdata.Account, reqdata.Account)
 	db = server.Db().Model(&model.XAdminUser{})
 	db = db.Where(edb.SellerId+edb.EQ, reqdata.SellerId)
-	db = db.Where(edb.ChannelId+edb.EQ, reqdata.ChannelId)
 	db = db.Where(edb.Account+edb.EQ, reqdata.Account)
 	db = db.Updates(map[string]interface{}{
 		"opt_google": googlesecret,

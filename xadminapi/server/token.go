@@ -17,7 +17,6 @@ import (
 
 type TokenData struct {
 	SellerId     int
-	ChannelId    int
 	Account      string
 	UserId       int
 	AuthData     string

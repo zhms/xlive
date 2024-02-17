@@ -17,6 +17,8 @@ require (
 	github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/spf13/viper v1.17.0 // indirect
+	github.com/swaggo/files v1.0.1 // indirect
+	github.com/swaggo/gin-swagger v1.6.0 // indirect
 	gorm.io/driver/mysql v1.5.2 // indirect
 )
 

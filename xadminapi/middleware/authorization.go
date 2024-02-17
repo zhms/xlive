@@ -143,7 +143,6 @@ func Authorization(mainmenu string, submenu string, opt string, optname string) 
 
 		// logdata["token"] = gin.H{
 		// 	"SellerId":  tokendata.SellerId,
-		// 	"ChannelId": tokendata.ChannelId,
 		// 	"Account":   tokendata.Account,
 		// 	"UserId":    tokendata.UserId,
 		// }
@@ -153,7 +152,6 @@ func Authorization(mainmenu string, submenu string, opt string, optname string) 
 
 		optlog := model.XAdminOptLog{}
 		optlog.SellerId = tokendata.SellerId
-		optlog.ChannelId = tokendata.ChannelId
 		optlog.Account = tokendata.Account
 		optlog.ReqData = req
 		optlog.ReqPath = c.Request.URL.Path

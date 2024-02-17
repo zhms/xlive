@@ -12,7 +12,6 @@ func Init() {
 	entries.ControllerAdminRole.InitRouter(router.Group("/admin_role"))
 	entries.ControllerAdminLog.InitRouter(router.Group("/admin_log"))
 	entries.ControllerAdminSeller.InitRouter(router.Group("/seller"))
-	entries.ControllerChannel.InitRouter(router.Group("/channel"))
 	entries.ControllerConfig.InitRouter(router.Group("/config"))
 	entries.ControllerUser.InitRouter(router.Group("/user"))
 }

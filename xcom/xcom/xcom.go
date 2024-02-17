@@ -21,6 +21,8 @@ import (
 	"github.com/beego/beego/logs"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 var Db *xdb.XDb
@@ -169,7 +171,7 @@ func Init() {
 	f, _ := os.OpenFile("_log/http.log", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	gin.DefaultWriter = io.MultiWriter(f)
 	global.Router = gin.New()
-	//global.Router.GET("swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	global.Router.GET("swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	global.Router.Use(access_log())
 	global.Router.Use(cors())
 	// consul健康检查

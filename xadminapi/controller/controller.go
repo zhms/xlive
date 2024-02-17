@@ -12,7 +12,6 @@ type ControllerEntries struct {
 	controller_admin.ControllerAdminUser
 	controller_admin.ControllerAdminRole
 	controller_admin.ControllerAdminLog
-	controller_admin.ControllerChannel
 	controller_admin.ControllerConfig
 	controller_user.ControllerUser
 }
