@@ -1,0 +1,22 @@
+server:
+  id: 1
+  project: xnotify
+  env: dev
+  host: 127.0.0.1
+http:
+  port: 2740
+rpc:
+  port: 3740
+consul:
+  host: 127.0.0.1
+  port: 8511
+redis_game:
+  host: 127.0.0.1
+  port: 6375
+  db: 0
+  password: Bo5zcd*2ozsvtjss0
+rabbitmq:
+  host: 127.0.0.1
+  port: 5672
+  user: admin
+  password: Bo5zcd*2ozsvtjss0
