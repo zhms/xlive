@@ -1,0 +1,268 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "xclientapi",
+        "contact": {},
+        "version": "1.0"
+    },
+    "basePath": "/api/v1",
+    "paths": {
+        "/hash/hash_bet": {
+            "post": {
+                "tags": [
+                    "哈希"
+                ],
+                "summary": "哈希下注",
+                "parameters": [
+                    {
+                        "description": "body参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service_hash.HashBetReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/service_hash.HashBetRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/hash/lottery_bet": {
+            "post": {
+                "tags": [
+                    "哈希"
+                ],
+                "summary": "彩票下注",
+                "parameters": [
+                    {
+                        "description": "body参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service_hash.LotteryBetReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/service_hash.LotteryBetRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/user_login": {
+            "post": {
+                "tags": [
+                    "玩家"
+                ],
+                "summary": "玩家登录",
+                "parameters": [
+                    {
+                        "description": "body参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service_user.UserLoginReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/service_user.UserLoginRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/user_register": {
+            "post": {
+                "tags": [
+                    "玩家"
+                ],
+                "summary": "玩家注册",
+                "parameters": [
+                    {
+                        "description": "body参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service_user.UserRegisterReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/service_user.UserRegisterRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/user_test": {
+            "post": {
+                "tags": [
+                    "玩家"
+                ],
+                "summary": "玩家测试",
+                "parameters": [
+                    {
+                        "description": "body参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service_user.UserTestReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/service_user.UserTestRes"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "service_hash.HashBetReq": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "area": {
+                    "type": "string"
+                },
+                "game_id": {
+                    "type": "integer"
+                },
+                "room_level": {
+                    "type": "integer"
+                }
+            }
+        },
+        "service_hash.HashBetRes": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "tx_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "service_hash.LotteryBetReq": {
+            "type": "object"
+        },
+        "service_hash.LotteryBetRes": {
+            "type": "object"
+        },
+        "service_user.UserLoginReq": {
+            "type": "object",
+            "required": [
+                "account",
+                "password"
+            ],
+            "properties": {
+                "account": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "service_user.UserLoginRes": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "number"
+                    }
+                },
+                "token": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "service_user.UserRegisterReq": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "type": "string"
+                },
+                "agent": {
+                    "type": "integer"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "service_user.UserRegisterRes": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "number"
+                    }
+                },
+                "token": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "service_user.UserTestReq": {
+            "type": "object",
+            "properties": {
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "service_user.UserTestRes": {
+            "type": "object",
+            "properties": {
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "": {
+            "type": "apiKey",
+            "name": "x-token",
+            "in": "header"
+        }
+    }
+}

@@ -1,0 +1,4 @@
+{"ip":"127.0.0.1","method":"GET","path":"/favicon.ico","req":"","spend":79708,"status":404,"time":"2024-01-07 04:03:26"}
+{"ip":"127.0.0.1","method":"GET","path":"/favicon.ico","req":"","spend":74750,"status":404,"time":"2024-01-18 02:40:41"}
+{"ip":"127.0.0.1","method":"GET","path":"/test/curd.html","req":"","spend":22834,"status":404,"time":"2024-01-31 14:22:31"}
+{"ip":"127.0.0.1","method":"GET","path":"/favicon.ico","req":"","spend":18958,"status":404,"time":"2024-01-31 14:22:31"}

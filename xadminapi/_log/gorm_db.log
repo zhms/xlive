@@ -1,0 +1,2 @@
+2024/02/17 15:17:11 [35m/Users/abu/xlive/xcom/xdb/xdb.go:79
+[0m[31m[error] [0mfailed to initialize database, got error dial tcp :0: connect: can't assign requested address

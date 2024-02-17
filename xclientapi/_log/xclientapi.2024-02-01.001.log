@@ -1,0 +1,421 @@
+2024/01/22 00:49:14.267 [D] [hash.go:129]  hash_bet: {"id":1000009307,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"a2d16717de444d7c3dc34df8609129682b2f63924452f7e8234fa45d46037137","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-01-22 00:49:14"}
+2024/01/22 00:51:18.136 [D] [hash.go:129]  hash_bet: {"id":1000009320,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"36f5c4e560cb220a03acc4b9b93a702e2a6dcb851825a1a060ede43eb1ec3404","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-01-22 00:51:18"}
+2024/01/22 00:52:39.403 [D] [hash.go:129]  hash_bet: {"id":1000009327,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"5dd70231c1594b3b2b9c005393eba39b8bcdab79be0694e5122b7ddcd605c943","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-01-22 00:52:39"}
+2024/01/22 00:56:07.105 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/22 00:56:07.164 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/22 00:56:07.227 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/22 00:56:07.291 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/22 00:56:07.291 [D] [xredis.go:55]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/22 00:56:07.291 [D] [xredis.go:55]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/22 00:56:07.292 [D] [xredis.go:55]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/22 00:56:07.292 [D] [xredis.go:55]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/22 00:56:07.292 [D] [xredis.go:55]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/22 00:56:07.425 [D] [rabbitmq.go:45]  连接rabbitmq 成功: 10.10.234.116
+2024/01/22 00:56:07.574 [D] [server.go:245]  start rpc server at port:  7600
+2024/01/22 00:56:07.575 [D] [server.go:266]  start server at port:  6600
+2024/01/22 00:56:07.575 [D] [server.go:267]  swagger: http://127.0.0.1:6600/swagger/index.html
+2024/01/22 00:56:07.575 [D] [server.go:268]  test: http://127.0.0.1:6600/test/game.html
+2024/01/22 00:56:15.961 [D] [hash.go:128]  hash_bet: {"id":1000009341,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"6c3345ffd891fa5338b4ace6291adc4e440812e866214b0372d11b756dbe2261","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-01-22 00:56:15"}
+2024/01/22 00:56:46.181 [D] [hash.go:128]  hash_bet: {"id":1000009343,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"cd7905c31320a419ae9464b1feafd9e47986ec52b65e164a030747693cb1ab96","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-01-22 00:56:46"}
+2024/01/22 00:56:52.731 [D] [hash.go:128]  hash_bet: {"id":1000009344,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"cbbe2b6dfad101ba42d3d238b9f412b0fff0f89a88393be82303f9d7e67bcd85","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-01-22 00:56:52"}
+2024/01/22 00:56:58.518 [D] [hash.go:128]  hash_bet: {"id":1000009345,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"0a7c079507fa9075a8f675ede5ff43299a27e4356be50ec8ec7831e8557d94eb","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-01-22 00:56:58"}
+2024/01/30 00:37:12.274 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/30 00:37:12.332 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/30 00:37:12.390 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/30 00:37:12.447 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/30 00:37:12.447 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/30 00:37:12.447 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/30 00:37:12.447 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/30 00:37:12.447 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/30 00:37:12.447 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/30 00:37:12.569 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/30 00:37:12.711 [D] [server.go:245]  start rpc server at port:  7600
+2024/01/30 00:37:12.711 [D] [server.go:266]  start server at port:  6600
+2024/01/30 00:37:12.711 [D] [server.go:267]  swagger: http://127.0.0.1:6600/swagger/index.html
+2024/01/30 00:37:12.711 [D] [server.go:268]  test: http://127.0.0.1:6600/test/game.html
+2024/01/30 00:37:49.514 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/30 00:37:49.569 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/30 00:37:49.619 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/30 00:37:49.671 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/30 00:37:49.671 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/30 00:37:49.671 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/30 00:37:49.671 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/30 00:37:49.671 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/30 00:37:49.671 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/30 00:37:49.780 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/30 00:37:49.900 [D] [server.go:245]  start rpc server at port:  7600
+2024/01/30 00:37:49.900 [D] [server.go:266]  start server at port:  6600
+2024/01/30 00:37:49.900 [D] [server.go:267]  swagger: http://127.0.0.1:6600/swagger/index.html
+2024/01/30 00:37:49.900 [D] [server.go:268]  test: http://127.0.0.1:6600/test/game.html
+2024/01/30 01:03:34.941 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/30 01:03:34.991 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/30 01:03:35.042 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/30 01:03:35.097 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/30 01:03:35.098 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/30 01:03:35.098 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/30 01:03:35.098 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/30 01:03:35.098 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/30 01:03:35.098 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/30 01:03:35.212 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/30 01:03:35.336 [D] [server.go:245]  start rpc server at port:  7600
+2024/01/30 01:03:35.336 [D] [server.go:266]  start server at port:  6600
+2024/01/30 01:03:35.337 [D] [server.go:267]  swagger: http://127.0.0.1:6600/swagger/index.html
+2024/01/30 01:03:35.337 [D] [server.go:268]  test: http://127.0.0.1:6600/test/game.html
+2024/01/31 14:16:24.346 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 14:16:24.399 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 14:16:24.448 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 14:16:24.498 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 14:16:24.498 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 14:16:24.498 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 14:16:24.498 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 14:16:24.498 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 14:16:24.498 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 14:16:24.606 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 14:16:24.725 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 14:16:24.725 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 19:53:01.876 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 19:53:01.926 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 19:53:01.975 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 19:53:02.024 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 19:53:02.024 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 19:53:02.025 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 19:53:02.025 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 19:53:02.025 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 19:53:02.025 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 19:53:02.130 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 19:53:02.248 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 19:53:02.248 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 19:55:27.394 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 19:55:27.447 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 19:55:27.503 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 19:55:27.555 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 19:55:27.556 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 19:55:27.556 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 19:55:27.556 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 19:55:27.556 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 19:55:27.556 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 19:55:27.661 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 19:55:27.806 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 19:55:27.807 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 19:56:01.137 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 19:56:01.190 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 19:56:01.244 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 19:56:01.299 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 19:56:01.301 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 19:56:01.301 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 19:56:01.301 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 19:56:01.301 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 19:56:01.301 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 19:56:01.430 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 19:56:01.565 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 19:56:01.566 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 19:56:39.903 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 19:56:39.959 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 19:56:40.014 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 19:56:40.072 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 19:56:40.072 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 19:56:40.073 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 19:56:40.073 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 19:56:40.073 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 19:56:40.073 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 19:56:40.187 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 19:56:40.329 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 19:56:40.329 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 19:59:03.077 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 19:59:03.130 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 19:59:03.188 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 19:59:03.252 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 19:59:03.253 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 19:59:03.253 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 19:59:03.253 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 19:59:03.253 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 19:59:03.253 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 19:59:03.374 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 19:59:03.514 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 19:59:03.515 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 19:59:05.804 [E] [thirdapi.go:22]  rpc client is nil
+2024/01/31 19:59:11.280 [E] [thirdapi.go:22]  rpc client is nil
+2024/01/31 20:00:34.233 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:00:34.291 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:00:34.345 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:00:34.400 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:00:34.400 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:00:34.400 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:00:34.400 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:00:34.400 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:00:34.400 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:00:34.512 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:00:34.642 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 20:00:34.642 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 20:00:42.548 [E] [thirdapi.go:22]  rpc client is nil
+2024/01/31 20:02:18.143 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:02:18.198 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:02:18.258 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:02:18.312 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:02:18.312 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:02:18.312 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:02:18.312 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:02:18.312 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:02:18.312 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:02:18.424 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:02:18.553 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 20:02:18.553 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 20:02:20.415 [E] [thirdapi.go:22]  rpc client is nil
+2024/01/31 20:03:55.215 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:03:55.267 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:03:55.321 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:03:55.376 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:03:55.376 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:03:55.376 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:03:55.376 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:03:55.376 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:03:55.376 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:03:55.486 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:03:55.616 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 20:03:55.616 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 20:04:01.820 [E] [thirdapi.go:22]  rpc client is nil
+2024/01/31 20:04:15.409 [E] [thirdapi.go:22]  rpc client is nil
+2024/01/31 20:05:10.639 [E] [connection.go:109]  rpc dialing: 10.58.0.4:7701 dial tcp 10.58.0.4:7701: connect: operation timed out
+2024/01/31 20:05:19.166 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:05:19.216 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:05:19.264 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:05:19.316 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:05:19.316 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:05:19.316 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:05:19.316 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:05:19.316 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:05:19.316 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:05:19.422 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:05:19.542 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 20:05:19.543 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 20:06:32.966 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:06:33.023 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:06:33.078 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:06:33.133 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:06:33.133 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:06:33.133 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:06:33.133 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:06:33.133 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:06:33.133 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:06:33.246 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:06:33.380 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 20:06:33.381 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 20:07:46.084 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:07:46.135 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:07:46.187 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:07:46.239 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:07:46.239 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:07:46.239 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:07:46.239 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:07:46.239 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:07:46.239 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:07:46.346 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:07:46.464 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 20:07:46.464 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 20:08:21.297 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:08:21.347 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:08:21.396 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:08:21.447 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:08:21.447 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:08:21.447 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:08:21.447 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:08:21.447 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:08:21.447 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:08:21.557 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:08:21.677 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 20:08:21.677 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 20:09:01.660 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:09:01.710 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:09:01.758 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:09:01.810 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:09:01.810 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:09:01.810 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:09:01.810 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:09:01.810 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:09:01.810 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:09:01.914 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:09:02.034 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 20:09:02.034 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 20:09:11.932 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:09:11.982 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:09:12.033 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:09:12.083 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:09:12.083 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:09:12.083 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:09:12.083 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:09:12.084 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:09:12.084 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:09:12.192 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:09:12.310 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 20:09:12.311 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 20:09:23.902 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:09:23.952 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:09:24.012 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:09:24.062 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:09:24.063 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:09:24.063 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:09:24.063 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:09:24.063 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:09:24.063 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:09:24.165 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:09:24.284 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 20:09:24.285 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 20:09:31.947 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:09:31.996 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:09:32.045 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:09:32.095 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:09:32.095 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:09:32.095 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:09:32.095 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:09:32.095 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:09:32.095 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:09:32.202 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:09:32.318 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 20:09:32.319 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 20:09:39.641 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:09:39.690 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:09:39.741 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:09:39.791 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:09:39.791 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:09:39.791 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:09:39.791 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:09:39.791 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:09:39.791 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:09:39.895 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:09:40.018 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 20:09:40.018 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 20:09:48.642 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:09:48.690 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:09:48.739 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:09:48.791 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:09:48.791 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:09:48.791 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:09:48.791 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:09:48.791 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:09:48.791 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:09:48.895 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:09:49.015 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 20:09:49.016 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 20:09:57.746 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:09:57.795 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:09:57.846 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:09:57.895 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:09:57.895 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:09:57.895 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:09:57.895 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:09:57.895 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:09:57.895 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:09:58.003 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:09:58.121 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 20:09:58.121 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 20:10:56.743 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:10:56.802 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:10:56.860 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:10:56.916 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:10:56.916 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:10:56.916 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:10:56.916 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:10:56.917 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:10:56.917 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:10:57.038 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:10:57.182 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 20:10:57.183 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 20:11:16.247 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:11:16.301 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:11:16.355 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:11:16.408 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:11:16.408 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:11:16.408 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:11:16.408 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:11:16.408 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:11:16.408 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:11:16.530 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:11:16.669 [D] [xcom.go:201]  start server at port:  6600
+2024/01/31 20:11:16.669 [D] [xcom.go:185]  start rpc server at port:  7600
+2024/01/31 20:14:01.898 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:14:01.950 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:14:01.998 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:14:02.050 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:14:02.050 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:14:02.050 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:14:02.050 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:14:02.050 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:14:02.050 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:14:02.157 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:14:02.275 [D] [xcom.go:171]  start rpc server at port:  7600
+2024/01/31 20:14:02.275 [D] [xcom.go:187]  start server at port:  6600
+2024/01/31 20:14:04.902 [E] [thirdapi.go:22]  rpc client is nil
+2024/01/31 20:14:54.044 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:14:54.101 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:14:54.157 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:14:54.214 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:14:54.215 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:14:54.215 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:14:54.215 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:14:54.215 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:14:54.215 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:14:54.335 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:14:54.472 [D] [xcom.go:171]  start rpc server at port:  7600
+2024/01/31 20:14:54.473 [D] [xcom.go:187]  start server at port:  6600
+2024/01/31 20:19:23.343 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:19:23.399 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:19:23.452 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:19:23.505 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:19:23.505 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:19:23.505 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:19:23.505 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:19:23.505 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:19:23.505 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:19:23.618 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:19:23.750 [D] [xcom.go:189]  start rpc server at port:  7600
+2024/01/31 20:19:23.750 [D] [xcom.go:205]  start server at port:  6600
+2024/01/31 20:20:41.062 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:20:41.119 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:20:41.178 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:20:41.234 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:20:41.234 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:20:41.234 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:20:41.234 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:20:41.234 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:20:41.234 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:20:41.348 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:20:41.479 [D] [xcom.go:189]  start rpc server at port:  7600
+2024/01/31 20:20:41.479 [D] [xcom.go:205]  start server at port:  6600
+2024/01/31 20:27:48.563 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 20:27:48.618 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 20:27:48.676 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 20:27:48.731 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 20:27:48.731 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 20:27:48.732 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 20:27:48.732 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 20:27:48.732 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 20:27:48.732 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 20:27:48.842 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 20:27:48.988 [D] [xcom.go:189]  start rpc server at port:  7600
+2024/01/31 20:27:48.991 [D] [xcom.go:205]  start server at port:  6600
+2024/01/31 21:40:56.687 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 21:40:56.741 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 21:40:56.793 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 21:40:56.845 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 21:40:56.846 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 21:40:56.846 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 21:40:56.846 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 21:40:56.846 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 21:40:56.846 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 21:40:56.953 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 21:40:57.075 [D] [xcom.go:189]  start rpc server at port:  7600
+2024/01/31 21:40:57.076 [D] [xcom.go:205]  start server at port:  6600
+2024/01/31 21:59:37.800 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/01/31 21:59:37.853 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/01/31 21:59:37.903 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/01/31 21:59:37.953 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/01/31 21:59:37.953 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/01/31 21:59:37.953 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/01/31 21:59:37.953 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/01/31 21:59:37.953 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/01/31 21:59:37.953 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/01/31 21:59:38.058 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/01/31 21:59:38.199 [D] [xcom.go:189]  start rpc server at port:  7600
+2024/01/31 21:59:38.199 [D] [xcom.go:205]  start server at port:  6600
+2024/01/31 22:00:05.283 [D] [hash.go:128]  hash_bet: {"id":1000024768,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"952ea5a11bd47d2ac007afc3d5c4ebfdb23377ef2afefb21bfdcfbff84c59810","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-01-31 22:00:05"}
+2024/01/31 22:15:46.629 [D] [hash.go:128]  hash_bet: {"id":1000025573,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"76e858747f0bf6aa47bc6da0243e13265f131153bc46f23587c47c4baa99afc5","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-01-31 22:15:46"}

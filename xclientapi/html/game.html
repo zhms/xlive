@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css" />
+	</head>
+	<body>
+		<div id="app">
+			<div style="width: 500px; margin: 0 auto">
+				<div><span> 当前区块: {{current_block.block_num}} {{current_block.block_time}}</span></div>
+				<div><span> 开奖区块: {{next_period.period}} {{next_period.open_time}}</span></div>
+				<div><el-button type="primary" style="margin-top: 10px" @click="bet">投注</el-button></div>
+			</div>
+		</div>
+	</body>
+	<script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script>
+		new Vue({
+			el: '#app',
+			data: function () {
+				return {
+					wsapi: '10.10.234.116:2740',
+					clientapi: '127.0.0.1:6600',
+					headers: null,
+					socket: null,
+					user_id: null,
+					token: null,
+					current_block: {},
+					next_period: {},
+					idx: 0,
+					game_id: 201,
+				}
+			},
+			created: async function () {
+				var userLanguage = navigator.language || navigator.userLanguage
+				console.log('用户系统的语言是：' + userLanguage)
+
+				let data = await axios.post(`http://${this.clientapi}/api/v1/user/user_login`, {
+					account: 'abu123123',
+					password: 'abu123123',
+				})
+				this.user_id = data.data.data.user_id
+				this.token = data.data.data.token
+				this.headers = {
+					headers: {
+						'x-token': this.token,
+					},
+				}
+				console.log('login:', this.user_id, this.token)
+				data = await axios.get(`http://${this.clientapi}/api/v1/hash/lottery_next?game_id=${this.game_id}`)
+				this.next_period = data.data.data
+				this.socket = new WebSocket(`ws://${this.wsapi}/` + this.user_id)
+				this.socket.onopen = (event) => {
+					this.socket.send(
+						JSON.stringify({
+							msg_id: 'subscribe',
+							topic: 'block_info',
+						})
+					)
+				}
+				this.socket.onclose = function (event) {
+					console.log('websocket closed')
+				}
+				this.socket.onmessage = async (event) => {
+					let data = JSON.parse(event.data)
+					if (data.msg_id == 'block_info') {
+						this.current_block = data.data
+						if (this.current_block.block_num == this.next_period.period) {
+							setTimeout(async () => {
+								let nextdata = await axios.get(`http://${this.clientapi}/api/v1/hash/lottery_next?game_id=${this.game_id}`)
+								this.next_period = nextdata.data.data
+							}, 1000)
+						}
+					}
+				}
+			},
+			methods: {
+				bet: async function () {
+					area = '大'
+					if (this.idx % 2 == 0) {
+						area = '小'
+					}
+					this.idx++
+					console.log('bet', this.token)
+					let reqdata = {
+						game_id: this.game_id,
+						room_level: 1,
+						period: this.next_period.period,
+						amount: 1,
+						symbol: 'usdt',
+						bet_area: area,
+					}
+					let data = await axios.post(`http://${this.clientapi}/api/v1/hash/lottery_bet`, reqdata, this.headers)
+					console.log(data.data.data)
+				},
+			},
+		})
+	</script>
+</html>

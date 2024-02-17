@@ -1,0 +1,97 @@
+2024/02/01 03:13:18.757 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: connect: operation timed out
+2024/02/01 03:13:46.685 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: connect: operation timed out
+2024/02/01 13:11:00.751 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/02/01 13:11:00.805 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/02/01 13:11:00.857 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/02/01 13:11:00.910 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/02/01 13:11:00.911 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/02/01 13:11:00.911 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/02/01 13:11:00.911 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/02/01 13:11:00.911 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/02/01 13:11:00.911 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/02/01 13:11:01.020 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/02/01 13:11:01.150 [D] [xcom.go:189]  start rpc server at port:  7600
+2024/02/01 13:11:01.151 [D] [xcom.go:205]  start server at port:  6600
+2024/02/01 13:11:04.266 [D] [hash.go:128]  hash_bet: {"id":1000026869,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"00539dd25a1a058258f7ff634395d2fd08377aaa9e4c473b57b8d193b10204aa","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-02-01 13:11:04"}
+2024/02/01 13:16:12.413 [D] [hash.go:128]  hash_bet: {"id":1000026882,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"24d5defbe803a5d99a44d26a67870ea905fdafe00506b323a7156b232cc69fbb","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-02-01 13:16:12"}
+2024/02/01 13:16:42.645 [D] [hash.go:128]  hash_bet: {"id":1000026884,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"276b5ccde4b476fff6d69d20f499bfc9469db426df1f59edca7d10901a67392d","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-02-01 13:16:42"}
+2024/02/01 13:17:49.886 [D] [hash.go:128]  hash_bet: {"id":1000026886,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"c98b26238f4fb8f658021c047c438a65801c17baba7f17f52d48497f3eee29b6","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-02-01 13:17:49"}
+2024/02/01 13:18:59.869 [D] [hash.go:128]  hash_bet: {"id":1000026887,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"6f6e8ce55f72c2ac57ad088dcdcaef194c44ef530ba0ab82f75fcf13811fc415","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-02-01 13:18:59"}
+2024/02/01 13:20:08.037 [D] [hash.go:128]  hash_bet: {"id":1000026889,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"750ec93989e912aaf859695e23e0dd15a22dbcb61bca69d812e36b34bd92bd3b","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-02-01 13:20:08"}
+2024/02/01 13:21:02.665 [D] [hash.go:128]  hash_bet: {"id":1000026892,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"475dd8a1a6eb7dac96ac5085a69a5680184b75f439954c7c048d3bb21e1153a2","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-02-01 13:21:02"}
+2024/02/01 13:21:43.708 [D] [hash.go:128]  hash_bet: {"id":1000026895,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"4be226471e36bebc2070104d22d101c0017328ec8f0fe94569005c12e02712c3","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-02-01 13:21:43"}
+2024/02/01 13:22:27.896 [D] [hash.go:128]  hash_bet: {"id":1000026896,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"3aa93c980cdb3dedc68c63c49ffe38c084bb44acc1c59409e7f975b725a9124d","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-02-01 13:22:27"}
+2024/02/01 13:22:43.612 [D] [hash.go:128]  hash_bet: {"id":1000026897,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"2e07d49e44552ff30984eb9943da22af0fa7c493eb02d7911652ae2c4e75bfb4","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-02-01 13:22:43"}
+2024/02/01 13:25:45.911 [D] [hash.go:128]  hash_bet: {"id":1000026903,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"34ee9019a839e7756c5b5d08b9b9ad6f3306d017b6a333d3712d490c40d853f5","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-02-01 13:25:45"}
+2024/02/01 13:27:41.722 [D] [hash.go:128]  hash_bet: {"id":1000026909,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"1e0ca9aab687c435969f1985d59fac4d0401c9d8898006e1865095cd656bb3be","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-02-01 13:27:41"}
+2024/02/01 13:29:36.971 [D] [hash.go:128]  hash_bet: {"id":1000026916,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"8cb2e88be8ab0b993c2da0c8a6151b13e6c5ce7e2184fdaa68d3d956bd9ebfb2","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-02-01 13:29:36"}
+2024/02/01 13:31:09.776 [D] [hash.go:128]  hash_bet: {"id":1000026921,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"0b74967061f9598b7607683653317ae75096418c4683d2c0d4e9d587bbb1d923","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-02-01 13:31:09"}
+2024/02/01 13:33:09.485 [D] [hash.go:128]  hash_bet: {"id":1000026928,"seller_id":1,"channel_id":1,"user_id":95388400,"game_id":102,"room_level":1,"symbol":"usdt","bet_amount":"1","bet_area":"双","tx_id":"e942ae21d6396f59d00893ce0d6de5e78ebdcbab8cbf7b15e2cfb84f54bd304f","from_address":"TW6frmZpAMfm8uXvPBT4dr7TGyYHiRp2TP","to_address":"TWUuLHJRPZ2f6woVe5wGUEEQujEspKjxxx","create_time":"2024-02-01 13:33:09"}
+2024/02/01 15:02:43.621 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/02/01 15:02:43.671 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/02/01 15:02:43.720 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/02/01 15:02:43.772 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/02/01 15:02:43.772 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/02/01 15:02:43.772 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/02/01 15:02:43.772 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/02/01 15:02:43.772 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/02/01 15:02:43.772 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/02/01 15:02:43.878 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/02/01 15:02:43.997 [D] [xcom.go:189]  start rpc server at port:  7600
+2024/02/01 15:02:43.997 [D] [xcom.go:205]  start server at port:  6600
+2024/02/01 15:02:57.940 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/02/01 15:02:57.990 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/02/01 15:02:58.040 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/02/01 15:02:58.092 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/02/01 15:02:58.092 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/02/01 15:02:58.092 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/02/01 15:02:58.092 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/02/01 15:02:58.092 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/02/01 15:02:58.092 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/02/01 15:02:58.199 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/02/01 15:02:58.317 [D] [xcom.go:189]  start rpc server at port:  7600
+2024/02/01 15:02:58.318 [D] [xcom.go:205]  start server at port:  6600
+2024/02/01 15:09:18.656 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/02/01 15:09:18.712 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/02/01 15:09:18.765 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/02/01 15:09:18.822 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/02/01 15:09:18.823 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/02/01 15:09:18.823 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/02/01 15:09:18.823 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/02/01 15:09:18.823 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/02/01 15:09:18.823 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/02/01 15:09:18.941 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/02/01 15:09:19.071 [D] [xcom.go:206]  start rpc server at port:  7600
+2024/02/01 15:09:19.072 [D] [xcom.go:222]  start server at port:  6600
+2024/02/01 15:11:13.521 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game
+2024/02/01 15:11:13.574 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_user
+2024/02/01 15:11:13.626 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_order
+2024/02/01 15:11:13.678 [D] [xdb.go:90]  连接数据库成功: 10.10.234.116 3306 x_game_statistic
+2024/02/01 15:11:13.678 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 5 redis_token
+2024/02/01 15:11:13.678 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 6 redis_game
+2024/02/01 15:11:13.678 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 7 redis_user
+2024/02/01 15:11:13.678 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 8 redis_order
+2024/02/01 15:11:13.678 [D] [xredis.go:56]  连接redis 成功: 10.10.234.116 6379 9 redis_statistic
+2024/02/01 15:11:13.783 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
+2024/02/01 15:11:13.904 [D] [xcom.go:206]  start rpc server at port:  7600
+2024/02/01 15:11:13.905 [D] [xcom.go:222]  start server at port:  6600
+2024/02/01 23:48:41.322 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: i/o timeout
+2024/02/01 23:48:43.326 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: connect: host is down
+2024/02/01 23:48:45.330 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: connect: host is down
+2024/02/01 23:48:47.340 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: connect: host is down
+2024/02/01 23:49:19.344 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: i/o timeout
+2024/02/01 23:49:51.347 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: i/o timeout
+2024/02/01 23:49:53.353 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: connect: no route to host
+2024/02/01 23:49:55.356 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: connect: host is down
+2024/02/01 23:49:57.359 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: connect: host is down
+2024/02/01 23:49:59.363 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: connect: host is down
+2024/02/01 23:50:01.367 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: connect: host is down
+2024/02/01 23:50:03.373 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: connect: host is down
+2024/02/01 23:50:05.376 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: connect: host is down
+2024/02/01 23:50:07.383 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: connect: host is down
+2024/02/01 23:50:09.386 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: connect: host is down
+2024/02/01 23:50:11.409 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: connect: host is down
+2024/02/01 23:50:43.423 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: i/o timeout
+2024/02/01 23:51:15.430 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: i/o timeout
+2024/02/01 23:51:47.435 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: i/o timeout
+2024/02/01 23:52:19.439 [E] [connection.go:67]  consul Error querying service: Get "http://10.10.234.116:8511/v1/health/service/xthirdapi?passing=1": dial tcp 10.10.234.116:8511: i/o timeout

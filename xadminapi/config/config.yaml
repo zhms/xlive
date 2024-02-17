@@ -1,0 +1,77 @@
+server:
+  id: 1
+  env: dev
+  project: xadminapi
+  host: 10.10.234.82
+http:
+  port: 6500
+rpc:
+  port: 7500
+rabbitmq:
+  host: 10.10.234.116
+  port: 5672
+  user: admin
+  password: bo5zcd2ozsvtjss0
+consul:
+  host: 10.10.234.116
+  port: 8511
+db_game:
+  host: 10.10.234.116
+  port: 3306
+  user: root
+  password: bo5zcd2ozsvtjss0
+  database: x_game
+db_user:
+  host: 10.10.234.116
+  port: 3306
+  user: root
+  password: bo5zcd2ozsvtjss0
+  database: x_game_user
+db_order:
+  host: 10.10.234.116
+  port: 3306
+  user: root
+  password: bo5zcd2ozsvtjss0
+  database: x_game_order
+db_statistic:
+  host: 10.10.234.116
+  port: 3306
+  user: root
+  password: bo5zcd2ozsvtjss0
+  database: x_game_statistic
+db_admin:
+  host: 10.10.234.116
+  port: 3306
+  user: root
+  password: bo5zcd2ozsvtjss0
+  database: x_game_admin
+redis_token:
+  host: 10.10.234.116
+  port: 6379
+  db: 5
+  password: bo5zcd2ozsvtjss0
+redis_game:
+  host: 10.10.234.116
+  port: 6379
+  db: 6
+  password: bo5zcd2ozsvtjss0
+redis_user:
+  host: 10.10.234.116
+  port: 6379
+  db: 7
+  password: bo5zcd2ozsvtjss0
+redis_order:
+  host: 10.10.234.116
+  port: 6379
+  db: 8
+  password: bo5zcd2ozsvtjss0
+redis_statistic:
+  host: 10.10.234.116
+  port: 6379
+  db: 9
+  password: bo5zcd2ozsvtjss0
+redis_admin:
+  host: 10.10.234.116
+  port: 6379
+  db: 10
+  password: bo5zcd2ozsvtjss0
