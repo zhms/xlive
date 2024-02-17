@@ -1,11 +1,9 @@
 package main
 
 import (
-	"xclientapi/eventhandler"
 	"xclientapi/router"
 	"xclientapi/server"
 	"xclientapi/service"
-	"xcom/rpcclient"
 )
 
 // @title           xclientapi
@@ -23,8 +21,6 @@ func main() {
 	server.Init()
 	server.Run(func() {
 		service.Init()
-		rpcclient.Init()
-		eventhandler.Init()
 		router.Init()
 	})
 }

@@ -202,3 +202,22 @@
 2024/02/17 15:35:27.871 [D] [xdb.go:90]  连接数据库成功: 127.0.0.1 3306 x_live
 2024/02/17 15:35:27.871 [D] [xredis.go:56]  连接redis 成功: 127.0.0.1 6379 10 redis
 2024/02/17 15:35:27.872 [D] [xcom.go:209]  start server at port:  6500
+2024/02/17 15:41:59.345 [D] [xdb.go:90]  连接数据库成功: 127.0.0.1 3306 x_live
+2024/02/17 15:41:59.346 [D] [xredis.go:56]  连接redis 成功: 127.0.0.1 6379 10 redis
+2024/02/17 15:41:59.346 [D] [xcom.go:209]  start server at port:  6500
+2024/02/17 15:53:18.511 [D] [xdb.go:90]  连接数据库成功: 127.0.0.1 3306 x_live
+2024/02/17 15:53:18.511 [D] [xredis.go:56]  连接redis 成功: 127.0.0.1 6379 10 redis
+2024/02/17 15:53:18.511 [D] [xcom.go:209]  start server at port:  6500
+2024/02/17 15:53:22.482 [D] [xdb.go:90]  连接数据库成功: 127.0.0.1 3306 x_live
+2024/02/17 15:53:22.482 [D] [xredis.go:56]  连接redis 成功: 127.0.0.1 6379 10 redis
+2024/02/17 15:53:22.482 [D] [xcom.go:209]  start server at port:  6500
+2024/02/17 18:18:41.324 [D] [xdb.go:90]  连接数据库成功: 127.0.0.1 3306 x_live
+2024/02/17 18:18:41.324 [D] [xredis.go:56]  连接redis 成功: 127.0.0.1 6379 10 redis
+2024/02/17 18:18:41.324 [D] [xcom.go:209]  start server at port:  6500
+2024/02/17 18:19:04.946 [D] [xdb.go:90]  连接数据库成功: 127.0.0.1 3306 x_live
+2024/02/17 18:19:04.947 [D] [xredis.go:56]  连接redis 成功: 127.0.0.1 6379 10 redis
+2024/02/17 18:19:04.947 [D] [xcom.go:209]  start server at port:  6500
+2024/02/17 18:19:08.555 [E] [user.go:128]  loginlog create error Error 1292 (22007): Incorrect datetime value: '' for column 'create_time' at row 1
+2024/02/17 18:19:28.223 [D] [xdb.go:90]  连接数据库成功: 127.0.0.1 3306 x_live
+2024/02/17 18:19:28.223 [D] [xredis.go:56]  连接redis 成功: 127.0.0.1 6379 10 redis
+2024/02/17 18:19:28.224 [D] [xcom.go:209]  start server at port:  6500

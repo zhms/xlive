@@ -26,7 +26,7 @@ func DelToken(token string) {
 		return
 	}
 	rediskey := fmt.Sprintf("%v:token:%s", global.Project, token)
-	_, err := redis_token.Client().Del(context.Background(), rediskey).Result()
+	_, err := redis_conn.Client().Del(context.Background(), rediskey).Result()
 	if err != nil {
 		logs.Error("SetToken error:", err.Error())
 	}
@@ -35,7 +35,7 @@ func DelToken(token string) {
 func SetToken(token string, value *TokenData) {
 	rediskey := fmt.Sprintf("%v:token:%s", global.Project, token)
 	valuejson, _ := json.Marshal(value)
-	_, err := redis_token.Client().Set(context.Background(), rediskey, string(valuejson), time.Second*3600*24*7).Result()
+	_, err := redis_conn.Client().Set(context.Background(), rediskey, string(valuejson), time.Second*3600*24*7).Result()
 	if err != nil {
 		logs.Error("SetToken error:", err.Error())
 	}
@@ -49,7 +49,7 @@ func GetToken(c *gin.Context) *TokenData {
 		return nil
 	}
 	rediskey := fmt.Sprintf("%v:token:%s", global.Project, tokenstr)
-	value, err := redis_token.Client().Get(context.Background(), rediskey).Result()
+	value, err := redis_conn.Client().Get(context.Background(), rediskey).Result()
 	if err != nil && !errors.Is(err, redis.Nil) {
 		logs.Error("GetToken error:", err.Error())
 		c.JSON(http.StatusBadRequest, enum.AuthGetTokenError)

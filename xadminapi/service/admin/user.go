@@ -10,6 +10,7 @@ import (
 
 	"xcom/utils"
 
+	"github.com/beego/beego/logs"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -119,11 +120,15 @@ func (this *ServiceAdmin) AdminUserLogin(ip string, verifycode string, reqdata *
 	}
 	loginlog := model.XAdminLoginLog{}
 	loginlog.SellerId = tokendata.SellerId
-
 	loginlog.Account = tokendata.Account
+	loginlog.CreateTime = utils.Now()
 	loginlog.Token = token
 	loginlog.LoginIp = ip
 	db = server.Db().Model(&loginlog).Create(&loginlog)
+	if db.Error != nil {
+		logs.Error("loginlog create error", db.Error)
+		return nil, nil, db.Error
+	}
 	return response, nil, nil
 }
 

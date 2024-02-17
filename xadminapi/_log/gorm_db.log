@@ -12,3 +12,9 @@
 [0m[33m[1.235ms] [34;1m[rows:0][0m INSERT INTO `x_admin_login_log` (`seller_id`,`account`,`token`,`login_ip`,`memo`,`create_time`) VALUES (1,'admin','7759682a-36f6-4b3f-b953-7b4e9f1a3465','127.0.0.1','','')
 2024/02/17 15:37:18 [31;1m/Users/abu/xlive/xadminapi/service/admin/user.go:126 [35;1mError 1292 (22007): Incorrect datetime value: '' for column 'create_time' at row 1
 [0m[33m[0.605ms] [34;1m[rows:0][0m INSERT INTO `x_admin_login_log` (`seller_id`,`account`,`token`,`login_ip`,`memo`,`create_time`) VALUES (1,'admin','98dc6d7c-70f8-44e5-a7b2-d3be3f03ced8','127.0.0.1','','')
+2024/02/17 15:53:30 [31;1m/Users/abu/xlive/xadminapi/service/admin/user.go:126 [35;1mError 1292 (22007): Incorrect datetime value: '' for column 'create_time' at row 1
+[0m[33m[0.849ms] [34;1m[rows:0][0m INSERT INTO `x_admin_login_log` (`seller_id`,`account`,`token`,`login_ip`,`memo`,`create_time`) VALUES (1,'admin','146e0d89-9e7d-4a5f-a518-4e839d8d80c3','127.0.0.1','','')
+2024/02/17 18:18:49 [31;1m/Users/abu/xlive/xadminapi/service/admin/user.go:125 [35;1mError 1292 (22007): Incorrect datetime value: '' for column 'create_time' at row 1
+[0m[33m[0.772ms] [34;1m[rows:0][0m INSERT INTO `x_admin_login_log` (`seller_id`,`account`,`token`,`login_ip`,`memo`,`create_time`) VALUES (1,'admin','9bd135b5-65fd-4650-85fb-b72812a68ba0','127.0.0.1','','')
+2024/02/17 18:19:08 [31;1m/Users/abu/xlive/xadminapi/service/admin/user.go:126 [35;1mError 1292 (22007): Incorrect datetime value: '' for column 'create_time' at row 1
+[0m[33m[0.616ms] [34;1m[rows:0][0m INSERT INTO `x_admin_login_log` (`seller_id`,`account`,`token`,`login_ip`,`memo`,`create_time`) VALUES (1,'admin','f407d77a-538c-4b4b-89e3-4a122f323822','127.0.0.1','','')

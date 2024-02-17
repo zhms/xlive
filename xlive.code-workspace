@@ -4,7 +4,13 @@
 			"path": "xadminapi"
 		},
 		{
+			"path": "xadminview"
+		},
+		{
 			"path": "xclientapi"
+		},
+		{
+			"path": "xnotify"
 		}
 	]
 }

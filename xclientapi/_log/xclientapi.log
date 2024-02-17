@@ -196,3 +196,8 @@
 2024/02/12 03:25:13.028 [D] [rabbitmq.go:40]  连接rabbitmq 成功: 10.10.234.116
 2024/02/12 03:25:13.165 [D] [xcom.go:206]  start rpc server at port:  7600
 2024/02/12 03:25:13.165 [D] [xcom.go:222]  start server at port:  6600
+2024/02/17 18:39:36.836 [E] [xdb.go:81]  dial tcp :0: connect: can't assign requested address
+2024/02/17 18:40:11.762 [E] [xdb.go:81]  dial tcp :0: connect: can't assign requested address
+2024/02/17 18:40:34.638 [D] [xdb.go:90]  连接数据库成功: 127.0.0.1 3306 x_live
+2024/02/17 18:40:34.639 [D] [xredis.go:56]  连接redis 成功: 127.0.0.1 6379 10 redis
+2024/02/17 18:40:34.639 [D] [xcom.go:209]  start server at port:  6500
