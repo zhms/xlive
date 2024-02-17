@@ -4,3 +4,6 @@
 **/package-lock.json
 **/config.js
 **/config.yaml
+/xclientapi/config/config.yaml
+/xnotify/config/config.yaml
+/xclientapi/_log
