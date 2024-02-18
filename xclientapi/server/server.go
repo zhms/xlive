@@ -19,10 +19,10 @@ func Init() {
 	xcom.Init()
 	//初始化数据库
 	db_conn.Init("db")
+	xcom.Db = db_conn
 	//初始化redis
 	redis_conn.Init("redis")
 	xcom.Redis = redis_conn
-
 }
 
 func Run(callback func()) {
@@ -33,6 +33,6 @@ func Db() *gorm.DB {
 	return db_conn.Gorm()
 }
 
-func Redis(id int) *xredis.XRedis {
+func Redis() *xredis.XRedis {
 	return redis_conn
 }

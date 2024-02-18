@@ -13,4 +13,5 @@ type ControllerApp struct {
 
 func (this *ControllerApp) InitRouter(router *gin.RouterGroup) {
 	this.service = &service.Entries().ServiceApp
+
 }

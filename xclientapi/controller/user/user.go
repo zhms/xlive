@@ -17,9 +17,9 @@ type ControllerUser struct {
 
 func (this *ControllerUser) InitRouter(router *gin.RouterGroup) {
 	this.service = &service.Entries().ServiceUser
-	router.POST("/user_register", this.user_register)
 	router.POST("/user_login", this.user_login)
-	router.POST("/user_test", this.user_test)
+	//router.POST("/user_register", this.user_register)
+	//router.POST("/user_test", this.user_test)
 }
 
 // @Router /user/user_register [post]
