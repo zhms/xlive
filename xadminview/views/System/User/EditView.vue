@@ -73,18 +73,15 @@ export default {
 			if (this.title == '编辑账号') {
 				delete this.itemdata.Password
 				this.getRoles()
-				this.getChannels()
 			}
 			if (this.title == '添加账号') {
 				if (!this.zong) {
 					this.getRoles()
-					this.getChannels()
 				}
 			}
 		},
 		sellerChange() {
 			this.getRoles()
-			this.getChannels()
 		},
 		getRoles() {
 			let data = {
@@ -92,17 +89,6 @@ export default {
 			}
 			this.$get('/v1/admin_role/get_admin_role', data, { noloading: true }).then((roledata) => {
 				this.dlgroles = roledata.data
-			})
-		},
-		getChannels() {
-			let data = {
-				seller_id: this.itemdata.seller_id,
-				page: 1,
-				page_size: 1000,
-			}
-			this.$get('/v1/channel/get_channel', data, { noloading: true }).then((result) => {
-				console.log(result.data)
-				this.dlgchannels = result.data
 			})
 		},
 	},

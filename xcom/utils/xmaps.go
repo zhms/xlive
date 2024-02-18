@@ -77,3 +77,11 @@ func (this *XMaps) ForEach(cb func(*XMap) bool) {
 		}
 	}
 }
+
+func (this *XMaps) ToString() string {
+	if this.RawData == nil {
+		return ""
+	}
+	bytes, _ := json.Marshal(this.RawData)
+	return string(bytes)
+}

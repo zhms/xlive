@@ -87,18 +87,21 @@ export default {
 			if (index == 0) next('编辑账号')
 			if (index == 1 || index == 2) {
 				let data = {
-					Account: item.Account,
-					CodeType: index,
+					Account: item.account,
 				}
-				this.$post('/modify_admin_user_google', data, { google: true }).then((result) => {
-					this.dialog1.show = true
-					this.dialog1.url = result.url
-					if (index == 1) {
+				if (index == 1) {
+					this.$post('/v1/admin_user/set_login_googlesecret', data, { google: true }).then((result) => {
+						this.dialog1.show = true
+						this.dialog1.url = result.url
 						this.dialog1.title = '登录验证码'
-					} else if (index == 2) {
+					})
+				} else if (index == 2) {
+					this.$post('/v1/admin_user/set_opt_googlesecret', data, { google: true }).then((result) => {
+						this.dialog1.show = true
+						this.dialog1.url = result.url
 						this.dialog1.title = '操作验证码'
-					}
-				})
+					})
+				}
 			}
 		},
 		AddItem(index, next) {

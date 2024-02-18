@@ -69,7 +69,7 @@ func (this *XRedis) Client() *redis.Client {
 
 func (this *XRedis) GetCacheMap(key string, cb func() (*utils.XMap, error)) (*utils.XMap, error) {
 	data, err := this.client.Get(context.Background(), key).Bytes()
-	if err != nil {
+	if err != nil && !errors.Is(err, redis.Nil) {
 		logs.Error("GetCacheMap error:", key, err.Error())
 		return nil, err
 	}

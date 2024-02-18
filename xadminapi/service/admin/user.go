@@ -256,7 +256,7 @@ type SetLoginGoogleReq struct {
 }
 
 type SetLoginGoogleRes struct {
-	Secret string `json:"google_secret"` // 登录验证码
+	Url string `json:"url"` // 二维码
 }
 
 // 设置登录验证码
@@ -290,15 +290,19 @@ func (this *ServiceAdmin) SetLoginGoogle(verifycode string, tokendata *server.To
 			return nil, enum.VerifyInCorrectCode, nil
 		}
 	}
-
-	secret, _ := utils.NewGoogleSecret(reqdata.Account, reqdata.Account)
+	secret, url := utils.NewGoogleSecret("直播登录", reqdata.Account)
 	db = server.Db().Model(&model.XAdminUser{})
 	db = db.Where(edb.SellerId+edb.EQ, reqdata.SellerId)
 	db = db.Where(edb.Account+edb.EQ, reqdata.Account)
 	db = db.Updates(map[string]interface{}{
-		edb.LoginGoogle: googlesecret,
+		edb.LoginGoogle: secret,
 	})
-	return &SetLoginGoogleRes{Secret: secret}, nil, db.Error
+	if db.Error != nil {
+		logs.Error("SetLoginGoogle error", db.Error)
+		return nil, nil, db.Error
+	}
+	googlesecret = &SetLoginGoogleRes{Url: url}
+	return googlesecret, nil, db.Error
 }
 
 type SetOptGoogleReq struct {
@@ -306,7 +310,7 @@ type SetOptGoogleReq struct {
 	Account  string `validate:"required" json:"account"`   // 账号
 }
 type SetOptGoogleRes struct {
-	Secret string `json:"google_secret"` // 操作验证码
+	Url string `json:"url"` // 二维码
 }
 
 // 设置操作验证码
@@ -340,12 +344,17 @@ func (this *ServiceAdmin) SetOptGoogle(verifycode string, tokendata *server.Toke
 			return nil, enum.VerifyInCorrectCode, nil
 		}
 	}
-	secret, _ := utils.NewGoogleSecret(reqdata.Account, reqdata.Account)
+	secret, url := utils.NewGoogleSecret("直播操作", reqdata.Account)
 	db = server.Db().Model(&model.XAdminUser{})
 	db = db.Where(edb.SellerId+edb.EQ, reqdata.SellerId)
 	db = db.Where(edb.Account+edb.EQ, reqdata.Account)
 	db = db.Updates(map[string]interface{}{
-		"opt_google": googlesecret,
+		"opt_google": secret,
 	})
-	return &SetOptGoogleRes{Secret: secret}, nil, db.Error
+	if db.Error != nil {
+		logs.Error("SetOptGoogle error", db.Error)
+		return nil, nil, db.Error
+	}
+	googlesecret = &SetOptGoogleRes{Url: url}
+	return googlesecret, nil, db.Error
 }

@@ -169,3 +169,8 @@ func MapSetIn(m *map[string]interface{}, key string, value interface{}, validval
 	}
 	(*m)[key] = value
 }
+
+func (this *XMap) ToString() string {
+	bytes, _ := json.Marshal(this.RawData)
+	return string(bytes)
+}

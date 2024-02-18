@@ -2,9 +2,12 @@ package xcom
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
+	"math/rand"
 	mrand "math/rand"
 	"net"
 	"net/http"
@@ -14,15 +17,19 @@ import (
 	"regexp"
 	"syscall"
 	"time"
+	"xcom/edb"
 	"xcom/global"
+	"xcom/utils"
 	"xcom/xdb"
 	"xcom/xredis"
 
 	"github.com/beego/beego/logs"
 	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
 	"github.com/spf13/viper"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"gorm.io/gorm"
 )
 
 var Db *xdb.XDb
@@ -225,4 +232,44 @@ func Run(callback func()) {
 	callback()
 	global.WorkGroup.Wait()
 	logs.Debug("****************server exit****************")
+}
+
+func GetSellerId(host string) int {
+	seller, err := Redis.Client().HGet(context.Background(), "host_seller", host).Result()
+	if err != nil && !errors.Is(err, redis.Nil) {
+		logs.Error("get seller id error: ", err)
+		return 0
+	}
+	seller_id := 0
+	if seller != "" {
+		seller_id = utils.ToInt(seller)
+		return seller_id
+	}
+	err = Db.Gorm().Table(edb.TableHostSeller).Where("host = ?", host).Select("seller_id").Row().Scan(&seller_id)
+	if err != nil {
+		return 0
+	}
+	if seller_id > 0 {
+		Redis.Client().HSet(context.Background(), "host_seller", host, seller_id)
+	}
+	return seller_id
+}
+
+func NewUserId() int {
+	UserId := 0
+	for i := 0; i < 100; i++ {
+		id := 10000000 + rand.Intn(99999999-10000000)
+		rdb, _ := Db.Gorm().DB()
+		//用原生sql,免得user_id重复,一大堆错误日志
+		sql := fmt.Sprintf("insert into %v (user_id) values (?)", edb.TableUserIdPool)
+		_, err := rdb.Exec(sql, id)
+		if err == nil {
+			UserId = id
+			break
+		}
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			return i
+		}
+	}
+	return UserId
 }

@@ -237,3 +237,7 @@ a {
 .item {
 	margin-left: 3px;
 }
+
+.el-popup-parent--hidden .fixed-header {
+	padding-right: 0 !important;
+}

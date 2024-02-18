@@ -12,6 +12,7 @@ import (
 	"xcom/global"
 	"xcom/utils"
 
+	"github.com/beego/beego/logs"
 	"github.com/gin-gonic/gin"
 )
 
@@ -157,6 +158,10 @@ func Authorization(mainmenu string, submenu string, opt string, optname string) 
 		optlog.ReqPath = c.Request.URL.Path
 		optlog.OptName = optname
 		optlog.ReqIp = c.ClientIP()
-		server.Db().Model(&optlog).Create(&optlog)
+		optlog.CreateTime = utils.Now()
+		err := server.Db().Model(&optlog).Create(&optlog).Error
+		if err != nil {
+			logs.Error("写入操作日志失败", err.Error())
+		}
 	}
 }
