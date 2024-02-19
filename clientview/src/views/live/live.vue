@@ -1,37 +1,25 @@
-<template lang="pug">
-.live
-  .player
-    Icon.play-icon(
-      name="play-circle-o",
-      @click="play",
-      size="100",
-      :style="{ left: (playerWidth - 100) / 2 + 'px', top: (playerHeight - 60) / 2 + 'px' }",
-      v-if="!isPlay"
-    )
-    .teacher-info.flex.flex-center
-      div {{ liveData?.data.name }} | Current Lecturer: {{ liveData?.data.account }}
-    canvas#canvas(
-      :style="{ width: playerWidth + 'px', height: playerHeight + 'px' }"
-    )
-    video.video-js(
-      :id="playerId",
-      x-webkit-airplay="allow",
-      webkit-playsinline,
-      playsinline,
-      preload="auto",
-      :width="playerWidth",
-      :height="playerHeight",
-      @click="play",
-      :poster="poster"
-    )
-
-  .chat-box
-    NoticeBar(:text="liveData?.data.title", left-icon="volume-o")
-    Tabs
-      Tab(title="Chat")
-        Chat
-      Tab(:title="'Online User(' + (onlineData?.data.online_count || '0') + ')'")
-        User
+<template>
+	<div class="live">
+		<div class="player">
+			<Icon name="play-circle-o" class="play-icon" @click="play" size="100" :style="{ left: (playerWidth - 100) / 2 + 'px', top: (playerHeight - 60) / 2 + 'px' }" v-if="!isPlay"></Icon>
+			<div class="teacher-info flex flex-center">
+				<div>{{ liveData?.data.name }} | Current Lecturer: {{ liveData?.data.account }}</div>
+			</div>
+			<canvas id="canvas" :style="{ width: playerWidth + 'px', height: playerHeight + 'px' }"></canvas>
+			<video :id="playerId" x-webkit-airplay="allow" webkit-playsinline playsinline preload="auto" :width="playerWidth" :height="playerHeight" @click="play" :poster="poster" class="video-js"></video>
+		</div>
+		<div class="chat-box">
+			<NoticeBar :text="liveData?.data.title" left-icon="volume-o"></NoticeBar>
+			<Tabs>
+				<Tab title="Chat">
+					<Chat></Chat>
+				</Tab>
+				<Tab :title="'Online User(' + (onlineData?.data.online_count || '0') + ')'">
+					<User></User>
+				</Tab>
+			</Tabs>
+		</div>
+	</div>
 </template>
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
@@ -41,8 +29,6 @@ import { Button, Icon, NoticeBar, Tab, Tabs, showToast } from 'vant'
 import Chat from './chat.vue'
 import User from './user.vue'
 import { useStorage, useIntervalFn } from '@vueuse/core'
-import qs from 'qs'
-const urlQuery = qs.parse(location.search.slice(1))
 
 const posterList = ref(['https://static.lotterybox.com/game/live/2023-12-31 20.21.45.jpg', 'https://static.lotterybox.com/game/live/2023-12-31 20.21.53.jpg', 'https://static.lotterybox.com/game/live/2023-12-31 20.21.57.jpg', 'https://static.lotterybox.com/game/live/2023-12-31 20.22.02.jpg'])
 const currentPosterIndex = ref(0)
@@ -85,6 +71,7 @@ function play() {
 		return
 	}
 	player.setDataSource(playData.value)
+	isPlay.value = true
 }
 
 function initPlayer(data) {

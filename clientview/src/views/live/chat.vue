@@ -1,79 +1,23 @@
-<template lang="pug">
-.chat
-  .controls(v-if="isAdmin")
-    img.hongbao(
-      src="https://static.lotterybox.com/game/live/hongbao/2.png",
-      @click="() => (hongbaoCreaterShow = true)"
-    )
-    img.choujiang(
-      src="https://static.lotterybox.com/game/live/hongbao/4.png",
-      @click="() => sendChoujiang()"
-    )
-
-  .message-list(ref="messageListDom")
-    template(v-for="item in messages")
-      .message-item(
-        v-if="!deleteMessageList.includes(item.idClient) && item.text"
-      )
-        .time {{ dayjs(item.time).format("MM-DD HH:mm:ss") }}
-        .message-content
-          span {{ item.fromNick }}:
-          img.hongbao(
-            v-if="item.text.indexOf('__hongbao__') == 0",
-            src="https://static.lotterybox.com/game/live/hongbao/2.png",
-            @click="() => getHongbao(item.text)"
-          )
-          img.choujiang(
-            v-else-if="item.text.indexOf('__choujiang__') == 0",
-            src="https://static.lotterybox.com/game/live/hongbao/4.png",
-            @click="() => (choujiangShow = true)"
-          )
-          span(v-else) {{ item.text }}
-        Icon.revoke(
-          name="revoke",
-          @click="confirmRevoke(item)",
-          v-if="isAdmin"
-        )
-
-  .input-box.flex(v-if="canSendMessage")
-    .input
-      input(
-        placeholder="send message",
-        v-model="inputMessage",
-        @keydown.enter="sendMessage"
-      )
-    Button(type="success", @click="sendMessage", :disabled="!chatRoomOk") Send
-
-Popup(v-model:show="hongbaoCreaterShow", :style="{ width: '300px' }")
-  .hongbao-create
-    .title Send Bonus
-    Field(
-      v-model="hongbaoForm.amount",
-      placeholder="Enter Amount",
-      label="Amount"
-    )
-    Field(v-model="hongbaoForm.num", placeholder="Enter Number", label="Count")
-    Field(
-      v-model="hongbaoForm.max",
-      placeholder="Enter Max Amount",
-      label="Max Amt"
-    )
-    .buttons
-      Button(type="primary", @click="sendHongbao") Send
-      Button(@click="() => (hongbaoCreaterShow = false)") Cancel
-
-Popup(v-model:show="hongbaoShow", closeable, :close-on-click-overlay="false")
-  .hongbao-box
-    .title Congratulations
-    .money ₹ {{ currentHongbao }}
-
-Popup(
-  v-model:show="choujiangShow",
-  closeable,
-  :close-on-click-overlay="false",
-  :style="{ background: 'transparent' }"
-)
-  Lottery
+<template>
+	<div class="chat">
+		<div class="message-list" ref="messageListDom">
+			<template v-for="item in messages" :key="item.time">
+				<div class="message-item" v-if="!deleteMessageList.includes(item.idClient) && item.text">
+					<div class="time">{{ dayjs(item.time).format('MM-DD HH:mm:ss') }}</div>
+					<div class="message-content">
+						<span>{{ item.fromNick }}:</span>
+						<span>{{ item.text }}</span>
+					</div>
+				</div>
+			</template>
+		</div>
+		<div class="input-box flex" v-if="canSendMessage">
+			<div class="input">
+				<input placeholder="send message" v-model="inputMessage" @keydown.enter="sendMessage" />
+			</div>
+			<Button type="success" @click="sendMessage" :disabled="!chatRoomOk"> Send </Button>
+		</div>
+	</div>
 </template>
 <script setup>
 import { ref, nextTick, computed } from 'vue'
@@ -83,73 +27,66 @@ import { Button, Icon, showConfirmDialog, Popup, Field, showToast } from 'vant'
 import { sleep, checkFetchError } from '@/script/base'
 import { useStorage, useIntervalFn } from '@vueuse/core'
 import dayjs from 'dayjs'
-import Lottery from './lottery.vue'
-import qs from 'qs'
-const urlQuery = qs.parse(location.search.slice(1))
-
-// hongbao
-const hongbaoCreaterShow = ref(false)
-const hongbaoForm = ref({
-	amount: 0,
-	num: 0,
-	max: 0,
-})
-const currentHongbao = ref(0)
-const hongbaoShow = ref(false)
-function sendHongbao() {
-	if (hongbaoForm.value.amount == 0) {
-		showToast('Amount is error!')
-		return
-	}
-	if (hongbaoForm.value.num == 0) {
-		showToast('Number is error!')
-		return
-	}
-	hongbaoCreaterShow.value = false
-	useMyFetch('/api/redPacket/create', {
-		immediate: true,
-		afterFetch: (res) => {
-			__sendMessage(`__hongbao__${res.data.data.period}`)
-		},
-	}).post(() => ({
-		amount: hongbaoForm.value.amount,
-		num: hongbaoForm.value.num,
-		max: hongbaoForm.value.max,
-	}))
-}
-function getHongbao(text) {
-	const period = text.replace('__hongbao__', '')
-	useMyFetch('/api/redPacket/rob', {
-		immediate: true,
-		afterFetch: (res) => {
-			if (checkFetchError(res)) {
-				return
-			}
-			currentHongbao.value = res.data.data.money
-			hongbaoShow.value = true
-		},
-	}).post(() => ({
-		period,
-	}))
-}
-
-// choujiang
-const choujiangShow = ref(false)
-function sendChoujiang() {
-	__sendMessage(`__choujiang__`)
-}
 
 const inputMessage = ref('')
 const chatRoomOk = ref(false)
-const messages = ref([])
+const messages = ref([
+	{
+		chatroomId: '5991320983',
+		idClient: '4cd5235279c18b144c798969a95f5809',
+		from: 'blackrocktest_visitor_1039',
+		fromNick: 'Visitor-65cf7e3808387',
+		fromAvatar: 'https://blackrock.bochats.com/public/upload/images/userAvatar.jpg',
+		fromCustom: '',
+		userUpdateTime: 1708097374339,
+		fromClientType: 'Web',
+		time: 1708097390601,
+		type: 'text',
+		text: '34',
+		resend: false,
+		status: 'success',
+		flow: 'in',
+	},
+	{
+		chatroomId: '5991320983',
+		idClient: '10a4c69c144d0d0afb6c725c6317a35a',
+		from: 'blackrocktest_visitor_1044',
+		fromNick: 'Visitor-65d03f81db050',
+		fromAvatar: 'https://blackrock.bochats.com/public/upload/images/userAvatar.jpg',
+		fromCustom: '',
+		userUpdateTime: 1708146563963,
+		fromClientType: 'Web',
+		time: 1708146575178,
+		type: 'text',
+		text: '白',
+		resend: false,
+		status: 'success',
+		flow: 'in',
+	},
+	{
+		chatroomId: '5991320983',
+		idClient: 'be1b3195165215f3def6b530450c152e',
+		from: 'blackrocktest_visitor_1048',
+		fromNick: 'Visitor-65d23a19c8247',
+		fromAvatar: 'https://blackrock.bochats.com/public/upload/images/userAvatar.jpg',
+		fromCustom: '',
+		userUpdateTime: 1708278217475,
+		fromClientType: 'Web',
+		time: 1708278236690,
+		type: 'text',
+		text: '1111',
+		resend: false,
+		status: 'success',
+		flow: 'in',
+	},
+])
 const messageListDom = ref(null)
 const blackWords = ref([])
 const deleteMessageList = ref([])
 const user = JSON.parse(useStorage('user').value)
-const isAdmin = computed(() => user?.is_admin === 1)
 const canSendMessage = ref(true)
-let chatRoom
 
+let chatRoom
 function initChatRoom(data) {
 	chatRoom = SDK.Chatroom.getInstance({
 		appKey: data.appKey,
@@ -167,7 +104,6 @@ function initChatRoom(data) {
 		},
 		onwillreconnect: () => {},
 		ondisconnect: () => {},
-		// 消息
 		onmsgs: (msgs) => {
 			msgs.forEach((msg) => {
 				if (msg.attach?.type === 'deleteChatroomMsg') {
