@@ -5,12 +5,12 @@ import { showToast } from 'vant'
 const useMyFetch = createFetch({
 	baseUrl: '',
 	options: {
-		immediate: false,
+		immediate: true,
 		beforeFetch({ options }) {
 			const token = getToken()
 			options.headers = {
 				...options.headers,
-				Token: token,
+				'x-token': token,
 				...appEnv,
 			}
 		},
@@ -18,16 +18,17 @@ const useMyFetch = createFetch({
 			if (typeof ctx.data === 'string') {
 				ctx.data = JSON.parse(ctx.data)
 			}
-
-			if (ctx.data.code === 401) {
-				login()
-			}
-
 			return ctx
 		},
 		onFetchError(ctx) {
-			// showToast(JSON.parse(ctx.data).message)
-			// console.error(ctx);
+			let data = JSON.parse(ctx.data)
+			if (data.code === 100201) {
+				showToast('account not exist')
+			} else if (data.code === 100202) {
+				showToast('password not correct')
+			} else if (data.code === 10) {
+				login()
+			}
 			return ctx
 		},
 	},

@@ -47,9 +47,10 @@ type UserLoginReq struct {
 }
 
 type UserLoginRes struct {
-	Account string `json:"account"`
-	UserId  int    `json:"user_id"`
-	Token   string `json:"token"`
+	Account   string `json:"account"`
+	UserId    int    `json:"user_id"`
+	Token     string `json:"token"`
+	IsVisitor int    `json:"is_visitor"`
 }
 
 func (this *ServiceUser) UserLogin(host string, ip string, reqdata *UserLoginReq) (response *UserLoginRes, merr map[string]interface{}, err error) {
@@ -89,6 +90,9 @@ func (this *ServiceUser) UserLogin(host string, ip string, reqdata *UserLoginReq
 		return nil, nil, err
 	}
 	if accountdata == nil {
+		if reqdata.IsVisitor == enum.StateNo {
+			return nil, enum.UserNotFound, nil
+		}
 		UserId := xcom.NewUserId()
 		err := server.Db().Table(edb.TableUser).Create(map[string]interface{}{
 			edb.SellerId:  reqdata.SellerId,
@@ -131,6 +135,7 @@ func (this *ServiceUser) UserLogin(host string, ip string, reqdata *UserLoginReq
 	response.Account = accountdata.String(edb.Account)
 	response.UserId = accountdata.Int(edb.UserId)
 	response.Token = accountdata.String(edb.Token)
+	response.IsVisitor = accountdata.Int(edb.IsVisitor)
 	return response, nil, err
 }
 

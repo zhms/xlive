@@ -9,7 +9,7 @@
       v-if="!isPlay"
     )
     .teacher-info.flex.flex-center
-      div {{ liveData?.data.name }} | Current Lecturer: {{ liveData?.data.anchor.name }}
+      div {{ liveData?.data.name }} | Current Lecturer: {{ liveData?.data.account }}
     canvas#canvas(
       :style="{ width: playerWidth + 'px', height: playerHeight + 'px' }"
     )
@@ -26,18 +26,18 @@
     )
 
   .chat-box
-    NoticeBar(:text="liveData?.data.meta_title", left-icon="volume-o")
+    NoticeBar(:text="liveData?.data.title", left-icon="volume-o")
     Tabs
       Tab(title="Chat")
         Chat
-      Tab(:title="'Online User(' + (onlineData?.data.on_line_num || '') + ')'")
+      Tab(:title="'Online User(' + (onlineData?.data.online_count || '0') + ')'")
         User
 </template>
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import useMyFetch from '@/fetch.js'
 import { rootScale, bodyWidth, bodyHeight, sleep } from '@/base'
-import { Button, Icon, NoticeBar, Tab, Tabs } from 'vant'
+import { Button, Icon, NoticeBar, Tab, Tabs, showToast } from 'vant'
 import Chat from './chat.vue'
 import User from './user.vue'
 import { useStorage, useIntervalFn } from '@vueuse/core'
@@ -68,22 +68,22 @@ const isPlay = ref(false)
 let player
 const liveUrl = ref('')
 const playData = computed(() => ({
-	//type: 'application/x-mpegURL',
 	type: 'video/flv',
 	src: liveUrl.value,
 	isLive: true,
 }))
 
-const { data: liveData } = useMyFetch('/api/yunxin/liveChannel', {
-	immediate: true,
+const { data: liveData } = useMyFetch('/api/v1/app/get_live_info', {
 	afterFetch: async (res) => {
-		liveUrl.value = 'https://pull.dbxapp.xyz/abc/abc.flv?auth_key=1708276065-0-0-ed7a1ac409877b492ec6052c07d6aa7a' //res.data.data.url;
-		await sleep(500)
+		liveUrl.value = res.data.data.live_url
 	},
-}).post(() => ({ roomid: urlQuery.roomid }))
+}).get()
 
 function play() {
-	console.log('-----------: ', playData.value)
+	if (liveUrl.value == '') {
+		showToast('The live is not ready yet, please try again later')
+		return
+	}
 	player.setDataSource(playData.value)
 }
 
@@ -118,17 +118,7 @@ watch(bodyWidth, () => {
 })
 
 // 在线人数
-const { data: onlineData } = useMyFetch('/api/yunxin/charRoom/info', {
-	immediate: true,
-}).post(() => ({ roomid: urlQuery.roomid }))
-
-// 登录检测
-useMyFetch('/api/user/islogin', {
-	immediate: true,
-	afterFetch: (res) => {
-		// console.log(res);
-	},
-})
+const { data: onlineData } = useMyFetch('/api/v1/app/get_online_info').get()
 
 onMounted(() => {
 	initPlayer()

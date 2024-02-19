@@ -43,4 +43,7 @@ const (
 	UserId    = "user_id"    // 用户Id
 	State     = "state"      // 状态
 	Token     = "token"      // token
+	LiveUrl   = "live_url"   // 直播地址
+	Title     = "title"      // 标题
+	Name      = "name"       // 名称
 )

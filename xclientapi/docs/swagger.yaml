@@ -1,75 +1,34 @@
 basePath: /api/v1
 definitions:
-  service_hash.HashBetReq:
+  service_app.AppGetLiveInfoReq:
     properties:
-      amount:
-        type: number
-      area:
-        type: string
-      game_id:
-        type: integer
-      room_level:
+      user_id:
         type: integer
     type: object
-  service_hash.HashBetRes:
+  service_app.AppGetLiveInfoRes:
     properties:
-      amount:
-        type: number
-      tx_id:
-        type: string
-    type: object
-  service_hash.LotteryBetReq:
-    type: object
-  service_hash.LotteryBetRes:
+      user_id:
+        type: integer
     type: object
   service_user.UserLoginReq:
     properties:
       account:
         type: string
+      is_visitor:
+        type: integer
       password:
         type: string
     required:
     - account
-    - password
     type: object
   service_user.UserLoginRes:
     properties:
-      amount:
-        additionalProperties:
-          type: number
-        type: object
-      token:
-        type: string
-      user_id:
-        type: integer
-    type: object
-  service_user.UserRegisterReq:
-    properties:
       account:
         type: string
-      agent:
+      is_visitor:
         type: integer
-      password:
-        type: string
-    type: object
-  service_user.UserRegisterRes:
-    properties:
-      amount:
-        additionalProperties:
-          type: number
-        type: object
       token:
         type: string
-      user_id:
-        type: integer
-    type: object
-  service_user.UserTestReq:
-    properties:
-      user_id:
-        type: integer
-    type: object
-  service_user.UserTestRes:
-    properties:
       user_id:
         type: integer
     type: object
@@ -78,40 +37,27 @@ info:
   title: xclientapi
   version: "1.0"
 paths:
-  /hash/hash_bet:
-    post:
+  /app/get_live_info:
+    get:
       parameters:
-      - description: body参数
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 筛选参数
         in: body
         name: body
-        required: true
         schema:
-          $ref: '#/definitions/service_hash.HashBetReq'
+          $ref: '#/definitions/service_app.AppGetLiveInfoReq'
       responses:
         "200":
           description: 成功
           schema:
-            $ref: '#/definitions/service_hash.HashBetRes'
-      summary: 哈希下注
+            $ref: '#/definitions/service_app.AppGetLiveInfoRes'
+      summary: 获取直播信息
       tags:
-      - 哈希
-  /hash/lottery_bet:
-    post:
-      parameters:
-      - description: body参数
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/service_hash.LotteryBetReq'
-      responses:
-        "200":
-          description: 成功
-          schema:
-            $ref: '#/definitions/service_hash.LotteryBetRes'
-      summary: 彩票下注
-      tags:
-      - 哈希
+      - 应用
   /user/user_login:
     post:
       parameters:
@@ -127,40 +73,6 @@ paths:
           schema:
             $ref: '#/definitions/service_user.UserLoginRes'
       summary: 玩家登录
-      tags:
-      - 玩家
-  /user/user_register:
-    post:
-      parameters:
-      - description: body参数
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/service_user.UserRegisterReq'
-      responses:
-        "200":
-          description: 成功
-          schema:
-            $ref: '#/definitions/service_user.UserRegisterRes'
-      summary: 玩家注册
-      tags:
-      - 玩家
-  /user/user_test:
-    post:
-      parameters:
-      - description: body参数
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/service_user.UserTestReq'
-      responses:
-        "200":
-          description: 成功
-          schema:
-            $ref: '#/definitions/service_user.UserTestRes'
-      summary: 玩家测试
       tags:
       - 玩家
 securityDefinitions:

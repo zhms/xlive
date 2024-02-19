@@ -22,11 +22,11 @@ func (this *ControllerUser) InitRouter(router *gin.RouterGroup) {
 	//router.POST("/user_test", this.user_test)
 }
 
-// @Router /user/user_register [post]
-// @Tags 玩家
-// @Summary 玩家注册
-// @Param body body service_user.UserRegisterReq true "body参数"
-// @Success 200 {object} service_user.UserRegisterRes "成功"
+// // @Router /user/user_register [post]
+// // @Tags 玩家
+// // @Summary 玩家注册
+// // @Param body body service_user.UserRegisterReq true "body参数"
+// // @Success 200 {object} service_user.UserRegisterRes "成功"
 func (this *ControllerUser) user_register(ctx *gin.Context) {
 	var reqdata service_user.UserRegisterReq
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
@@ -84,11 +84,11 @@ func (this *ControllerUser) user_login(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, enum.MakeSucess(reponse))
 }
 
-// @Router /user/user_test [post]
-// @Tags 玩家
-// @Summary 玩家测试
-// @Param body body service_user.UserTestReq true "body参数"
-// @Success 200 {object} service_user.UserTestRes "成功"
+// // @Router /user/user_test [post]
+// // @Tags 玩家
+// // @Summary 玩家测试
+// // @Param body body service_user.UserTestReq true "body参数"
+// // @Success 200 {object} service_user.UserTestRes "成功"
 func (this *ControllerUser) user_test(ctx *gin.Context) {
 	var reqdata service_user.UserTestReq
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {

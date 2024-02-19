@@ -32,12 +32,8 @@ import { ref, computed } from 'vue'
 import { Button } from 'vant'
 import { useStorage } from '@vueuse/core'
 import useMyFetch from '@/fetch.js'
-import { checkFetchError, vScrollInto } from '@/base'
 import { useRouter } from 'vue-router'
-
-import qs from 'qs'
 import { bodyWidth } from '@/base.js'
-const urlQuery = qs.parse(location.search.slice(1))
 
 const name = ref('')
 const pwd = ref('')
@@ -46,22 +42,19 @@ const router = useRouter()
 const mediaWidth = ref(640)
 const isMobile = computed(() => mediaWidth.value > bodyWidth.value)
 
-console.log(bodyWidth.value, isMobile.value)
-
 const btnDisabled = computed(() => !name.value.trim() || !pwd.value || loginIsFetching.value)
 
-const { execute: loginExecute, isFetching: loginIsFetching } = useMyFetch('/api/user/login', {
+const { execute: loginExecute, isFetching: loginIsFetching } = useMyFetch('/api/v1/user/user_login', {
 	afterFetch: (res) => {
 		loginCallback(res)
 	},
 }).post(() => ({
-	name: name.value,
-	pwd: pwd.value,
-	pid: urlQuery.pid,
+	account: name.value,
+	password: pwd.value,
+	is_visitor: 2,
 }))
 
 function loginCallback(res) {
-	if (checkFetchError(res)) return
 	useStorage('token').value = res.data.data.token
 	useStorage('user').value = JSON.stringify(res.data.data)
 	router.push(isMobile.value ? '/live' : 'plive')
@@ -71,16 +64,43 @@ function login() {
 	loginExecute()
 }
 
+function generateRandomString(length) {
+	const characters = 'abcdefghijklmnopqrstuvwxyz0123456789'
+	let result = ''
+
+	for (let i = 0; i < length; i++) {
+		const randomIndex = Math.floor(Math.random() * characters.length)
+		result += characters.charAt(randomIndex)
+	}
+
+	return result
+}
+
 function visitorLogin() {
-	useMyFetch('/api/user/visitorLogin', {
+	let account = 'Visitor_u' + generateRandomString(15)
+	try {
+		let user = useStorage('user').value
+		if (user) {
+			user = JSON.parse(user)
+			if (user.is_visitor == 1) {
+				account = user.account
+			}
+		}
+	} catch (e) {}
+	useMyFetch('/api/v1/user/user_login', {
 		immediate: true,
 		afterFetch: (res) => {
 			loginCallback(res)
 		},
 	}).post(() => ({
-		pid: urlQuery.pid,
+		account: account,
+		is_visitor: 1,
 	}))
 }
+
+// if (useStorage('token').value && useStorage('token').value != 'null' && useStorage('token').value != 'undefined') {
+// 	router.push(isMobile.value ? '/live' : 'plive')
+// }
 </script>
 
 <style lang="scss" scoped>

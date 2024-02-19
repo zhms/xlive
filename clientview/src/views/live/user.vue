@@ -7,9 +7,9 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import useMyFetch from '@/fetch.js'
 
-const { data: users } = useMyFetch('/api/yunxin/charRoom/user_online', {
-	immediate: true,
-}).post()
+// const { data: users } = useMyFetch('/api/yunxin/charRoom/user_online', {
+// 	immediate: true,
+// }).post()
 </script>
 <style lang="scss" scoped>
 .users {

@@ -4,7 +4,7 @@
     .logo
       img(src="https://static.lotterybox.com/game/live/logo111.jpg")
     .user-head.flex.flex-center
-      div Online({{ onlineData?.data.on_line_num }})
+      div Online({{ onlineData?.data.online_count || 0 }})
     User
 
   .player
@@ -16,7 +16,7 @@
       v-if="!isPlay"
     )
     .teacher-info.flex
-      div {{ liveData?.data.name }} | Current Lecturer: {{ liveData?.data.anchor.name }}
+      div {{ liveData?.data.name }} | Current Lecturer: {{ liveData?.data.account }}
       .logout(v-if="isVisitor", @click="$router.push('/')") Login
       .logout(v-else, @click="logout") Logout
     canvas#canvas(
@@ -40,7 +40,7 @@
       )
 
   .chat-box
-    NoticeBar(:text="liveData?.data.meta_title", left-icon="volume-o")
+    NoticeBar(:text="liveData?.data.title", left-icon="volume-o")
     Chat
 </template>
 <script setup>
@@ -79,24 +79,23 @@ const isPlay = ref(false)
 let player
 const liveUrl = ref('')
 const playData = computed(() => ({
-	//type: 'application/x-mpegURL',
 	type: 'video/x-flv',
-	src: 'https://pull.dbxapp.xyz/abc/abc.flv?auth_key=1708276065-0-0-ed7a1ac409877b492ec6052c07d6aa7a', //liveUrl.value,
+	src: liveUrl.value,
 	isLive: true,
 }))
 
-const { data: liveData } = useMyFetch('/api/yunxin/liveChannel', {
-	immediate: true,
+const { data: liveData } = useMyFetch('/api/v1/app/get_live_info', {
 	afterFetch: async (res) => {
-		liveUrl.value = res.data.data.url
-		await sleep(500)
-		// play();
+		liveUrl.value = res.data.data.live_url
 	},
-}).post(() => ({ roomid: urlQuery.roomid }))
+}).get()
 
 function play() {
+	if (liveUrl.value == '') {
+		showToast('The live is not ready yet, please try again later')
+		return
+	}
 	player.setDataSource(playData.value)
-	console.log('gotoplay')
 }
 
 function initPlayer(data) {
@@ -114,13 +113,10 @@ function initPlayer(data) {
 			canvasId: 'canvas',
 			enableStashBuffer: true,
 		},
-		() => {
-			console.log('inited!')
-		}
+		() => {}
 	)
 
 	player.on('play', () => {
-		console.log('play')
 		isPlay.value = true
 	})
 }
@@ -130,9 +126,7 @@ watch(bodyWidth, () => {
 })
 
 // 在线人数
-const { data: onlineData } = useMyFetch('/api/yunxin/charRoom/info', {
-	immediate: true,
-}).post(() => ({ roomid: urlQuery.roomid }))
+const { data: onlineData } = useMyFetch('/api/v1/app/get_online_info').get()
 
 onMounted(() => {
 	initPlayer()
@@ -143,7 +137,7 @@ onMounted(() => {
 .player {
 	flex-shrink: 0;
 	position: relative;
-	height: 90vh;
+	height: 100vh;
 	overflow: hidden;
 	border-right: 6px solid #3a4f7f;
 	border-left: 6px solid #3a4f7f;
@@ -192,7 +186,7 @@ onMounted(() => {
 		text-align: center;
 	}
 	:deep(.users) {
-		height: calc(100vh - 40px - 100px);
+		height: calc(100vh - 132px);
 		overflow: auto;
 	}
 }
@@ -216,7 +210,7 @@ onMounted(() => {
 .course {
 	img {
 		width: 100%;
-		// height: 400px;
+		height: 400px;
 	}
 }
 

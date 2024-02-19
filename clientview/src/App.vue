@@ -24,12 +24,12 @@ watchEffect(() => {
 useCssVar('--van-overlay-z-index').value = 2000
 
 // 状态上报
-const { execute: onlineExecute } = useMyFetch('/api/v1/user/user_login', {
-	immediate: true,
-}).post({
-	account: 'fuck',
-	password: 'fuck',
-	is_visitor: 1,
-})
+// const { execute: onlineExecute } = useMyFetch('/api/v1/user/user_login', {
+// 	immediate: true,
+// }).post({
+// 	account: 'test',
+// 	password: 'test',
+// 	is_visitor: 1,
+// })
 // setInterval(onlineExecute, 60 * 1000)
 </script>

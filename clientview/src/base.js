@@ -17,7 +17,6 @@ useResizeObserver(document.body, () => {
 })
 const rootScale = computed(() => bodyWidth.value / 360)
 
-// url 参数
 const urlQuery = qs.parse(location.search.slice(1))
 const isApp = urlQuery['app'] == 1
 
@@ -38,14 +37,17 @@ function sleep(time = 1000) {
 		setTimeout(resolve, time)
 	})
 }
+
 // [0 - a)随机一个整数
 function random(a = 10) {
 	return parseInt(Math.random() * a)
 }
+
 // 产生一个1/a的概率
 function rand(a = 10) {
 	return random(a) === 0
 }
+
 function checkFetchError(res) {
 	if (!res.data.code == 0) {
 		showToast(res.data.message)
@@ -53,6 +55,7 @@ function checkFetchError(res) {
 	}
 	return false
 }
+
 const vScrollInto = {
 	mounted: (el) => {
 		el.addEventListener('focus', () => {
@@ -60,6 +63,7 @@ const vScrollInto = {
 		})
 	},
 }
+
 const vClipboard = {
 	mounted: (el) => {
 		const clipboard = new ClipboardJS(el)
@@ -68,21 +72,26 @@ const vClipboard = {
 		})
 	},
 }
+
 function useBodyBgColor(color) {
 	document.body.style.backgroundColor = color
 	onBeforeUnmount(() => {
 		document.body.style.backgroundColor = ''
 	})
 }
+
 function deepClone(item) {
 	return JSON.parse(JSON.stringify(item))
 }
+
 function formatMoney(money) {
 	return (money || '0').toString().replace(/\B(?=(\d{3})+\b)/g, ',')
 }
+
 function padZero(number) {
 	return ('0' + number).slice(-2)
 }
+
 function upFirstLetter(word) {
 	return word.replace(/^(\w)/, (s) => s.toUpperCase())
 }
@@ -92,6 +101,7 @@ let localId = +new Date()
 function getLocalId() {
 	return localId++
 }
+
 function Defer() {
 	let resolve, reject
 	const promise = new Promise((_resolve, _reject) => {
@@ -166,12 +176,14 @@ function getDownload() {
 	})
 	return data
 }
+
 function downloadApp(appUrl) {
 	const form = document.createElement('form')
 	form.action = appUrl
 	document.body.appendChild(form)
 	form.submit()
 }
+
 function getBonusClass(bonus) {
 	if (parseFloat(bonus) > 0) {
 		return 'green'
@@ -234,6 +246,7 @@ function login() {
 function miner_getStageTypeByGameType(gameType) {
 	return Math.pow(2, ~~gameType / 10)
 }
+
 function miner_handleOrder(item) {
 	if (item.mine_position) {
 		item.pass_list.push({
@@ -247,6 +260,7 @@ function miner_handleOrder(item) {
 	item.blocks = miner_createBlocks(stageType, item.pass_list)
 	return item
 }
+
 function miner_createBlocks(type, passList = []) {
 	const passListObject = {}
 	passList.forEach((item) => {
@@ -278,7 +292,6 @@ function miner_createBlocks(type, passList = []) {
 	return result
 }
 
-// fly
 function fly_getOddsColor(odds) {
 	if (odds >= 100.01) return '#645cff'
 	if (odds >= 5.01) return '#0082FE'
@@ -286,7 +299,7 @@ function fly_getOddsColor(odds) {
 	if (odds >= 1.21) return '#00C67C'
 	return '#F85169'
 }
-// parity
+
 function parity_getColor(name) {
 	return { green: '#00A280', violet: '#5841FF', red: '#FF6821' }[name]
 }
@@ -322,7 +335,6 @@ export {
 	getBonusClass,
 	upFirstLetter,
 	preloadImage,
-	// share,
 	share2,
 	login,
 	fly_getOddsColor,

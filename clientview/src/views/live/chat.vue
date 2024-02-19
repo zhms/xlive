@@ -247,33 +247,33 @@ function revoke(item) {
 	}))
 }
 
-useMyFetch('/api/yunxin/charRoom/roomid', {
-	immediate: true,
-	afterFetch: (res) => {
-		initChatRoom(res.data.data)
-	},
-}).post(() => ({ roomid: urlQuery.roomid }))
+// useMyFetch('/api/yunxin/charRoom/roomid', {
+// 	immediate: true,
+// 	afterFetch: (res) => {
+// 		initChatRoom(res.data.data)
+// 	},
+// }).post(() => ({ roomid: urlQuery.roomid }))
 
-useMyFetch('/api/yunxin/banword', {
-	immediate: true,
-	afterFetch: (res) => {
-		blackWords.value = res.data.data.map((item) => item.replacefrom)
-	},
-}).post()
+// useMyFetch('/api/yunxin/banword', {
+// 	immediate: true,
+// 	afterFetch: (res) => {
+// 		blackWords.value = res.data.data.map((item) => item.replacefrom)
+// 	},
+// }).post()
 
 // 登录检测
-const { execute: isLoginExecute } = useMyFetch('/api/user/islogin', {
-	immediate: true,
-	afterFetch: (res) => {
-		if (res.data.data.status != 0) {
-			canSendMessage.value = false
-		}
-	},
-})
+// const { execute: isLoginExecute } = useMyFetch('/api/user/islogin', {
+// 	immediate: true,
+// 	afterFetch: (res) => {
+// 		if (res.data.data.status != 0) {
+// 			canSendMessage.value = false
+// 		}
+// 	},
+// })
 
-useIntervalFn(() => {
-	isLoginExecute()
-}, 5000)
+// useIntervalFn(() => {
+// 	isLoginExecute()
+// }, 5000)
 </script>
 <style lang="scss" scoped>
 .chat {
