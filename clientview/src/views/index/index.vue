@@ -31,9 +31,9 @@
 import { ref, computed } from 'vue'
 import { Button } from 'vant'
 import { useStorage } from '@vueuse/core'
-import useMyFetch from '@/fetch.js'
+import useMyFetch from '@/script/fetch.js'
 import { useRouter } from 'vue-router'
-import { bodyWidth } from '@/base.js'
+import { bodyWidth } from '@/script/base.js'
 
 const name = ref('')
 const pwd = ref('')
@@ -129,7 +129,7 @@ function visitorLogin() {
 }
 
 .form-box {
-	background: url('@/assets/images/bg1.png');
+	background: url('@/images/bg1.png');
 	background-size: cover;
 	padding: 100px 0;
 	height: 490px;

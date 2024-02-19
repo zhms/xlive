@@ -77,10 +77,10 @@ Popup(
 </template>
 <script setup>
 import { ref, nextTick, computed } from 'vue'
-import useMyFetch from '@/fetch.js'
+import useMyFetch from '@/script/fetch.js'
 import SDK from '@yxim/nim-web-sdk'
 import { Button, Icon, showConfirmDialog, Popup, Field, showToast } from 'vant'
-import { sleep, checkFetchError } from '@/base'
+import { sleep, checkFetchError } from '@/script/base'
 import { useStorage, useIntervalFn } from '@vueuse/core'
 import dayjs from 'dayjs'
 import Lottery from './lottery.vue'

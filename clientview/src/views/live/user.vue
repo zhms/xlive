@@ -5,7 +5,7 @@
 </template>
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import useMyFetch from '@/fetch.js'
+import useMyFetch from '@/script/fetch.js'
 
 // const { data: users } = useMyFetch('/api/yunxin/charRoom/user_online', {
 // 	immediate: true,

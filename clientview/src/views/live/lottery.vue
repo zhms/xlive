@@ -19,8 +19,8 @@
 import { computed, ref } from 'vue'
 import qs from 'qs'
 import { useIntervalFn } from '@vueuse/core'
-import useMyFetch from '@/fetch'
-import { checkFetchError, sleep, getWebSocket } from '@/base.js'
+import useMyFetch from '@/script/fetch'
+import { checkFetchError, sleep, getWebSocket } from '@/script/base.js'
 import { Popup } from 'vant'
 
 const period = ref('')

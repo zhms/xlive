@@ -10,10 +10,10 @@
 
 <script setup>
 import { UseScreenSafeArea } from '@vueuse/components'
-import { rootScale, bodyWidth } from './base'
+import { rootScale, bodyWidth } from './script/base'
 import { useCssVar } from '@vueuse/core'
 import { watchEffect } from 'vue'
-import useMyFetch from '@/fetch.js'
+import useMyFetch from '@/script/fetch.js'
 
 watchEffect(() => {
 	useCssVar('--rootScale').value = rootScale.value
@@ -22,14 +22,4 @@ watchEffect(() => {
 
 // topbar z-index 是1w，所以遮罩从2w开始
 useCssVar('--van-overlay-z-index').value = 2000
-
-// 状态上报
-// const { execute: onlineExecute } = useMyFetch('/api/v1/user/user_login', {
-// 	immediate: true,
-// }).post({
-// 	account: 'test',
-// 	password: 'test',
-// 	is_visitor: 1,
-// })
-// setInterval(onlineExecute, 60 * 1000)
 </script>

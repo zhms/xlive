@@ -1,9 +1,9 @@
 import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
-import './assets/main.scss'
+import App from '../App.vue'
+import router from '../router'
+import '../css/main.scss'
 import 'vant/lib/index.css'
-import { urlQuery, formatMoney } from './base'
+import { formatMoney } from './base'
 
 import { setToastDefaultOptions } from 'vant'
 // setToastDefaultOptions({ position: "top", duration: 200000 });

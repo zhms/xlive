@@ -45,8 +45,8 @@
 </template>
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import useMyFetch from '@/fetch.js'
-import { rootScale, bodyWidth, bodyHeight, sleep, logout } from '@/base'
+import useMyFetch from '@/script/fetch.js'
+import { rootScale, bodyWidth, bodyHeight, sleep, logout } from '@/script/base'
 import { Button, Icon, NoticeBar } from 'vant'
 import { useStorage, useIntervalFn } from '@vueuse/core'
 import Chat from './chat.vue'
