@@ -3,9 +3,8 @@
 		<div class="message-list" ref="messageListDom">
 			<template v-for="item in messages" :key="item.time">
 				<div class="message-item" v-if="!deleteMessageList.includes(item.idClient) && item.text">
-					<div class="time">{{ dayjs(item.time).format('MM-DD HH:mm:ss') }}</div>
+					<div class="time">{{ dayjs(item.time).format('MM-DD HH:mm:ss') }} {{ item.fromNick }}:</div>
 					<div class="message-content">
-						<span>{{ item.fromNick }}:</span>
 						<span>{{ item.text }}</span>
 					</div>
 				</div>
@@ -67,7 +66,7 @@ const messages = ref([
 		chatroomId: '5991320983',
 		idClient: 'be1b3195165215f3def6b530450c152e',
 		from: 'blackrocktest_visitor_1048',
-		fromNick: 'Visitor-65d23a19c8247',
+		fromNick: 'A3352',
 		fromAvatar: 'https://blackrock.bochats.com/public/upload/images/userAvatar.jpg',
 		fromCustom: '',
 		userUpdateTime: 1708278217475,
@@ -126,6 +125,9 @@ function getHistory() {
 
 function mergerMessage(msgs) {
 	messages.value = [...messages.value, ...msgs]
+	if (messages.value.length > 200) {
+		messages.value = messages.value.slice(messages.value.length - 200)
+	}
 	scroll()
 }
 
@@ -145,77 +147,15 @@ function __sendMessage(text) {
 
 function sendMessage() {
 	if (!inputMessage.value.trim()) return
-	const text = getWhiteWords()
+	const text = inputMessage.value
 	__sendMessage(text)
 	inputMessage.value = ''
 }
-
-function getWhiteWords() {
-	let words = inputMessage.value
-	blackWords.value.forEach((item) => {
-		words = words.replaceAll(item, '******************************'.slice(0, item.length))
-	})
-	return words
-}
-
-function confirmRevoke(item) {
-	showConfirmDialog({
-		confirmButtonText: 'Yes',
-		cancelButtonText: 'no',
-		message: 'Confirm revoke?',
-	})
-		.then(() => {
-			revoke(item)
-		})
-		.catch(() => {})
-}
-
-function revoke(item) {
-	deleteMessageList.value.push(item.idClient)
-	useMyFetch('/api/yunxin/charRoom/recall_msg', {
-		immediate: true,
-	}).post(() => ({
-		roomid: item.chatroomId,
-		msgTimetag: item.time,
-		msgId: item.idClient,
-		fromAcc: item.from,
-		operatorAcc: item.from,
-	}))
-}
-
-// useMyFetch('/api/yunxin/charRoom/roomid', {
-// 	immediate: true,
-// 	afterFetch: (res) => {
-// 		initChatRoom(res.data.data)
-// 	},
-// }).post(() => ({ roomid: urlQuery.roomid }))
-
-// useMyFetch('/api/yunxin/banword', {
-// 	immediate: true,
-// 	afterFetch: (res) => {
-// 		blackWords.value = res.data.data.map((item) => item.replacefrom)
-// 	},
-// }).post()
-
-// 登录检测
-// const { execute: isLoginExecute } = useMyFetch('/api/user/islogin', {
-// 	immediate: true,
-// 	afterFetch: (res) => {
-// 		if (res.data.data.status != 0) {
-// 			canSendMessage.value = false
-// 		}
-// 	},
-// })
-
-// useIntervalFn(() => {
-// 	isLoginExecute()
-// }, 5000)
 </script>
 <style lang="scss" scoped>
 .chat {
 	background: #2e4068;
 	position: relative;
-
 	.message-list {
 		padding: 10px 0;
 		.message-item {
@@ -262,43 +202,8 @@ function revoke(item) {
 		}
 	}
 }
-.hongbao,
-.choujiang {
-	width: 100px;
-}
 
-.hongbao-create {
-	.title {
-		padding: 20px 0;
-		text-align: center;
-		font-weight: bold;
-	}
-
-	.buttons {
-		padding: 10px 0;
-		text-align: center;
-		.van-button + .van-button {
-			margin-left: 10px;
-		}
-	}
-}
-
-.hongbao-box {
-	width: 290px;
-	height: 354px;
-	background: url('https://static.lotterybox.com/game/live/hongbao/1.png');
-	text-align: center;
-	padding-top: 80px;
-	.title {
-		font-weight: bold;
-		color: #a56e2d;
-		line-height: 19px;
-	}
-	.money {
-		font-size: 40px;
-		font-weight: bold;
-		color: #956122;
-		margin-top: 20px;
-	}
+.message-item {
+	margin-left: 5px;
 }
 </style>

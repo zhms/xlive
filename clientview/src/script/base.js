@@ -16,21 +16,11 @@ useResizeObserver(document.body, () => {
 	bodyHeight.value = document.body.clientHeight
 })
 const rootScale = computed(() => bodyWidth.value / 360)
-
 const urlQuery = qs.parse(location.search.slice(1))
-const isApp = urlQuery['app'] == 1
-
-// 渠道、平台等环境
-function getAppEnv() {
-	// const channel = location.host;
-	const channel = 'game.lotterybox.com'
-	const platform = `app_${urlQuery['app'] || 0}`
-	return {
-		channel,
-		platform,
-	}
+let AppId = urlQuery['app']
+if (!AppId) {
+	AppId = '1'
 }
-const appEnv = getAppEnv()
 
 function sleep(time = 1000) {
 	return new Promise((resolve) => {
@@ -127,7 +117,28 @@ function preloadImage(url) {
 
 // ws地址
 const wsProtocol = location.protocol === 'http:' ? 'ws' : 'wss'
-const wsUrl = `${wsProtocol}://${location.host}/ws`
+const wsUrl = `${wsProtocol}://${location.host}/api/v1/app/ws/` + `${getToken()}_${AppId}`
+let ws
+function wsconn() {
+	if (ws) return
+	ws = useWebSocket(wsUrl, {
+		onMessage: (ws, e) => {
+			//console.log('ws', e.data)
+		},
+		heartbeat: {
+			message: 'ping',
+			interval: 5000,
+			pongTimeout: 30000,
+		},
+		onDisconnected: () => {},
+		onError: (res) => {
+			console.log('error', res)
+		},
+		onConnected: () => {
+			console.log('ws connected')
+		},
+	})
+}
 
 // 封装websocket
 function getWebSocket(params, callback = () => {}) {
@@ -169,32 +180,19 @@ function getWebSocket(params, callback = () => {}) {
 	return result
 }
 
-// 获取分享下载的App地址
-function getDownload() {
-	const { data } = useMyFetch('/game/account/down', { immediate: true }).post({
-		channel_id: urlQuery.channel_id,
-	})
-	return data
-}
-
-function downloadApp(appUrl) {
-	const form = document.createElement('form')
-	form.action = appUrl
-	document.body.appendChild(form)
-	form.submit()
-}
-
-function getBonusClass(bonus) {
-	if (parseFloat(bonus) > 0) {
-		return 'green'
-	}
-	return 'red'
-}
-
 // 获取用户信息
 function getUser() {
 	const { data } = useMyFetch('/game/user/info', { immediate: true })
 	return data
+}
+
+function getLiveData() {
+	let d = useStorage('user').value
+	if (d) {
+		return {
+			data: JSON.parse(JSON.parse(d).live_data),
+		}
+	}
 }
 
 function hasToken() {
@@ -207,30 +205,11 @@ function getToken() {
 }
 
 function logout() {
+	ws.close()
+	ws = null
 	useStorage('token').value = ''
+	useStorage('user').value = ''
 	router.push('/index')
-}
-
-// 分享指定海报图片
-function share2(img, orderSn, user, bonus, callback) {
-	useMyFetch('/game/user/share', {
-		immediate: true,
-		afterFetch: (res) => {
-			callback()
-			const bonus = res.data.bizData.bonus
-			callback(bonus)
-		},
-	}).post({
-		order_sn: orderSn,
-	})
-
-	const shareUrl = location.origin + '?user_code=' + user.user_code + '&channel_id=' + user.channel_id
-	const shareObj = {
-		title: `This game is very interesting, and I won ${bonus}RS in the game. I'm offering you 30RS for free, so why don't you join and play together? Click the link to start directly: ${shareUrl}`,
-		img,
-	}
-	console.log(shareObj)
-	dsbridge.call('Native.toShare', JSON.stringify(shareObj))
 }
 
 // 去登录
@@ -309,8 +288,7 @@ export {
 	bodyHeight,
 	rootScale,
 	eventBus,
-	isApp,
-	appEnv,
+	AppId,
 	urlQuery,
 	vScrollInto,
 	vClipboard,
@@ -323,21 +301,20 @@ export {
 	miner_getStageTypeByGameType,
 	getLocalId,
 	getWebSocket,
-	getDownload,
 	getUser,
-	downloadApp,
 	getToken,
 	hasToken,
 	useBodyBgColor,
 	deepClone,
 	formatMoney,
 	padZero,
-	getBonusClass,
 	upFirstLetter,
 	preloadImage,
-	share2,
 	login,
 	fly_getOddsColor,
 	parity_getColor,
 	logout,
+	wsconn,
+	ws,
+	getLiveData,
 }

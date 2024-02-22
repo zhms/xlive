@@ -10,7 +10,6 @@ import (
 	"xnotify/server"
 
 	"github.com/beego/beego/logs"
-	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
 
@@ -28,81 +27,9 @@ type MsgData struct {
 	Topic   string `json:"topic"`
 }
 
-func socket_handler(ctx *gin.Context) {
-	conn, err := server.WsUpgrader.Upgrade(ctx.Writer, ctx.Request, nil)
-	if err != nil {
-		logs.Error("WebSocket upgrade error:", err)
-		return
-	}
-	defer conn.Close()
-	id := ctx.Param("id")
-	if id == "all" {
-		conn.Close()
-		return
-	}
-	u, o := users.Load(id)
-	if o {
-		u.(*websocket.Conn).Close()
-		user_count--
-	}
-	users.Store(id, conn)
-	user_count++
-	server.Redis().Client().HSet(context.Background(), "online:"+global.Project, global.Id, user_count)
-	for {
-		_, msg, err := conn.ReadMessage()
-		if err != nil {
-			break
-		}
-		msgdata := MsgData{}
-		err = json.Unmarshal(msg, &msgdata)
-		if err != nil {
-			break
-		}
-		if msgdata.MsgId == "subscribe" && msgdata.Topic != "" {
-			if _, ok := subscribes.Load(msgdata.Topic); !ok {
-				subscribes.Store(msgdata.Topic, &sync.Map{})
-			}
-			connections, _ := subscribes.Load(msgdata.Topic)
-			connections.(*sync.Map).Store(conn, 1)
-
-			if _, ok := connection_subscribes.Load(conn); !ok {
-				connection_subscribes.Store(conn, &sync.Map{})
-			}
-			topics, _ := connection_subscribes.Load(conn)
-			topics.(*sync.Map).Store(msgdata.Topic, 1)
-			if msgdata.Topic == "block_info" {
-				conn.WriteMessage(websocket.TextMessage, last_block_data)
-			}
-			continue
-		} else if msgdata.MsgId == "unsubscribe" && msgdata.Topic != "" {
-			if connections, ok := subscribes.Load(msgdata.Topic); ok {
-				connections.(*sync.Map).Delete(conn)
-			}
-			if topics, ok := connection_subscribes.Load(conn); ok {
-				topics.(*sync.Map).Delete(msgdata.Topic)
-			}
-			continue
-		}
-		break
-	}
-	if topics, ok := connection_subscribes.Load(conn); ok {
-		topics.(*sync.Map).Range(func(key, value interface{}) bool {
-			connections, okex := subscribes.Load(key)
-			if !okex {
-				connections.(*sync.Map).Delete(conn)
-			}
-			return true
-		})
-	}
-	conn.Close()
-	users.Delete(id)
-	user_count--
-	server.Redis().Client().HSet(context.Background(), "online:"+global.Project, global.Id, user_count)
-}
-
 func Init() {
 	server.Redis().Client().HSet(context.Background(), "online:"+global.Project, global.Id, 0)
-	global.Router.GET("/:id", socket_handler)
+	global.Router.GET("/ws/:id", socket_handler)
 }
 
 func on_queue_message(data []byte) error {

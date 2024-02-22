@@ -17,8 +17,10 @@ import (
 
 type TokenData struct {
 	SellerId  int
+	Account   string
 	UserId    int
 	IsVisitor int
+	Token     string
 }
 
 func DelToken(token string) {

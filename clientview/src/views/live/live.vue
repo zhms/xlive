@@ -24,7 +24,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import useMyFetch from '@/script/fetch.js'
-import { rootScale, bodyWidth, bodyHeight, sleep } from '@/script/base'
+import { rootScale, bodyWidth, bodyHeight, sleep, wsconn } from '@/script/base'
 import { Button, Icon, NoticeBar, Tab, Tabs, showToast } from 'vant'
 import Chat from './chat.vue'
 import User from './user.vue'
@@ -103,6 +103,8 @@ function initPlayer(data) {
 watch(bodyWidth, () => {
 	player.resize(playerWidth.value, playerHeight.value)
 })
+
+wsconn()
 
 // 在线人数
 const { data: onlineData } = useMyFetch('/api/v1/app/get_online_info').get()

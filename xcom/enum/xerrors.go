@@ -36,6 +36,7 @@ var InternalError = map[string]interface{}{"code": 2, "msg": "内部错误"}
 var TooManyRequest = map[string]interface{}{"code": 3, "msg": "请求频繁"}
 var GetUserInfoError = map[string]interface{}{"code": 4, "msg": "获取用户信息失败"}
 var SellerNotFound = map[string]interface{}{"code": 5, "msg": "商户不存在"}
+var LiveNotAvailable = map[string]interface{}{"code": 6, "msg": "直播不可用"}
 
 // 验证码
 var VerifyNotFoundCode = map[string]interface{}{"code": 100001, "msg": "未填写验证码"}

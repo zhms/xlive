@@ -1,5 +1,5 @@
 import { createFetch, useStorage } from '@vueuse/core'
-import { getToken, login, appEnv } from './base'
+import { getToken, login, AppId } from './base'
 import { showToast } from 'vant'
 
 const useMyFetch = createFetch({
@@ -11,7 +11,7 @@ const useMyFetch = createFetch({
 			options.headers = {
 				...options.headers,
 				'x-token': token,
-				...appEnv,
+				appid: AppId,
 			}
 		},
 		afterFetch(ctx) {

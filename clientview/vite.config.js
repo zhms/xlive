@@ -30,9 +30,11 @@ export default defineConfig({
 				//target: 'http://blackrock-13.232.26.141.nip.io ',
 				target: 'http://localhost:3400',
 				changeOrigin: true,
+				ws: true,
 			},
 			'/ws': {
-				target: 'ws://qa-13.232.26.141.nip.io',
+				//target: 'ws://qa-13.232.26.141.nip.io',
+				target: 'ws://localhost:2740',
 				changeOrigin: true,
 				ws: true,
 			},

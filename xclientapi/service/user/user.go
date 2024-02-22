@@ -51,16 +51,21 @@ type UserLoginRes struct {
 	UserId    int    `json:"user_id"`
 	Token     string `json:"token"`
 	IsVisitor int    `json:"is_visitor"`
+	LiveData  string `json:"live_data"`
 }
 
-func (this *ServiceUser) UserLogin(host string, ip string, reqdata *UserLoginReq) (response *UserLoginRes, merr map[string]interface{}, err error) {
+func (this *ServiceUser) UserLogin(appid string, host string, ip string, reqdata *UserLoginReq) (response *UserLoginRes, merr map[string]interface{}, err error) {
 	locker := enum.Lock_UserLogin + reqdata.Account
 	if !server.Redis().Lock(locker, 1) {
 		return nil, enum.TooManyRequest, nil
 	}
 	reqdata.SellerId = xcom.GetSellerId(host)
 	if reqdata.SellerId == 0 {
-		return nil, enum.SellerNotFound, nil
+		reqdata.SellerId = 1
+	}
+	livingdata := server.Redis().Client().HGet(context.Background(), "living", fmt.Sprintf("%v_%v", reqdata.SellerId, appid)).Val()
+	if len(livingdata) == 0 {
+		return nil, enum.LiveNotAvailable, nil
 	}
 
 	if reqdata.IsVisitor == enum.StateYes {
@@ -68,7 +73,6 @@ func (this *ServiceUser) UserLogin(host string, ip string, reqdata *UserLoginReq
 	} else {
 		reqdata.Password = utils.Md5(reqdata.Password)
 	}
-
 	rediskey := fmt.Sprintf("account:%v:%v", reqdata.SellerId, reqdata.Account)
 	accountdata, err := server.Redis().GetCacheMap(rediskey, func() (*utils.XMap, error) {
 		rows, err := server.Db().Table(edb.TableUser).Where(edb.SellerId+edb.EQ, reqdata.SellerId).Where(edb.Account+edb.EQ, reqdata.Account).Rows()
@@ -128,26 +132,16 @@ func (this *ServiceUser) UserLogin(host string, ip string, reqdata *UserLoginReq
 
 	tokendata := server.TokenData{}
 	tokendata.SellerId = reqdata.SellerId
+	tokendata.Account = accountdata.String(edb.Account)
 	tokendata.UserId = accountdata.Int(edb.UserId)
 	tokendata.IsVisitor = accountdata.Int(edb.IsVisitor)
+	tokendata.Token = accountdata.String(edb.Token)
 	server.SetToken(accountdata.String(edb.Token), &tokendata)
 	response = &UserLoginRes{}
 	response.Account = accountdata.String(edb.Account)
 	response.UserId = accountdata.Int(edb.UserId)
 	response.Token = accountdata.String(edb.Token)
 	response.IsVisitor = accountdata.Int(edb.IsVisitor)
+	response.LiveData = livingdata
 	return response, nil, err
-}
-
-type UserTestReq struct {
-	SellerId int `json:"-"`
-	UserId   int `json:"user_id"`
-}
-
-type UserTestRes struct {
-	UserId int `json:"user_id"`
-}
-
-func (this *ServiceUser) UserTest(reqdata *UserTestReq) (response *UserTestRes, merr map[string]interface{}, err error) {
-	return nil, nil, nil
 }

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"net/http"
 	"xcom/xcom"
 	"xcom/xredis"
 
@@ -9,6 +10,7 @@ import (
 	_ "xclientapi/docs" // main 文件中导入 docs 包
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/websocket"
 	"gorm.io/gorm"
 )
 
@@ -35,4 +37,12 @@ func Db() *gorm.DB {
 
 func Redis() *xredis.XRedis {
 	return redis_conn
+}
+
+var WsUpgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
 }

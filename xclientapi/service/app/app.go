@@ -1,72 +1,77 @@
 package service_app
 
 import (
-	"context"
-	"errors"
-	"fmt"
+	"encoding/json"
+	"sync"
+	"time"
 	"xclientapi/server"
-	"xcom/edb"
-	"xcom/enum"
-	"xcom/utils"
-	"xcom/xcom"
 
-	"github.com/redis/go-redis/v9"
+	"github.com/gorilla/websocket"
 )
 
+type UserData struct {
+	ConnTime int64
+	Conn     *websocket.Conn
+}
+
 type ServiceApp struct {
+	users   map[string]map[string]*UserData
+	maxconn map[string]int
+	locker  sync.Mutex
 }
 
 func (this *ServiceApp) Init() {
+	this.users = make(map[string]map[string]*UserData)
+	this.maxconn = make(map[string]int)
 }
 
-type AppGetLiveInfoReq struct {
-	SellerId int `json:"-"`
+func (this *ServiceApp) SendMsg(conn *websocket.Conn, msgid string, data interface{}) {
+	msgdata := map[string]interface{}{"msg_id": msgid, "msg_data": data}
+	bytes, _ := json.Marshal(msgdata)
+	conn.WriteMessage(websocket.TextMessage, bytes)
 }
 
-type AppGetLiveInfoRes struct {
-	Name    string `json:"name"`
-	Account string `json:"account"`
-	LiveUrl string `json:"live_url"`
-	Title   string `json:"title"`
-}
+func (this *ServiceApp) UserCome(conn *websocket.Conn, appid string, tokendata *server.TokenData) {
+	this.locker.Lock()
+	defer this.locker.Unlock()
 
-func (this *ServiceApp) GetLiveInfo(host string, reqdata *AppGetLiveInfoReq) (response *AppGetLiveInfoRes, merr map[string]interface{}, err error) {
-	reqdata.SellerId = xcom.GetSellerId(host)
-	if reqdata.SellerId == 0 {
-		return nil, enum.SellerNotFound, nil
+	{
+		v, ok := this.maxconn[appid]
+		if !ok {
+			v = 0
+			this.maxconn[appid] = v
+		}
 	}
-	response = &AppGetLiveInfoRes{}
-	result, err := server.Redis().Client().HGet(context.Background(), "living", fmt.Sprint(reqdata.SellerId)).Result()
-	if err != nil && !errors.Is(err, redis.Nil) {
-		return nil, nil, err
+	{
+		this.maxconn[appid]++
 	}
-	if result == "" {
-		return response, nil, nil
+	{
+		v, ok := this.users[appid]
+		if !ok {
+			v = make(map[string]*UserData)
+			this.users[appid] = v
+		}
+		keys := make([]string, 0, len(v))
+		for k := range v {
+			keys = append(keys, k)
+			this.SendMsg(v[k].Conn, "user_come", tokendata.Account)
+			this.SendMsg(v[k].Conn, "user_count", this.maxconn[appid])
+		}
+		this.SendMsg(conn, "user_list", keys)
+		v[tokendata.Account] = &UserData{ConnTime: time.Now().Unix(), Conn: conn}
+		this.SendMsg(conn, "user_come", tokendata.Account)
+		this.SendMsg(conn, "user_count", this.maxconn[appid])
 	}
-	mdata := &utils.XMap{}
-	mdata.FromBytes([]byte(result))
-	response.Name = mdata.String(edb.Name)
-	response.Account = mdata.String(edb.Account)
-	response.LiveUrl = mdata.String(edb.LiveUrl)
-	response.Title = mdata.String(edb.Title)
-	return response, nil, nil
 }
 
-type AppGetOnlineInfoReq struct {
-	SellerId int `json:"-"`
-}
+func (this *ServiceApp) UserLeave(conn *websocket.Conn, appid string, tokendata *server.TokenData) {
+	this.locker.Lock()
+	defer this.locker.Unlock()
 
-type AppGetOnlineInfoRes struct {
-	OnlineCount int `json:"online_count"`
-}
-
-func (this *ServiceApp) GetOnlineInfo(host string, reqdata *AppGetOnlineInfoReq) (response *AppGetOnlineInfoRes, merr map[string]interface{}, err error) {
-	reqdata.SellerId = xcom.GetSellerId(host)
-	if reqdata.SellerId == 0 {
-		return nil, enum.SellerNotFound, nil
+	delete(this.users[appid], tokendata.Account)
+	this.maxconn[appid]--
+	for _, v := range this.users[appid] {
+		this.SendMsg(v.Conn, "user_leave", tokendata.Account)
+		this.SendMsg(v.Conn, "user_count", this.maxconn[appid])
 	}
-
-	response = &AppGetOnlineInfoRes{}
-	response.OnlineCount = 100
-	return response, nil, nil
 }

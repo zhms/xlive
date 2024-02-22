@@ -13,11 +13,12 @@
 			<Icon name="play-circle-o" class="play-icon" @click="play" size="100" :style="{ left: (playerWidth - 100) / 2 + 'px', top: (playerHeight - 60) / 2 + 'px' }" v-if="!isPlay"></Icon>
 			<div class="teacher-info flex">
 				<div>{{ liveData?.data.name }} | Current Lecturer: {{ liveData?.data.account }}</div>
-				<div class="logout" v-if="isVisitor" @click="$router.push('/')">Login</div>
-				<div class="logout" v-else @click="logout">Logout</div>
+				<!-- <div class="logout" v-if="isVisitor" @click="$router.push('/')">Login</div> -->
+				<!-- <div class="logout" v-else @click="logout">Logout</div> -->
+				<div class="logout" @click="logout">Logout</div>
 			</div>
 			<canvas id="canvas" :style="{ width: playerWidth + 'px', height: playerHeight + 'px' }"></canvas>
-			<video :id="playerId" webkit-playsinline="true" playsinline="true" preload="auto" :width="playerWidth" :height="playerHeight" @click="play" :poster="poster" class="video-js test"></video>
+			<video :id="playerId" webkit-playsinline="true" playsinline="true" preload="auto" :height="playerHeight" @click="play" :poster="poster" class="video-js test"></video>
 			<div class="course">
 				<img src="https://static.lotterybox.com/game/live/2023-12-30 10.54.47.jpg" :style="{ width: playerWidth + 'px', height: bodyHeight * 0.3 + 'px' }" />
 			</div>
@@ -30,10 +31,10 @@
 	</div>
 </template>
 <script setup>
-import { Button, Icon, NoticeBar } from 'vant'
+import { Button, Icon, NoticeBar, showToast } from 'vant'
 import { ref, computed, onMounted, watch } from 'vue'
 import useMyFetch from '@/script/fetch.js'
-import { rootScale, bodyWidth, bodyHeight, sleep, logout } from '@/script/base'
+import { rootScale, bodyWidth, bodyHeight, sleep, logout, wsconn, getLiveData } from '@/script/base'
 import { useStorage, useIntervalFn } from '@vueuse/core'
 import Chat from './chat.vue'
 import User from './user.vue'
@@ -61,20 +62,14 @@ const playerHeight = computed(() => {
 
 const playerId = ref('e' + +new Date())
 const isPlay = ref(false)
-
+const liveData = ref(getLiveData())
 let player
-const liveUrl = ref('')
+const liveUrl = ref(liveData.value.data.live_url)
 const playData = computed(() => ({
 	type: 'video/x-flv',
 	src: liveUrl.value,
 	isLive: true,
 }))
-
-const { data: liveData } = useMyFetch('/api/v1/app/get_live_info', {
-	afterFetch: async (res) => {
-		liveUrl.value = res.data.data.live_url
-	},
-}).get()
 
 function play() {
 	if (liveUrl.value == '') {
@@ -111,9 +106,10 @@ function initPlayer(data) {
 watch(bodyWidth, () => {
 	player.resize(playerWidth.value, playerHeight.value)
 })
-
+wsconn()
+let onlineData = ref({ data: { online_count: 0 } })
 // 在线人数
-const { data: onlineData } = useMyFetch('/api/v1/app/get_online_info').get()
+// const { data: onlineData } = useMyFetch('/api/v1/app/get_online_info').get()
 
 onMounted(() => {
 	initPlayer()
@@ -128,6 +124,7 @@ onMounted(() => {
 	overflow: hidden;
 	border-right: 6px solid #3a4f7f;
 	border-left: 6px solid #3a4f7f;
+	flex: 1;
 	.play-icon {
 		position: absolute;
 		z-index: 10;
@@ -139,6 +136,7 @@ onMounted(() => {
 		top: 0;
 		left: 0;
 		z-index: 10;
+		flex: 1;
 	}
 	.teacher-info {
 		height: 40px;
@@ -165,7 +163,7 @@ onMounted(() => {
 }
 
 .user-box {
-	width: 300px;
+	width: 250px;
 	background: #2e4068;
 	.logo {
 		background: #fff;
@@ -192,9 +190,10 @@ onMounted(() => {
 .chat-box {
 	flex-shrink: 0;
 	position: relative;
-	width: 400px;
+	width: 350px;
 	overflow: auto;
 	height: 100%;
+	margin-left: auto;
 
 	:deep(.chat) {
 		.message-list {
@@ -213,5 +212,9 @@ onMounted(() => {
 .van-notice-bar {
 	background: #2e4068 !important;
 	color: #fff !important;
+}
+.video-js {
+	background: #000;
+	flex: 1;
 }
 </style>

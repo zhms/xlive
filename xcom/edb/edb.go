@@ -7,6 +7,7 @@ const (
 	TableConfig     = "x_config"       // 配置表
 	TableUserIdPool = "x_user_id_pool" // 用户池
 	TableHostSeller = "x_host_seller"  // 域名对应运营商
+	TableKv         = "x_kv"           // 键值对
 )
 
 const (
@@ -46,4 +47,6 @@ const (
 	LiveUrl   = "live_url"   // 直播地址
 	Title     = "title"      // 标题
 	Name      = "name"       // 名称
+	K         = "k"          // 键
+	V         = "v"          // 值
 )

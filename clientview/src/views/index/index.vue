@@ -1,31 +1,28 @@
-<template lang="pug">
-.index
-  .head.flex
-    h2 Welcome To Live
+<template>
+	<div class="index">
+		<div class="head flex">
+			<h2>Welcome To Live</h2>
+		</div>
 
-  .desc
-    h4 Welcome to live
-    .tip There are some interesting things in this studio. Come and play. You can also invite your good friends to come with you!
+		<div class="desc">
+			<h4>Welcome to live</h4>
+			<div class="tip">There are some interesting things in this studio. Come and play. You can also invite your good friends to come with you!</div>
+		</div>
 
-  .form-box.flex
-    .form
-      .form-item
-        input(
-          type="text",
-          placeholder="Enter Account",
-          v-model="name",
-          v-scrollInto
-        )
-      .form-item
-        input(
-          type="password",
-          placeholder="Enter Password",
-          v-model="pwd",
-          v-scrollInto
-        )
+		<div class="form-box flex">
+			<div class="form">
+				<div class="form-item">
+					<input type="text" placeholder="Enter Account" v-model="name" v-scrollInto />
+				</div>
+				<div class="form-item">
+					<input type="password" placeholder="Enter Password" v-model="pwd" v-scrollInto />
+				</div>
 
-      Button(type="primary", block, :disabled="btnDisabled", @click="login") Login
-      .visitor(@click="visitorLogin") Visitor Login
+				<Button type="primary" block :disabled="btnDisabled" @click="login"> Login </Button>
+				<div class="visitor" @click="visitorLogin">Visitor Login</div>
+			</div>
+		</div>
+	</div>
 </template>
 <script setup>
 import { ref, computed } from 'vue'
@@ -45,6 +42,7 @@ const isMobile = computed(() => mediaWidth.value > bodyWidth.value)
 const btnDisabled = computed(() => !name.value.trim() || !pwd.value || loginIsFetching.value)
 
 const { execute: loginExecute, isFetching: loginIsFetching } = useMyFetch('/api/v1/user/user_login', {
+	immediate: false,
 	afterFetch: (res) => {
 		loginCallback(res)
 	},
