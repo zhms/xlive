@@ -21,6 +21,7 @@ type TokenData struct {
 	UserId    int
 	IsVisitor int
 	Token     string
+	Ip        string
 }
 
 func DelToken(token string) {

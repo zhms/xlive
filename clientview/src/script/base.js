@@ -4,7 +4,6 @@ import mitt from 'mitt'
 import { showToast } from 'vant'
 import useMyFetch from './fetch.js'
 import qs from 'qs'
-import dsbridge from 'dsbridge'
 import router from '@/router/index.js'
 import ClipboardJS from 'clipboard'
 
@@ -20,6 +19,19 @@ const urlQuery = qs.parse(location.search.slice(1))
 let AppId = urlQuery['app']
 if (!AppId) {
 	AppId = '1'
+}
+let Sale = urlQuery['sale']
+if (!Sale) {
+	Sale = '0'
+}
+
+let scoll_callback = null
+let OnlineCount = ref(0)
+let UserList = ref([])
+let MsgList = ref([])
+
+function setScoll(cb) {
+	scoll_callback = cb
 }
 
 function sleep(time = 1000) {
@@ -117,13 +129,51 @@ function preloadImage(url) {
 
 // ws地址
 const wsProtocol = location.protocol === 'http:' ? 'ws' : 'wss'
-const wsUrl = `${wsProtocol}://${location.host}/api/v1/app/ws/` + `${getToken()}_${AppId}`
+let wsUrl = `${wsProtocol}://${location.host}/api/v1/app/ws/` + `${getToken()}_${AppId}`
 let ws
-function wsconn() {
+function wsclose() {
+	if (ws) {
+		ws.close()
+		ws = null
+	}
+}
+function wsconn(token) {
 	if (ws) return
+	if (token) {
+		wsUrl = `${wsProtocol}://${location.host}/api/v1/app/ws/` + `${token}_${AppId}`
+	}
 	ws = useWebSocket(wsUrl, {
 		onMessage: (ws, e) => {
-			//console.log('ws', e.data)
+			try {
+				const data = JSON.parse(e.data)
+				if (data.msg_id == 'user_count') {
+					OnlineCount.value = data.msg_data
+				} else if (data.msg_id == 'user_list') {
+					UserList.value = []
+					data.msg_data.forEach((item) => {
+						UserList.value.push({
+							username: item,
+						})
+					})
+				} else if (data.msg_id == 'user_come') {
+					UserList.value.unshift({
+						username: data.msg_data,
+					})
+				} else if (data.msg_id == 'user_leave') {
+					const index = UserList.value.findIndex((item) => item.username == data.msg_data)
+					UserList.value.splice(index, 1)
+				} else if (data.msg_id == 'chat') {
+					let msgdata = JSON.parse(data.msg_data)
+					if (MsgList.value.length > 200) {
+						MsgList.value.shift()
+					}
+					msgdata.k = random(100000000)
+					MsgList.value.push(msgdata)
+					if (scoll_callback) {
+						scoll_callback()
+					}
+				}
+			} catch (e) {}
 		},
 		heartbeat: {
 			message: 'ping',
@@ -140,47 +190,19 @@ function wsconn() {
 	})
 }
 
-// 封装websocket
-function getWebSocket(params, callback = () => {}) {
-	const result = ref([])
-	params['Authorization'] = getToken()
-	const { send, close, status, open } = useWebSocket(wsUrl, {
-		onMessage: (ws, e) => {
-			if (e.data === 'success\n') return
-			const newData = JSON.parse(e.data)
-			newData['_id'] = getLocalId()
-			callback(newData)
-			result.value = [newData, ...result.value].slice(0, 20)
-		},
-		heartbeat: {
-			pongTimeout: 5000,
-		},
-		autoClose: false,
-		onDisconnected: () => {
-			console.log('disconnected', status.value)
-		},
-		onError: (res) => {
-			console.log('error', res)
-		},
-	})
-	send(JSON.stringify(params))
-
-	// 组件卸载时候关闭
-	onBeforeUnmount(() => {
-		close()
-	})
-	// 心跳检测异常关闭则重连;
-	useIntervalFn(() => {
-		if (status.value === 'CLOSED') {
-			open()
-			send(JSON.stringify(params))
-			console.log('reconnected')
-		}
-	}, 1000)
-	return result
+function sendChatMsg(msg) {
+	if (ws) {
+		ws.send(
+			JSON.stringify({
+				msg_id: 'chat',
+				msg_data: {
+					msg: msg,
+				},
+			})
+		)
+	}
 }
 
-// 获取用户信息
 function getUser() {
 	const { data } = useMyFetch('/game/user/info', { immediate: true })
 	return data
@@ -195,13 +217,10 @@ function getLiveData() {
 	}
 }
 
-function hasToken() {
-	const token = dsbridge.call('Native.getToken') || useStorage('token').value
-	return token !== '' && token !== 'undefined' && token !== 'empty' && token !== undefined
-}
-
 function getToken() {
-	return dsbridge.call('Native.getToken') || useStorage('token').value
+	const token = useStorage('token').value
+	if (token == '' && token == 'undefined' && token !== 'empty' && token !== undefined) return
+	return token
 }
 
 function logout() {
@@ -212,16 +231,10 @@ function logout() {
 	router.push('/index')
 }
 
-// 去登录
 function login() {
-	if (isApp) {
-		dsbridge.call('Native.toLogin')
-	} else {
-		router.push('/')
-	}
+	router.push('/')
 }
 
-// miner
 function miner_getStageTypeByGameType(gameType) {
 	return Math.pow(2, ~~gameType / 10)
 }
@@ -289,6 +302,7 @@ export {
 	rootScale,
 	eventBus,
 	AppId,
+	Sale,
 	urlQuery,
 	vScrollInto,
 	vClipboard,
@@ -300,10 +314,8 @@ export {
 	miner_handleOrder,
 	miner_getStageTypeByGameType,
 	getLocalId,
-	getWebSocket,
 	getUser,
 	getToken,
-	hasToken,
 	useBodyBgColor,
 	deepClone,
 	formatMoney,
@@ -317,4 +329,10 @@ export {
 	wsconn,
 	ws,
 	getLiveData,
+	OnlineCount,
+	UserList,
+	MsgList,
+	setScoll,
+	sendChatMsg,
+	wsclose,
 }

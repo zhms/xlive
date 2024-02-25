@@ -48,7 +48,7 @@ export default {
 			if (!routes[i].meta) {
 				final_routes.push(routes[i])
 			} else {
-				if (routes[i].children.length == 1) {
+				if (routes[i].children.length == 1 && routes[i].meta.title == '系统首页') {
 					let a = routes[i].meta.title
 					if (AuthData[a] && AuthData[a]['查']) {
 						final_routes.push(routes[i])

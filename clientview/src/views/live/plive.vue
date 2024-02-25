@@ -5,7 +5,7 @@
 				<img src="https://static.lotterybox.com/game/live/logo111.jpg" />
 			</div>
 			<div class="user-head flex flex-center">
-				<div>Online({{ onlineData?.data.online_count || 0 }})</div>
+				<div>Online({{ OnlineCount || 0 }})</div>
 			</div>
 			<User></User>
 		</div>
@@ -34,7 +34,7 @@
 import { Button, Icon, NoticeBar, showToast } from 'vant'
 import { ref, computed, onMounted, watch } from 'vue'
 import useMyFetch from '@/script/fetch.js'
-import { rootScale, bodyWidth, bodyHeight, sleep, logout, wsconn, getLiveData } from '@/script/base'
+import { rootScale, bodyWidth, bodyHeight, sleep, logout, wsconn, getLiveData, OnlineCount } from '@/script/base'
 import { useStorage, useIntervalFn } from '@vueuse/core'
 import Chat from './chat.vue'
 import User from './user.vue'
@@ -106,7 +106,7 @@ function initPlayer(data) {
 watch(bodyWidth, () => {
 	player.resize(playerWidth.value, playerHeight.value)
 })
-wsconn()
+
 let onlineData = ref({ data: { online_count: 0 } })
 // 在线人数
 // const { data: onlineData } = useMyFetch('/api/v1/app/get_online_info').get()
@@ -114,6 +114,8 @@ let onlineData = ref({ data: { online_count: 0 } })
 onMounted(() => {
 	initPlayer()
 })
+
+setTimeout(() => wsconn(), 1000)
 </script>
 
 <style lang="scss" scoped>

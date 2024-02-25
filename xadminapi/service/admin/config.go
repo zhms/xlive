@@ -9,9 +9,9 @@ import (
 )
 
 type GetXConfigReq struct {
-	SellerId   int      `validate:"required" json:"seller_id"` // 运营商
-	ChannelId  int      `json:"channel_id"`                    // 渠道商
-	ConfigName []string `json:"config_name"`                   // 配置名称
+	SellerId   int      `validate:"required" from:"seller_id"` // 运营商
+	ChannelId  int      `from:"channel_id"`                    // 渠道商
+	ConfigName []string `from:"config_name"`                   // 配置名称
 }
 
 type GetXConfigRes struct {

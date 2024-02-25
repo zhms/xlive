@@ -1,23 +1,13 @@
 <template>
 	<div class="users">
-		<div class="user flex" v-for="user in users?.data" :key="user.username">
+		<div class="user flex" v-for="user in UserList" :key="user.username">
 			<div>{{ user.username }}</div>
 		</div>
 	</div>
 </template>
 <script setup>
 import useMyFetch from '@/script/fetch.js'
-
-let users = {
-	data: [
-		{
-			username: 'Visitor-65d35a88d59d3',
-		},
-		{
-			username: 'A1232',
-		},
-	],
-}
+import { UserList } from '@/script/base'
 // const { data: users } = useMyFetch('/api/yunxin/charRoom/user_online', {
 // 	immediate: true,
 // }).post()

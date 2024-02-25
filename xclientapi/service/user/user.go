@@ -44,6 +44,7 @@ type UserLoginReq struct {
 	Account   string `validate:"required" json:"account"`
 	Password  string `json:"password"`
 	IsVisitor int    `json:"is_visitor"`
+	Sale      string `json:"sale"`
 }
 
 type UserLoginRes struct {
@@ -136,6 +137,7 @@ func (this *ServiceUser) UserLogin(appid string, host string, ip string, reqdata
 	tokendata.UserId = accountdata.Int(edb.UserId)
 	tokendata.IsVisitor = accountdata.Int(edb.IsVisitor)
 	tokendata.Token = accountdata.String(edb.Token)
+	tokendata.Ip = ip
 	server.SetToken(accountdata.String(edb.Token), &tokendata)
 	response = &UserLoginRes{}
 	response.Account = accountdata.String(edb.Account)

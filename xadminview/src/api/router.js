@@ -20,6 +20,18 @@ let routers = [
 		],
 	},
 	{
+		path: '/user',
+		component: Layout,
+		meta: { title: '会员管理', icon: 'el-icon-s-tools' },
+		children: [
+			{
+				path: 'list',
+				component: () => import('../../views/User/index'),
+				meta: { title: '会员列表', icon: 'el-icon-setting' },
+			},
+		],
+	},
+	{
 		path: '/system',
 		component: Layout,
 		meta: { title: '系统管理', icon: 'el-icon-s-tools' },

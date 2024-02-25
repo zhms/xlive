@@ -104,14 +104,14 @@ watch(bodyWidth, () => {
 	player.resize(playerWidth.value, playerHeight.value)
 })
 
-wsconn()
-
 // 在线人数
 const { data: onlineData } = useMyFetch('/api/v1/app/get_online_info').get()
 
 onMounted(() => {
 	initPlayer()
 })
+
+setTimeout(() => wsconn(), 1000)
 </script>
 
 <style lang="scss" scoped>

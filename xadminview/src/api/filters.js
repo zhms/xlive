@@ -48,6 +48,7 @@ export function shortString(orignalstr, startcount, endcount) {
 	}
 	return orignalstr
 }
+
 export function numDeal(t, n) {
 	if (t == 0) return 0
 	let f = t / Math.abs(t)

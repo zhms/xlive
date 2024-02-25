@@ -1,46 +1,5 @@
 package model
 
-type XUser struct {
-	Id         uint64 `gorm:"column:id;primaryKey;autoIncrement" json:"id"` // Id
-	SellerId   int    `gorm:"column:seller_id" json:"seller_id"`            // 运营商
-	UserId     int64  `gorm:"column:user_id" json:"user_id"`                // 用户id
-	State      int    `gorm:"column:state;default:1" json:"state"`          // 状态 1开启 2关闭
-	Account    string `gorm:"column:account" json:"account"`                // 账号
-	Password   string `gorm:"column:password" json:"password"`              // 密码
-	NickName   string `gorm:"column:nick_name" json:"nick_name"`            // 昵称
-	PhoneNum   string `gorm:"column:phone_num" json:"phone_num"`            // 手机号
-	Email      string `gorm:"column:email" json:"email"`                    // 邮箱
-	TopAgent   int    `gorm:"column:top_agent" json:"top_agent"`            // 顶级代理
-	Agent      int    `gorm:"column:agent" json:"agent"`                    // 代理
-	Agents     string `gorm:"column:agents" json:"agents"`                  // 代理 json数组,第一个是顶级id,最后一个是上级id
-	RegIP      string `gorm:"column:reg_ip" json:"reg_ip"`                  // 注册ip
-	LoginIP    string `gorm:"column:login_ip" json:"login_ip"`              // 登录ip
-	LoginTime  string `gorm:"column:login_time" json:"login_time"`          // 登录时间
-	Token      string `gorm:"column:token" json:"token"`                    // 登录token
-	Memo       string `gorm:"column:memo" json:"memo"`                      // 备注
-	CreateTime string `gorm:"column:create_time" json:"create_time"`        // 创建时间
-}
-
-func (XUser) TableName() string {
-	return "x_user"
-}
-
-type XSlide struct {
-	Id         int    `gorm:"column:id;primary_key;auto_increment" json:"id"`              // 自增id
-	SellerId   int    `gorm:"column:seller_id;default:0" json:"seller_id"`                 // 运营商
-	Title      string `gorm:"column:title;type:varchar(64);default:''" json:"title"`       // 标题
-	Picture    string `gorm:"column:picture;type:varchar(1024);default:''" json:"picture"` // 图片
-	Content    string `gorm:"column:content;type:varchar(2048);default:''" json:"content"` // 内容
-	ExLink     string `gorm:"column:exlink;type:varchar(1024);default:''" json:"exlink"`   // 外链,http开头是外部链接,否则是内部链接
-	Sort       int    `gorm:"column:sort;type:varchar(255);default:0" json:"sort"`         // 排序,数字大排前面
-	Memo       string `gorm:"column:memo;type:varchar(255);default:''" json:"memo"`        // 备注
-	CreateTime string `gorm:"column:create_time" json:"create_time"`                       // 创建时间
-}
-
-func (XSlide) TableName() string {
-	return "x_slide"
-}
-
 type XSeller struct {
 	Id         uint64 `gorm:"column:id;primary_key;AUTO_INCREMENT;comment:'自增Id'" json:"id"`          // 自增Id
 	SellerId   int    `gorm:"column:seller_id;type:int;comment:'运营商'" json:"seller_id"`               // 运营商
@@ -131,4 +90,23 @@ type XAdminRole struct {
 
 func (XAdminRole) TableName() string {
 	return "x_admin_role"
+}
+
+type XUser struct {
+	Id            int64  `gorm:"column:id;primaryKey;autoIncrement" json:"id"`                                   // 自增Id
+	SellerId      int    `gorm:"column:seller_id;comment:'运营商'" json:"seller_id"`                                // 运营商
+	UserId        int    `gorm:"column:user_id;comment:'用户id'" json:"user_id"`                                   // 用户id
+	Account       string `gorm:"column:account;type:varchar(32);comment:'用户账号'" json:"account"`                  // 用户账号
+	Password      string `gorm:"column:password;type:varchar(32);comment:'用户密码'" json:"password"`                // 用户密码
+	IsVisitor     int    `gorm:"column:is_visitor;comment:'是否是游客'" json:"is_visitor"`                            // 是否是游客
+	State         int    `gorm:"column:state;comment:'状态 1开启,2关闭'" json:"state"`                                 // 状态 1开启,2关闭
+	Agent         string `gorm:"column:agent;type:varchar(32);comment:'所属管理员'" json:"agent"`                     // 所属管理员
+	LoginIP       string `gorm:"column:login_ip;type:varchar(64);comment:'登录ip'" json:"login_ip"`                // 登录ip
+	LoginLocation string `gorm:"column:login_location;type:varchar(64);comment:'登录ip地区'" json:"login_location"`  // 登录ip地区
+	LoginCount    int    `gorm:"column:login_count;comment:'登录次数'" json:"login_count"`                           // 登录次数
+	CreateTime    string `gorm:"column:create_time;default:CURRENT_TIMESTAMP;comment:'创建时间'" json:"create_time"` // 创建时间
+}
+
+func (XUser) TableName() string {
+	return "x_user"
 }

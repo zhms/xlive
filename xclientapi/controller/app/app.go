@@ -78,6 +78,14 @@ func (this *ControllerApp) socket_handler(ctx *gin.Context) {
 			conn.WriteMessage(websocket.TextMessage, []byte("pong"))
 			continue
 		}
-		break
+		msgdata := &MsgData{}
+		err = json.Unmarshal(msg, msgdata)
+		if err != nil {
+			break
+		}
+		if msgdata.MsgId == "chat" {
+			this.service.ChatMsg(ids[1], tokendata, msgdata.MsgData["msg"].(string))
+		}
 	}
+	this.service.UserLeave(conn, ids[1], tokendata)
 }

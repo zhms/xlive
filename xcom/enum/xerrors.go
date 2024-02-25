@@ -51,6 +51,11 @@ var AuthNotFoundMainMenu = map[string]interface{}{"code": 100104, "msg": "权限
 var AuthNotFoundSubMenu = map[string]interface{}{"code": 100105, "msg": "权限不足"}
 var AuthNotFoundOpt = map[string]interface{}{"code": 100106, "msg": "权限不足"}
 var AuthNotAllow = map[string]interface{}{"code": 100107, "msg": "权限不足"}
+var ParentRoleNotFound = map[string]interface{}{"code": 100108, "msg": "父级角色不存在"}
+var RoleNotEditable = map[string]interface{}{"code": 100109, "msg": "角色不允许编辑"}
+var RoleCantDelete = map[string]interface{}{"code": 100110, "msg": "角色不允许删除"}
+var RoleNotFound = map[string]interface{}{"code": 100111, "msg": "角色不存在"}
+var RoleStateError = map[string]interface{}{"code": 100112, "msg": "角色状态异常"}
 
 // 用户
 var UserNotFound = map[string]interface{}{"code": 100201, "msg": "用户不存在"}

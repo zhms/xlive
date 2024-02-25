@@ -37,16 +37,32 @@ const (
 )
 
 const (
-	SellerId  = "seller_id"  // 运营商
-	Account   = "account"    // 账号
-	Password  = "password"   // 密码
-	IsVisitor = "is_visitor" // 是否游客
-	UserId    = "user_id"    // 用户Id
-	State     = "state"      // 状态
-	Token     = "token"      // token
-	LiveUrl   = "live_url"   // 直播地址
-	Title     = "title"      // 标题
-	Name      = "name"       // 名称
-	K         = "k"          // 键
-	V         = "v"          // 值
+	SellerId    = "seller_id"    // 运营商
+	Account     = "account"      // 账号
+	Password    = "password"     // 密码
+	IsVisitor   = "is_visitor"   // 是否游客
+	UserId      = "user_id"      // 用户Id
+	State       = "state"        // 状态
+	Token       = "token"        // token
+	LiveUrl     = "live_url"     // 直播地址
+	Title       = "title"        // 标题
+	Name        = "name"         // 名称
+	K           = "k"            // 键
+	V           = "v"            // 值
+	RoleName    = "role_name"    // 角色名称
+	LoginIp     = "login_ip"     // 登录IP
+	CreateTime  = "create_time"  // 创建时间
+	Memo        = "memo"         // 备注
+	ConfigName  = "config_name"  // 配置名称
+	ConfigValue = "config_value" // 配置值
+	ChannelId   = "channel_id"   // 渠道Id
+	SellerName  = "seller_name"  // 运营商名称
+	LoginGoogle = "login_google" // 谷歌登录
+	Id          = "id"           // Id
+	OptName     = "opt_name"     // 操作名称
+	Parent      = "parent"       // 父级
+	RoleData    = "role_data"    // 角色数据
+	LoginTime   = "login_time"   // 登录时间
+	LoginCount  = "login_count"  // 登录次数
+	Agent       = "agent"        // 代理商
 )
