@@ -5,29 +5,27 @@ import (
 	"xadminapi/server"
 	"xcom/edb"
 
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 type GetXConfigReq struct {
-	SellerId   int      `validate:"required" from:"seller_id"` // 运营商
-	ChannelId  int      `from:"channel_id"`                    // 渠道商
-	ConfigName []string `from:"config_name"`                   // 配置名称
-}
-
-type GetXConfigRes struct {
-	Data []model.XConfig `json:"data"`
+	ChannelId  int      `json:"channel_id"`  // 渠道商
+	ConfigName []string `json:"config_name"` // 配置名称
 }
 
 // 获取配置
-func (this *ServiceAdmin) GetXConfig(reqdata *GetXConfigReq) (data *GetXConfigRes, merr map[string]interface{}, err error) {
-	data = &GetXConfigRes{}
+func (this *ServiceAdmin) GetXConfig(ctx *gin.Context, idata interface{}) (data interface{}, merr map[string]interface{}, err error) {
+	reqdata := idata.(GetXConfigReq)
+	data = []model.XConfig{}
+	token := server.GetToken(ctx)
 	db := server.Db().Model(&model.XConfig{})
-	db = db.Where(edb.SellerId+edb.EQ, reqdata.SellerId)
+	db = db.Where(edb.SellerId+edb.EQ, token.SellerId)
 	db = db.Where(edb.ChannelId+edb.EQ, reqdata.ChannelId)
 	db = db.Where(edb.ConfigName+edb.IN, reqdata.ConfigName)
-	db = db.Find(&data.Data)
+	db = db.Find(&data)
 	if db.Error != nil {
-		return nil, nil, err
+		return err, nil, nil
 	}
 	return data, nil, err
 }
@@ -45,7 +43,8 @@ type UpdateXConfigReq struct {
 }
 
 // 更新配置
-func (this *ServiceAdmin) UpdateXConfig(reqdata *UpdateXConfigReq) (merr map[string]interface{}, err error) {
+func (this *ServiceAdmin) UpdateXConfig(ctx *gin.Context, idata interface{}) (merr map[string]interface{}, err error) {
+	reqdata := idata.(UpdateXConfigReq)
 	err = server.Db().Transaction(func(db *gorm.DB) error {
 		db = db.Model(&model.XConfig{})
 		for _, v := range reqdata.Configs {

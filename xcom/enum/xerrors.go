@@ -63,3 +63,4 @@ var UserPasswordError = map[string]interface{}{"code": 100202, "msg": "密码错
 var UserStateError = map[string]interface{}{"code": 100203, "msg": "用户状态异常"}
 var UserExist = map[string]interface{}{"code": 100204, "msg": "账号已存在"}
 var UserCantDelete = map[string]interface{}{"code": 100205, "msg": "账号不允许删除"}
+var NewIdError = map[string]interface{}{"code": 100206, "msg": "新建用户Id错误"}

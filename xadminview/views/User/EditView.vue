@@ -1,38 +1,32 @@
 <template>
 	<div class="dialogBox">
 		<el-dialog style="margin-top: -100px" :title="title" :visible.sync="visable" width="630px" center @open="handleOpen">
-			<el-form :inline="true" label-width="120px">
-				<el-form-item label="账号:">
-					<el-input v-model="itemdata.account" :disabled="title == '编辑账号'" style="width: 400px"></el-input>
-				</el-form-item>
-				<!-- <el-form-item label="渠道:" v-show="title != '编辑账号'">
-					<el-select v-model="itemdata.channel_id" placeholder="渠道" style="width: 350px" clearable>
-						<el-option v-for="item in dlgchannels" :key="item.channel_id" :label="item.channel_name" :value="item.channel_id"> </el-option>
-					</el-select>
-				</el-form-item> -->
-				<el-form-item label="密码:">
-					<el-input v-model="itemdata.password" show-password style="width: 400px"></el-input>
-				</el-form-item>
-				<el-form-item label="角色:">
-					<el-select v-model="itemdata.role_name" placeholder="请选择" style="width: 400px">
-						<el-option v-for="item in dlgroles" :key="item.role_name" :label="item.role_name" :value="item.role_name"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="选项:">
-					<el-checkbox border label="禁用" v-model="itemdata.state" :true-label="2" :false-label="1"></el-checkbox>
-				</el-form-item>
-				<el-form-item label="备注:">
-					<el-input type="textarea" v-model="itemdata.memo" :rows="4" style="width: 400px"></el-input>
-				</el-form-item>
-			</el-form>
-			<span slot="footer" class="dialog-footer">
-				<el-button type="primary" @click="handleCommit">确定</el-button>
-			</span>
+			<div v-if="title != '批量导入'">
+				<el-form :inline="true" label-width="120px">
+					<el-form-item label="账号:">
+						<el-input v-model="itemdata.account" :disabled="title == '编辑会员'" style="width: 400px"></el-input>
+					</el-form-item>
+					<el-form-item label="密码:">
+						<el-input v-model="itemdata.password" show-password style="width: 400px"></el-input>
+					</el-form-item>
+				</el-form>
+				<div class="dlg-footer">
+					<el-button type="primary" @click="handleCommit">确定</el-button>
+				</div>
+			</div>
+			<div v-if="title == '批量导入'" class="upload-container">
+				<el-upload ref="uploadRef" :show-file-list="false" action="/upload" :on-change="onUpload" :auto-upload="false" :accept="'.xlsx,.xls'">
+					<i class="el-icon-upload"></i>
+					<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+					<div class="el-upload__tip" slot="tip">只能上传 xls/xlsx 文件，且不超过 2M.</div>
+				</el-upload>
+			</div>
 		</el-dialog>
 	</div>
 </template>
 <script>
 import dlgbase from '@/api/dlgbase'
+import XLSX from 'xlsx'
 export default {
 	extends: dlgbase,
 	data() {
@@ -43,23 +37,19 @@ export default {
 	},
 	methods: {
 		commitData(next) {
-			if (this.title == '编辑账号') {
+			if (this.title == '编辑会员') {
+				if (!this.itemdata.password) return this.$message.error('请填写密码')
 				let data = JSON.parse(JSON.stringify(this.itemdata))
-				if (data.password && data.password.length > 0) {
-					data.password = this.$md5(data.password)
-				}
-				this.$patch('/v1/admin_user/update_admin_user', data, { google: true }).then(() => {
+				this.$patch('/v1/user_list/update_user', data, { google: true }).then(() => {
 					this.$message.success('修改成功')
 					next(true)
 				})
 			}
-			if (this.title == '添加账号') {
+			if (this.title == '添加会员') {
 				if (!this.itemdata.account) return this.$message.error('请填写账号')
 				if (!this.itemdata.password) return this.$message.error('请填写密码')
-				if (!this.itemdata.role_name) return this.$message.error('请选择角色')
 				let data = JSON.parse(JSON.stringify(this.itemdata))
-				data.password = this.$md5(data.password)
-				this.$post('/v1/admin_user/create_admin_user', data, { google: true }).then(() => {
+				this.$post('/v1/user_list/add_user', data, { google: true }).then(() => {
 					this.$message.success('添加成功')
 					next(true)
 				})
@@ -70,27 +60,47 @@ export default {
 			this.itemdata.seller_id = this.filters.seller_id
 			this.dlgroles = []
 			this.dlgchannels = []
-			if (this.title == '编辑账号') {
+			if (this.title == '编辑会员') {
 				delete this.itemdata.Password
-				this.getRoles()
 			}
-			if (this.title == '添加账号') {
-				if (!this.zong) {
-					this.getRoles()
+		},
+		onUpload(file) {
+			const reader = new FileReader()
+			reader.onload = async (event) => {
+				const data = new Uint8Array(event.target.result)
+				const workbook = XLSX.read(data, { type: 'array' })
+				const sheetName = workbook.SheetNames[0]
+				const sheet = workbook.Sheets[sheetName]
+				const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 })
+				for (let i = 1; i < jsonData.length; i++) {
+					let data = {
+						account: `${jsonData[i][0]}`,
+						password: `${jsonData[i][1]}`,
+					}
+					if (data.account.length > 0 && data.password.length > 0) {
+						await this.$post('/v1/user_list/add_user', data, { google: false })
+					}
 				}
+				this.$message.success('上传成功')
+				this.visable = false
+				this.$emit('getTableData')
 			}
-		},
-		sellerChange() {
-			this.getRoles()
-		},
-		getRoles() {
-			let data = {
-				seller_id: this.itemdata.seller_id,
-			}
-			this.$get('/v1/admin_role/get_admin_role', data, { noloading: true }).then((roledata) => {
-				this.dlgroles = roledata.data
-			})
+			reader.readAsArrayBuffer(file.raw)
+			return false
 		},
 	},
 }
 </script>
+
+<style scoped>
+.upload-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.dlg-footer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+</style>

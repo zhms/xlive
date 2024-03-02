@@ -22,12 +22,68 @@ let routers = [
 	{
 		path: '/user',
 		component: Layout,
-		meta: { title: '会员管理', icon: 'el-icon-s-tools' },
+		meta: { title: '会员管理', icon: 'el-icon-user-solid' },
 		children: [
 			{
-				path: 'list',
+				path: 'user_list',
 				component: () => import('../../views/User/index'),
-				meta: { title: '会员列表', icon: 'el-icon-setting' },
+				meta: { title: '会员列表', icon: 'el-icon-user-solid' },
+			},
+		],
+	},
+	{
+		path: '/live',
+		component: Layout,
+		meta: { title: '直播间', icon: 'el-icon-user-solid' },
+		children: [
+			{
+				path: 'live_list',
+				component: () => import('../../views/Live/LiveRoom/index'),
+				meta: { title: '直播间列表', icon: 'el-icon-user-solid' },
+			},
+			{
+				path: 'chat_list',
+				component: () => import('../../views/User/index'),
+				meta: { title: '互动列表', icon: 'el-icon-user-solid' },
+			},
+			{
+				path: 'banip_list',
+				component: () => import('../../views/User/index'),
+				meta: { title: 'Ip封禁', icon: 'el-icon-user-solid' },
+			},
+		],
+	},
+	{
+		path: '/data',
+		component: Layout,
+		meta: { title: '数据分析', icon: 'el-icon-user-solid' },
+		children: [
+			{
+				path: 'online_list',
+				component: () => import('../../views/User/index'),
+				meta: { title: '在线管理', icon: 'el-icon-user-solid' },
+			},
+			{
+				path: 'online_chart',
+				component: () => import('../../views/User/index'),
+				meta: { title: '在线图表', icon: 'el-icon-user-solid' },
+			},
+			{
+				path: 'peak_chart',
+				component: () => import('../../views/User/index'),
+				meta: { title: '峰值图表', icon: 'el-icon-user-solid' },
+			},
+		],
+	},
+	{
+		path: '/robot',
+		component: Layout,
+		meta: { title: '机器人管理', icon: 'el-icon-user-solid' },
+		children: [
+			{
+				path: 'robot_list',
+				component: () => import('../../views/User/index'),
+				meta: { title: '机器人列表', icon: 'el-icon-user-solid' },
 			},
 		],
 	},

@@ -21,7 +21,7 @@ func (this *ControllerAdminUser) InitRouter(router *gin.RouterGroup) {
 	this.service = &service.Entries().ServiceAdmin
 	router.POST("/user_login", this.user_login)
 	router.POST("/user_logout", this.user_logout)
-	router.GET("/get_admin_user", middleware.Authorization("系统管理", "账号管理", "查", ""), this.get_admin_user)
+	router.POST("/get_admin_user", middleware.Authorization("系统管理", "账号管理", "查", ""), this.get_admin_user)
 	router.POST("/create_admin_user", middleware.Authorization("系统管理", "账号管理", "增", "新增管理员"), this.create_admin_user)
 	router.PATCH("/update_admin_user", middleware.Authorization("系统管理", "账号管理", "改", "更新管理员"), this.update_admin_user)
 	router.DELETE("/delete_admin_user", middleware.Authorization("系统管理", "账号管理", "删", "删除管理员"), this.delete_admin_user)
@@ -46,17 +46,7 @@ func (this *ControllerAdminUser) user_login(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
 		return
 	}
-	verifycode := ctx.Request.Header.Get("VerifyCode")
-	reponse, merr, err := this.service.AdminUserLogin(ctx.ClientIP(), verifycode, &reqdata)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.InternalError, err.Error()))
-		return
-	}
-	if merr != nil {
-		ctx.JSON(http.StatusBadRequest, merr)
-		return
-	}
-	ctx.JSON(http.StatusOK, enum.MakeSucess(reponse))
+	server.OnRequestEx(ctx, reqdata, this.service.AdminUserLogin)
 }
 
 // @Router /admin_user/user_logout [post]
@@ -70,33 +60,24 @@ func (this *ControllerAdminUser) user_logout(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, enum.Success)
 }
 
-// @Router /admin_user/get_admin_user [get]
+// @Router /admin_user/get_admin_user [post]
 // @Tags 后台用户
 // @Summary 获取管理员列表
 // @Param x-token header string true "token"
 // @Param query query service_admin.GetAdminUserReq false "筛选参数"
-// @Success 200 {object} []model.XAdminUser "成功"
+// @Success 200 {object} service_admin.GetAdminUserRes "成功"
 func (this *ControllerAdminUser) get_admin_user(ctx *gin.Context) {
 	var reqdata service_admin.GetAdminUserReq
 	if err := ctx.ShouldBindQuery(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
 		return
 	}
-	token := server.GetToken(ctx)
-	if token == nil {
+	validator := val.New()
+	if err := validator.Struct(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
 		return
 	}
-	reqdata.SellerId = token.SellerId
-	total, adminuserdata, merr, err := this.service.GetAdminUserList(&reqdata)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.InternalError, err.Error()))
-		return
-	}
-	if merr != nil {
-		ctx.JSON(http.StatusBadRequest, merr)
-		return
-	}
-	ctx.JSON(http.StatusOK, enum.MakePageSucess(total, adminuserdata))
+	server.OnRequestEx(ctx, reqdata, this.service.GetAdminUserList)
 }
 
 // @Router /admin_user/create_admin_user [post]
@@ -117,21 +98,7 @@ func (this *ControllerAdminUser) create_admin_user(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
 		return
 	}
-	token := server.GetToken(ctx)
-	if token == nil {
-		return
-	}
-	reqdata.SellerId = token.SellerId
-	merr, err := this.service.CreateAdminUser(&reqdata)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.InternalError, err.Error()))
-		return
-	}
-	if merr != nil {
-		ctx.JSON(http.StatusBadRequest, merr)
-		return
-	}
-	ctx.JSON(http.StatusOK, enum.Success)
+	server.OnRequest(ctx, reqdata, this.service.CreateAdminUser)
 }
 
 // @Router /admin_user/update_admin_user [patch]
@@ -152,21 +119,7 @@ func (this *ControllerAdminUser) update_admin_user(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
 		return
 	}
-	token := server.GetToken(ctx)
-	if token == nil {
-		return
-	}
-	reqdata.SellerId = token.SellerId
-	merr, err := this.service.UpdateAdminUser(&reqdata)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.InternalError, err.Error()))
-		return
-	}
-	if merr != nil {
-		ctx.JSON(http.StatusBadRequest, merr)
-		return
-	}
-	ctx.JSON(http.StatusOK, enum.Success)
+	server.OnRequest(ctx, reqdata, this.service.UpdateAdminUser)
 }
 
 // @Router /admin_user/delete_admin_user [delete]
@@ -187,21 +140,7 @@ func (this *ControllerAdminUser) delete_admin_user(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
 		return
 	}
-	token := server.GetToken(ctx)
-	if token == nil {
-		return
-	}
-	reqdata.SellerId = token.SellerId
-	rows, merr, err := this.service.DeleteAdminUser(&reqdata)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.InternalError, err.Error()))
-		return
-	}
-	if merr != nil {
-		ctx.JSON(http.StatusBadRequest, merr)
-		return
-	}
-	ctx.JSON(http.StatusOK, enum.MakeSucess(rows))
+	server.OnRequest(ctx, reqdata, this.service.DeleteAdminUser)
 }
 
 // @Router /admin_user/set_login_googlesecret [post]
@@ -222,22 +161,7 @@ func (this *ControllerAdminUser) set_login_googlesecret(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
 		return
 	}
-	verifycode := ctx.Request.Header.Get("VerifyCode")
-	token := server.GetToken(ctx)
-	if token == nil {
-		return
-	}
-	reqdata.SellerId = token.SellerId
-	googlesecret, merr, err := this.service.SetLoginGoogle(verifycode, token, &reqdata)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.InternalError, err.Error()))
-		return
-	}
-	if merr != nil {
-		ctx.JSON(http.StatusBadRequest, merr)
-		return
-	}
-	ctx.JSON(http.StatusOK, enum.MakeSucess(googlesecret))
+	server.OnRequestEx(ctx, reqdata, this.service.SetLoginGoogle)
 }
 
 // @Router /admin_user/set_opt_googlesecret [post]
@@ -258,20 +182,5 @@ func (this *ControllerAdminUser) set_opt_googlesecret(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
 		return
 	}
-	verifycode := ctx.Request.Header.Get("VerifyCode")
-	token := server.GetToken(ctx)
-	if token == nil {
-		return
-	}
-	reqdata.SellerId = token.SellerId
-	googlesecret, merr, err := this.service.SetOptGoogle(verifycode, token, &reqdata)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.InternalError, err.Error()))
-		return
-	}
-	if merr != nil {
-		ctx.JSON(http.StatusBadRequest, merr)
-		return
-	}
-	ctx.JSON(http.StatusOK, enum.MakeSucess(googlesecret))
+	server.OnRequestEx(ctx, reqdata, this.service.SetOptGoogle)
 }

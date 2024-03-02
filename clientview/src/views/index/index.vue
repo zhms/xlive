@@ -32,7 +32,6 @@ import useMyFetch from '@/script/fetch.js'
 import { useRouter } from 'vue-router'
 import { bodyWidth } from '@/script/base.js'
 import { Sale, wsconn } from '../../script/base'
-
 const name = ref('')
 const pwd = ref('')
 const router = useRouter()

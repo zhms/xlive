@@ -44,8 +44,8 @@
 			<el-table-column label="操作" align="left" width="300">
 				<template slot-scope="scope">
 					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 0)">编辑</el-button>
-					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 1)">登录验证码</el-button>
-					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 2)">操作验证码</el-button>
+					<!-- <el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 1)">登录验证码</el-button>
+					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 2)">操作验证码</el-button> -->
 					<el-button type="text" size="small" icon="el-icon-delete" class="red" @click="handleDelete(scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
@@ -78,7 +78,7 @@ export default {
 	methods: {
 		getTableData() {
 			let data = this.getQueryData()
-			this.$get('/v1/admin_user/get_admin_user', data).then((result) => {
+			this.$post('/v1/admin_user/get_admin_user', data).then((result) => {
 				this.table_data = this.dealData(result.data)
 				this.total = result.total
 			})

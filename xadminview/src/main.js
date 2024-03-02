@@ -19,6 +19,7 @@ Vue.prototype.$get = request.get
 Vue.prototype.$post = request.post
 Vue.prototype.$patch = request.patch
 Vue.prototype.$delete = request.delete
+Vue.prototype.$download = request.download
 
 router.beforeEach(async (to, from, next) => {
 	document.title = '演示系统'

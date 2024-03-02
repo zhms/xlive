@@ -36,7 +36,8 @@ export default {
 	methods: {
 		getTableData() {
 			let data = this.getQueryData()
-			this.$get('/v1/admin_role/get_admin_role', data).then((result) => {
+			this.$post('/v1/admin_role/get_admin_role', data).then((result) => {
+				console.log(result)
 				this.table_data = result.data
 				this.total = result.total
 			})

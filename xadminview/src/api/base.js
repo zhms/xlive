@@ -106,7 +106,7 @@ export default {
 	},
 	methods: {
 		getSeller() {
-			request.get('/v1/seller/get_seller', { page_size: 1000 }, { noloading: true }).then((data) => {
+			request.post('/v1/seller/get_seller', { page_size: 1000 }, { noloading: true }).then((data) => {
 				store.dispatch('app/setSellers', data)
 			})
 			//this.getChannel(this.filters.seller_id)
@@ -121,7 +121,7 @@ export default {
 					page: 1,
 					page_size: 1000,
 				}
-				request.get('/v1/channel/get_channel', data, { noloading: true }).then((channels) => {
+				request.post('/v1/channel/get_channel', data, { noloading: true }).then((channels) => {
 					store.dispatch('app/setChannels', channels.data)
 				})
 			}

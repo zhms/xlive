@@ -3,7 +3,7 @@
 		<div class="message-list" ref="messageListDom">
 			<template v-for="item in MsgList" :key="item.k">
 				<div class="message-item">
-					<div class="time">{{ item.time }} {{ item.from }}:</div>
+					<div class="time">{{ item.time }} {{ item.from }} :</div>
 					<div class="message-content">
 						<span>{{ item.msg }}</span>
 					</div>

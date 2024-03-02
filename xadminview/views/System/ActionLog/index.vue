@@ -71,7 +71,7 @@ export default {
 		getTableData() {
 			let data = this.getQueryData()
 			data.channel_id = Number(data.channel_id)
-			this.$get('/v1/admin_log/get_opt_log', data).then((result) => {
+			this.$post('/v1/admin_log/get_opt_log', data).then((result) => {
 				this.table_data = this.dealData(result.data)
 				this.total = result.total
 			})

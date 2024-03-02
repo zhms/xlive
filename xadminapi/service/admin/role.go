@@ -6,47 +6,50 @@ import (
 	"xcom/edb"
 	"xcom/enum"
 	"xcom/utils"
+
+	"github.com/gin-gonic/gin"
 )
 
 type GetAdminRoleReq struct {
-	Page     int    `form:"page"`      // 页码
-	PageSize int    `form:"page_size"` // 每页数量
-	SellerId int    `form:"seller_id"` // 运营商
-	RoleName string `form:"role_name"` // 角色名
+	Page     int    `json:"page"`      // 页码
+	PageSize int    `json:"page_size"` // 每页数量
+	RoleName string `json:"role_name"` // 角色名
 }
 
 type GetAdminRoleRes struct {
-	Total int                `json:"total"` // 总数
+	Total int64              `json:"total"` // 总数
 	Data  []model.XAdminRole `json:"data"`  // 数据
 }
 
 // 获取角色列表
-func (this *ServiceAdmin) GetRoleList(reqdata *GetAdminRoleReq) (total int64, data []model.XAdminRole, merr map[string]interface{}, err error) {
+func (this *ServiceAdmin) GetRoleList(ctx *gin.Context, idata interface{}) (rdata interface{}, merr map[string]interface{}, err error) {
+	reqdata := idata.(GetAdminRoleReq)
 	if reqdata.Page <= 0 {
 		reqdata.Page = 1
 	}
 	if reqdata.PageSize <= 0 {
 		reqdata.PageSize = 15
 	}
+	token := server.GetToken(ctx)
+	data := GetAdminRoleRes{}
 	db := server.Db().Model(&model.XAdminRole{})
-	db = utils.DbWhere(db, edb.SellerId, reqdata.SellerId, int(0))
+	db = utils.DbWhere(db, edb.SellerId, token.SellerId, int(0))
 	db = utils.DbWhere(db, edb.RoleName, reqdata.RoleName, "")
-	err = db.Count(&total).Error
+	err = db.Count(&data.Total).Error
 	if err != nil {
-		return 0, nil, nil, err
+		return nil, nil, err
 	}
 	db = db.Offset((reqdata.Page - 1) * reqdata.PageSize)
 	db = db.Limit(reqdata.PageSize)
 	db = db.Order(edb.Id + edb.DESC)
-	err = db.Find(&data).Error
+	err = db.Find(&data.Data).Error
 	if err != nil {
-		return 0, nil, nil, err
+		return nil, nil, err
 	}
-	return total, data, nil, err
+	return data, nil, err
 }
 
 type CreateAdminRoleReq struct {
-	SellerId int    `validate:"required" json:"seller_id"` // 运营商
 	RoleName string `validate:"required" json:"role_name"` // 角色
 	Parent   string `validate:"required" json:"parent"`    // 上级角色
 	RoleData string `validate:"required" json:"role_data"` // 权限数据
@@ -55,8 +58,10 @@ type CreateAdminRoleReq struct {
 }
 
 // 创建角色
-func (this *ServiceAdmin) CreateRole(reqdata *CreateAdminRoleReq) (merr map[string]interface{}, err error) {
-	exists, err := this.role_exists(reqdata.SellerId, reqdata.Parent)
+func (this *ServiceAdmin) CreateRole(ctx *gin.Context, idata interface{}) (merr map[string]interface{}, err error) {
+	reqdata := idata.(CreateAdminRoleReq)
+	token := server.GetToken(ctx)
+	exists, err := this.role_exists(token.SellerId, reqdata.Parent)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +70,7 @@ func (this *ServiceAdmin) CreateRole(reqdata *CreateAdminRoleReq) (merr map[stri
 	}
 	db := server.Db().Model(&model.XAdminRole{})
 	db = db.Create(map[string]interface{}{
-		edb.SellerId: reqdata.SellerId,
+		edb.SellerId: token.SellerId,
 		edb.RoleName: reqdata.RoleName,
 		edb.Parent:   reqdata.Parent,
 		edb.RoleData: reqdata.RoleData,
@@ -76,7 +81,6 @@ func (this *ServiceAdmin) CreateRole(reqdata *CreateAdminRoleReq) (merr map[stri
 }
 
 type UpdateAdminRoleReq struct {
-	SellerId int    `validate:"required" json:"seller_id"` // 运营商
 	RoleName string `validate:"required" json:"role_name"` // 角色
 	Parent   string `json:"parent"`                        // 上级角色
 	RoleData string `json:"role_data"`                     // 权限数据
@@ -85,14 +89,16 @@ type UpdateAdminRoleReq struct {
 }
 
 // 更新角色
-func (this *ServiceAdmin) UpdateRole(reqdata *UpdateAdminRoleReq) (merr map[string]interface{}, err error) {
+func (this *ServiceAdmin) UpdateRole(ctx *gin.Context, idata interface{}) (merr map[string]interface{}, err error) {
+	reqdata := idata.(UpdateAdminRoleReq)
 	if reqdata.RoleName == "超级管理员" || reqdata.RoleName == "运营商超管" {
 		return enum.RoleNotEditable, nil
 	}
+	token := server.GetToken(ctx)
 	updatedata := map[string]interface{}{}
 	utils.MapSet(&updatedata, edb.Memo, reqdata.Memo, "")
 	if reqdata.Parent != "" {
-		exists, err := this.role_exists(reqdata.SellerId, reqdata.Parent)
+		exists, err := this.role_exists(token.SellerId, reqdata.Parent)
 		if err != nil {
 			return nil, err
 		}
@@ -104,25 +110,26 @@ func (this *ServiceAdmin) UpdateRole(reqdata *UpdateAdminRoleReq) (merr map[stri
 	utils.MapSet(&updatedata, edb.RoleData, reqdata.RoleData, "")
 	utils.MapSetIn(&updatedata, edb.State, reqdata.State, []interface{}{int(1), int(2)})
 	db := server.Db().Model(&model.XAdminRole{})
-	db = db.Where(edb.SellerId+edb.EQ, reqdata.SellerId)
+	db = db.Where(edb.SellerId+edb.EQ, token.SellerId)
 	db = db.Where(edb.RoleName+edb.EQ, reqdata.RoleName)
 	db = db.Updates(updatedata)
 	return nil, db.Error
 }
 
 type DeleteAdminRoleReq struct {
-	SellerId int    `validate:"required" json:"seller_id"` // 运营商
 	RoleName string `validate:"required" json:"role_name"` // 角色
 }
 
 // 删除角色
-func (this *ServiceAdmin) DeleteRole(reqdata *DeleteAdminRoleReq) (rows int64, merr map[string]interface{}, err error) {
+func (this *ServiceAdmin) DeleteRole(ctx *gin.Context, idata interface{}) (merr map[string]interface{}, err error) {
+	token := server.GetToken(ctx)
+	reqdata := idata.(DeleteAdminRoleReq)
 	if reqdata.RoleName == "超级管理员" || reqdata.RoleName == "运营商超管" {
-		return 0, enum.RoleCantDelete, nil
+		return enum.RoleCantDelete, nil
 	}
 	db := server.Db().Model(&model.XAdminRole{})
-	db = db.Where(edb.SellerId+edb.EQ, reqdata.SellerId)
+	db = db.Where(edb.SellerId+edb.EQ, token.SellerId)
 	db = db.Where(edb.RoleName+edb.EQ, reqdata.RoleName)
 	db = db.Delete(&model.XAdminRole{})
-	return db.RowsAffected, nil, db.Error
+	return nil, db.Error
 }

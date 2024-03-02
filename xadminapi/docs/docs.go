@@ -16,7 +16,7 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/admin_log/get_login_log": {
-            "get": {
+            "post": {
                 "tags": [
                     "后台日志"
                 ],
@@ -30,69 +30,26 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "type": "string",
-                        "description": "操作人",
-                        "name": "account",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "渠道商",
-                        "name": "channel_id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "结束时间",
-                        "name": "end_time",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "登录Ip",
-                        "name": "login_ip",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "页码",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "每页数量",
-                        "name": "page_size",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "运营商",
-                        "name": "seller_id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "开始时间",
-                        "name": "start_time",
-                        "in": "query"
+                        "description": "筛选参数",
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/service_admin.GetAdminLoginLogReq"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.XAdminLoginLog"
-                            }
+                            "$ref": "#/definitions/service_admin.GetAdminLoginLogRes"
                         }
                     }
                 }
             }
         },
         "/admin_log/get_opt_log": {
-            "get": {
+            "post": {
                 "tags": [
                     "后台日志"
                 ],
@@ -100,61 +57,25 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "操作人",
-                        "name": "account",
-                        "in": "query"
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
                     },
                     {
-                        "type": "integer",
-                        "description": "渠道商",
-                        "name": "channel_id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "结束时间",
-                        "name": "end_time",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "操作名",
-                        "name": "opt_name",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "页码",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "每页数量",
-                        "name": "page_size",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "运营商",
-                        "name": "seller_id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "开始时间",
-                        "name": "start_time",
-                        "in": "query"
+                        "description": "筛选参数",
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/service_admin.GetAdminOptLogReq"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.XAdminOptLog"
-                            }
+                            "$ref": "#/definitions/service_admin.GetAdminOptLogRes"
                         }
                     }
                 }
@@ -267,22 +188,13 @@ const docTemplate = `{
                         "description": "角色名",
                         "name": "role_name",
                         "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "运营商",
-                        "name": "seller_id",
-                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.XAdminRole"
-                            }
+                            "$ref": "#/definitions/service_admin.GetAdminRoleRes"
                         }
                     }
                 }
@@ -403,7 +315,7 @@ const docTemplate = `{
             }
         },
         "/admin_user/get_admin_user": {
-            "get": {
+            "post": {
                 "tags": [
                     "后台用户"
                 ],
@@ -433,23 +345,13 @@ const docTemplate = `{
                         "description": "每页数量",
                         "name": "page_size",
                         "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "运营商",
-                        "name": "seller_id",
-                        "in": "query",
-                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.XAdminUser"
-                            }
+                            "$ref": "#/definitions/service_admin.GetAdminUserRes"
                         }
                     }
                 }
@@ -658,7 +560,10 @@ const docTemplate = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/service_admin.GetXConfigRes"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.XConfig"
+                            }
                         }
                     }
                 }
@@ -683,6 +588,40 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "成功"
+                    }
+                }
+            }
+        },
+        "/live_room/get_live_room": {
+            "post": {
+                "tags": [
+                    "直播间"
+                ],
+                "summary": "直播间列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "body参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service_live.GetLiveRoomListReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/service_live.GetLiveRoomListRes"
+                        }
                     }
                 }
             }
@@ -790,12 +729,6 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
-                        "type": "integer",
-                        "description": "运营商",
-                        "name": "seller_id",
-                        "in": "query"
-                    },
-                    {
                         "type": "string",
                         "description": "运营商名称",
                         "name": "seller_name",
@@ -806,10 +739,7 @@ const docTemplate = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.XSeller"
-                            }
+                            "$ref": "#/definitions/service_admin.GetXSellerRes"
                         }
                     }
                 }
@@ -843,6 +773,116 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/service_admin.UpdateXSellerReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功"
+                    }
+                }
+            }
+        },
+        "/user/add_user": {
+            "post": {
+                "tags": [
+                    "会员管理"
+                ],
+                "summary": "添加会员",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "验证码",
+                        "name": "VerifyCode",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "body参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service_user.AddUserReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功"
+                    }
+                }
+            }
+        },
+        "/user/get_user": {
+            "post": {
+                "tags": [
+                    "会员管理"
+                ],
+                "summary": "会员列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "body参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service_user.GetUserReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/service_user.GetUserRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/update_user": {
+            "patch": {
+                "tags": [
+                    "会员管理"
+                ],
+                "summary": "更新会员",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "验证码",
+                        "name": "VerifyCode",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "body参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service_user.UpdateUserReq"
                         }
                     }
                 ],
@@ -1040,6 +1080,47 @@ const docTemplate = `{
                 }
             }
         },
+        "model.XLiveRoom": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "主播账号",
+                    "type": "string"
+                },
+                "create_time": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "id",
+                    "type": "integer"
+                },
+                "live_url": {
+                    "description": "前端地址",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "直播间名称",
+                    "type": "string"
+                },
+                "pull_url": {
+                    "description": "拉流地址",
+                    "type": "string"
+                },
+                "push_url": {
+                    "description": "推流地址",
+                    "type": "string"
+                },
+                "seller_id": {
+                    "description": "运营商",
+                    "type": "integer"
+                },
+                "state": {
+                    "description": "状态 1正在直播,2未直播",
+                    "type": "integer"
+                }
+            }
+        },
         "model.XSeller": {
             "type": "object",
             "properties": {
@@ -1061,6 +1142,67 @@ const docTemplate = `{
                 },
                 "state": {
                     "description": "状态 1开启 2关闭",
+                    "type": "integer"
+                }
+            }
+        },
+        "model.XUser": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "用户账号",
+                    "type": "string"
+                },
+                "agent": {
+                    "description": "所属管理员",
+                    "type": "string"
+                },
+                "chat_state": {
+                    "description": "聊天状态 1开启,2关闭",
+                    "type": "integer"
+                },
+                "create_time": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "自增Id",
+                    "type": "integer"
+                },
+                "is_visitor": {
+                    "description": "是否是游客",
+                    "type": "integer"
+                },
+                "login_count": {
+                    "description": "登录次数",
+                    "type": "integer"
+                },
+                "login_ip": {
+                    "description": "登录ip",
+                    "type": "string"
+                },
+                "login_location": {
+                    "description": "登录ip地区",
+                    "type": "string"
+                },
+                "login_time": {
+                    "description": "登录时间",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "用户密码",
+                    "type": "string"
+                },
+                "seller_id": {
+                    "description": "运营商",
+                    "type": "integer"
+                },
+                "state": {
+                    "description": "状态 1开启,2关闭",
+                    "type": "integer"
+                },
+                "user_id": {
+                    "description": "用户id",
                     "type": "integer"
                 }
             }
@@ -1125,7 +1267,6 @@ const docTemplate = `{
                 "parent",
                 "role_data",
                 "role_name",
-                "seller_id",
                 "state"
             ],
             "properties": {
@@ -1145,10 +1286,6 @@ const docTemplate = `{
                     "description": "角色",
                     "type": "string"
                 },
-                "seller_id": {
-                    "description": "运营商",
-                    "type": "integer"
-                },
                 "state": {
                     "description": "状态 1开启,2关闭",
                     "type": "integer"
@@ -1161,7 +1298,6 @@ const docTemplate = `{
                 "account",
                 "password",
                 "role_name",
-                "seller_id",
                 "state"
             ],
             "properties": {
@@ -1181,10 +1317,6 @@ const docTemplate = `{
                     "description": "角色",
                     "type": "string"
                 },
-                "seller_id": {
-                    "description": "运营商",
-                    "type": "integer"
-                },
                 "state": {
                     "description": "状态 1开启,2关闭",
                     "type": "integer"
@@ -1194,7 +1326,6 @@ const docTemplate = `{
         "service_admin.CreateXSellerReq": {
             "type": "object",
             "required": [
-                "seller_id",
                 "seller_name",
                 "state"
             ],
@@ -1202,10 +1333,6 @@ const docTemplate = `{
                 "memo": {
                     "description": "备注",
                     "type": "string"
-                },
-                "seller_id": {
-                    "description": "运营商",
-                    "type": "integer"
                 },
                 "seller_name": {
                     "description": "运营商名称",
@@ -1220,34 +1347,24 @@ const docTemplate = `{
         "service_admin.DeleteAdminRoleReq": {
             "type": "object",
             "required": [
-                "role_name",
-                "seller_id"
+                "role_name"
             ],
             "properties": {
                 "role_name": {
                     "description": "角色",
                     "type": "string"
-                },
-                "seller_id": {
-                    "description": "运营商",
-                    "type": "integer"
                 }
             }
         },
         "service_admin.DeleteAdminUserReq": {
             "type": "object",
             "required": [
-                "account",
-                "seller_id"
+                "account"
             ],
             "properties": {
                 "account": {
                     "description": "账号",
                     "type": "string"
-                },
-                "seller_id": {
-                    "description": "运营商",
-                    "type": "integer"
                 }
             }
         },
@@ -1263,11 +1380,138 @@ const docTemplate = `{
                 }
             }
         },
+        "service_admin.GetAdminLoginLogReq": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "操作人",
+                    "type": "string"
+                },
+                "channel_id": {
+                    "description": "渠道商",
+                    "type": "integer"
+                },
+                "end_time": {
+                    "description": "结束时间",
+                    "type": "string"
+                },
+                "login_ip": {
+                    "description": "登录Ip",
+                    "type": "string"
+                },
+                "page": {
+                    "description": "页码",
+                    "type": "integer"
+                },
+                "page_size": {
+                    "description": "每页数量",
+                    "type": "integer"
+                },
+                "start_time": {
+                    "description": "开始时间",
+                    "type": "string"
+                }
+            }
+        },
+        "service_admin.GetAdminLoginLogRes": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "数据",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.XAdminLoginLog"
+                    }
+                },
+                "total": {
+                    "description": "总数",
+                    "type": "integer"
+                }
+            }
+        },
+        "service_admin.GetAdminOptLogReq": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "操作人",
+                    "type": "string"
+                },
+                "channel_id": {
+                    "description": "渠道商",
+                    "type": "integer"
+                },
+                "end_time": {
+                    "description": "结束时间",
+                    "type": "string"
+                },
+                "opt_name": {
+                    "description": "操作名",
+                    "type": "string"
+                },
+                "page": {
+                    "description": "页码",
+                    "type": "integer"
+                },
+                "page_size": {
+                    "description": "每页数量",
+                    "type": "integer"
+                },
+                "start_time": {
+                    "description": "开始时间",
+                    "type": "string"
+                }
+            }
+        },
+        "service_admin.GetAdminOptLogRes": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "数据",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.XAdminOptLog"
+                    }
+                },
+                "total": {
+                    "description": "总数",
+                    "type": "integer"
+                }
+            }
+        },
+        "service_admin.GetAdminRoleRes": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "数据",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.XAdminRole"
+                    }
+                },
+                "total": {
+                    "description": "总数",
+                    "type": "integer"
+                }
+            }
+        },
+        "service_admin.GetAdminUserRes": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "数据",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.XAdminUser"
+                    }
+                },
+                "total": {
+                    "description": "总数",
+                    "type": "integer"
+                }
+            }
+        },
         "service_admin.GetXConfigReq": {
             "type": "object",
-            "required": [
-                "seller_id"
-            ],
             "properties": {
                 "channel_id": {
                     "description": "渠道商",
@@ -1279,46 +1523,42 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
-                },
-                "seller_id": {
-                    "description": "运营商",
-                    "type": "integer"
                 }
             }
         },
-        "service_admin.GetXConfigRes": {
+        "service_admin.GetXSellerRes": {
             "type": "object",
             "properties": {
                 "data": {
+                    "description": "数据",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.XConfig"
+                        "$ref": "#/definitions/model.XSeller"
                     }
+                },
+                "total": {
+                    "description": "总数",
+                    "type": "integer"
                 }
             }
         },
         "service_admin.SetLoginGoogleReq": {
             "type": "object",
             "required": [
-                "account",
-                "seller_id"
+                "account"
             ],
             "properties": {
                 "account": {
                     "description": "账号",
                     "type": "string"
-                },
-                "seller_id": {
-                    "description": "运营商",
-                    "type": "integer"
                 }
             }
         },
         "service_admin.SetLoginGoogleRes": {
             "type": "object",
             "properties": {
-                "google_secret": {
-                    "description": "登录验证码",
+                "url": {
+                    "description": "二维码",
                     "type": "string"
                 }
             }
@@ -1326,25 +1566,20 @@ const docTemplate = `{
         "service_admin.SetOptGoogleReq": {
             "type": "object",
             "required": [
-                "account",
-                "seller_id"
+                "account"
             ],
             "properties": {
                 "account": {
                     "description": "账号",
                     "type": "string"
-                },
-                "seller_id": {
-                    "description": "运营商",
-                    "type": "integer"
                 }
             }
         },
         "service_admin.SetOptGoogleRes": {
             "type": "object",
             "properties": {
-                "google_secret": {
-                    "description": "操作验证码",
+                "url": {
+                    "description": "二维码",
                     "type": "string"
                 }
             }
@@ -1352,8 +1587,7 @@ const docTemplate = `{
         "service_admin.UpdateAdminRoleReq": {
             "type": "object",
             "required": [
-                "role_name",
-                "seller_id"
+                "role_name"
             ],
             "properties": {
                 "memo": {
@@ -1372,10 +1606,6 @@ const docTemplate = `{
                     "description": "角色",
                     "type": "string"
                 },
-                "seller_id": {
-                    "description": "运营商",
-                    "type": "integer"
-                },
                 "state": {
                     "description": "状态 1开启,2关闭",
                     "type": "integer"
@@ -1385,8 +1615,7 @@ const docTemplate = `{
         "service_admin.UpdateAdminUserReq": {
             "type": "object",
             "required": [
-                "account",
-                "seller_id"
+                "account"
             ],
             "properties": {
                 "account": {
@@ -1404,10 +1633,6 @@ const docTemplate = `{
                 "role_name": {
                     "description": "角色",
                     "type": "string"
-                },
-                "seller_id": {
-                    "description": "运营商",
-                    "type": "integer"
                 },
                 "state": {
                     "description": "状态 1开启,2关闭",
@@ -1435,6 +1660,125 @@ const docTemplate = `{
                 },
                 "state": {
                     "description": "状态 1开启,2关闭",
+                    "type": "integer"
+                }
+            }
+        },
+        "service_live.GetLiveRoomListReq": {
+            "type": "object",
+            "properties": {
+                "page": {
+                    "description": "页码",
+                    "type": "integer"
+                },
+                "page_size": {
+                    "description": "每页数量",
+                    "type": "integer"
+                }
+            }
+        },
+        "service_live.GetLiveRoomListRes": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "数据",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.XLiveRoom"
+                    }
+                },
+                "total": {
+                    "description": "总数",
+                    "type": "integer"
+                }
+            }
+        },
+        "service_user.AddUserReq": {
+            "type": "object",
+            "required": [
+                "account",
+                "password"
+            ],
+            "properties": {
+                "account": {
+                    "description": "账号",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "密码",
+                    "type": "string"
+                }
+            }
+        },
+        "service_user.GetUserReq": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "账号",
+                    "type": "string"
+                },
+                "agent": {
+                    "description": "代理",
+                    "type": "string"
+                },
+                "export": {
+                    "description": "导出",
+                    "type": "integer"
+                },
+                "login_ip": {
+                    "description": "登录Ip",
+                    "type": "string"
+                },
+                "page": {
+                    "description": "页码",
+                    "type": "integer"
+                },
+                "page_size": {
+                    "description": "每页数量",
+                    "type": "integer"
+                },
+                "user_id": {
+                    "description": "用户Id",
+                    "type": "integer"
+                }
+            }
+        },
+        "service_user.GetUserRes": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "数据",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.XUser"
+                    }
+                },
+                "total": {
+                    "description": "总数",
+                    "type": "integer"
+                }
+            }
+        },
+        "service_user.UpdateUserReq": {
+            "type": "object",
+            "required": [
+                "user_id"
+            ],
+            "properties": {
+                "chat_state": {
+                    "description": "聊天状态",
+                    "type": "integer"
+                },
+                "password": {
+                    "description": "密码",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "状态",
+                    "type": "integer"
+                },
+                "user_id": {
+                    "description": "用户Id",
                     "type": "integer"
                 }
             }

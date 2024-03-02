@@ -87,7 +87,7 @@ export default {
 			let data = {
 				seller_id: this.itemdata.seller_id,
 			}
-			this.$get('/v1/admin_role/get_admin_role', data, { noloading: true }).then((roledata) => {
+			this.$post('/v1/admin_role/get_admin_role', data, { noloading: true }).then((roledata) => {
 				this.dlgroles = roledata.data
 			})
 		},

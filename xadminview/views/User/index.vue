@@ -15,9 +15,10 @@
 			</el-form-item>
 			<el-form-item>
 				<el-button type="primary" icon="el-icon-refresh" v-on:click="handleQuery">查询</el-button>
+
 				<el-button type="primary" icon="el-icon-plus" class="mr10" @click="handleAdd(0)">添加</el-button>
-				<el-button type="primary" icon="el-icon-upload2" class="mr10" @click="handleAdd(0)">批量导入</el-button>
-				<el-button type="primary" icon="el-icon-bottom" class="mr10" @click="handleAdd(0)">导出</el-button>
+				<el-button type="primary" icon="el-icon-upload2" class="mr10" @click="handleAdd(1)">批量导入</el-button>
+				<el-button type="primary" icon="el-icon-bottom" class="mr10" @click="ExportUser()">导出</el-button>
 				<el-button type="primary" icon="el-icon-download" class="mr10" @click="DownLoadExcelTemplate()">下载导入模板</el-button>
 			</el-form-item>
 		</el-form>
@@ -39,25 +40,22 @@
 			<el-table-column align="center" prop="login_ip" label="登录Ip" width="150"></el-table-column>
 			<el-table-column align="center" prop="login_location" label="登录地区" width="120"></el-table-column>
 			<el-table-column align="center" prop="create_time" label="注册时间" width="160"></el-table-column>
-			<el-table-column align="center" prop="memo" label="备注" width="200"></el-table-column>
-			<!--<el-table-column label="操作" align="left" width="300">
+
+			<el-table-column label="操作" align="left" width="300">
 				<template slot-scope="scope">
-					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 0)">编辑</el-button>
-					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 1)">登录验证码</el-button>
-					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 2)">操作验证码</el-button>
-					<el-button type="text" size="small" icon="el-icon-delete" class="red" @click="handleDelete(scope.row)">删除</el-button>
+					<el-button type="text" size="small" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 3)" v-if="scope.row.state == 1">封号</el-button>
+					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 4)" v-if="scope.row.state != 1">解封</el-button>
+
+					<el-button type="text" size="small" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 1)" v-if="scope.row.chat_state != 1">禁言</el-button>
+					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 2)" v-if="scope.row.chat_state == 1">解除禁言</el-button>
 				</template>
-			</el-table-column> -->
+			</el-table-column>
 		</el-table>
 		<div class="pagination">
 			<el-pagination style="margin-right: 10px" background layout="sizes,total, prev, pager, next, jumper" @size-change="page_sizeChange" :current-page="page" @current-change="pageChange" :page-sizes="page_sizes" :total="total" :page-size="page_size"></el-pagination>
 		</div>
 		<edit-view :show.sync="dialog0.show" :title="dialog0.title" :itemdata="dialog0.itemdata" :filters="filters" @getTableData="getTableData" />
-		<div>
-			<el-dialog :title="dialog1.title" :visible.sync="dialog1.show" width="350px" center>
-				<vueqr :text="dialog1.url" :size="300"> </vueqr>
-			</el-dialog>
-		</div>
+		<edit-view :show.sync="dialog1.show" :title="dialog1.title" :itemdata="dialog1.itemdata" :filters="filters" @getTableData="getTableData" />
 	</div>
 </template>
 <script>
@@ -79,40 +77,39 @@ export default {
 	methods: {
 		getTableData() {
 			let data = this.getQueryData()
-			this.$get('/v1/user/get_user', data).then((result) => {
+			this.$post('/v1/user_list/get_user', data).then((result) => {
 				this.table_data = this.dealData(result.data)
 				this.total = result.total
 			})
 		},
+		ExportUser() {
+			let data = this.getQueryData()
+			this.$download('/v1/user_list/get_user', data).then((result) => {
+				this.$message.success('导出成功')
+			})
+		},
 		ModifyItem(index, next, item) {
-			if (index == 0) next('编辑账号')
-			if (index == 1 || index == 2) {
-				let data = {
-					Account: item.account,
-				}
-				if (index == 1) {
-					this.$post('/v1/admin_user/set_login_googlesecret', data, { google: true }).then((result) => {
-						this.dialog1.show = true
-						this.dialog1.url = result.url
-						this.dialog1.title = '登录验证码'
-					})
-				} else if (index == 2) {
-					this.$post('/v1/admin_user/set_opt_googlesecret', data, { google: true }).then((result) => {
-						this.dialog1.show = true
-						this.dialog1.url = result.url
-						this.dialog1.title = '操作验证码'
-					})
-				}
+			if (index == 0) return next('编辑会员')
+			let reqdata = {
+				user_id: item.user_id,
 			}
-		},
-		AddItem(index, next) {
-			if (index == 0) next('添加账号')
-		},
-		DeleteItem(item) {
-			this.$delete('/v1/admin_user/delete_admin_user', item, { google: true }).then(() => {
-				this.$message.success('删除成功')
+			if (index == 1) {
+				reqdata.chat_state = 1
+			} else if (index == 2) {
+				reqdata.chat_state = 2
+			} else if (index == 3) {
+				reqdata.state = 2
+			} else if (index == 4) {
+				reqdata.state = 1
+			}
+			this.$patch('/v1/user_list/update_user', reqdata, { google: true }).then(() => {
+				this.$message.success('修改成功')
 				this.getTableData()
 			})
+		},
+		AddItem(index, next) {
+			if (index == 0) return next('添加会员')
+			if (index == 1) return next('批量导入')
 		},
 		DownLoadExcelTemplate() {
 			console.log('下载导入模板')

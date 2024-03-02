@@ -36,11 +36,11 @@ func (this *ControllerUser) user_login(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
 		return
 	}
-	host := ctx.Request.Host
-	host = strings.Replace(host, "www.", "", -1)
-	host = strings.Split(host, ":")[0]
-	appid := ctx.GetHeader("appid")
-	reponse, merr, err := this.service.UserLogin(appid, host, ctx.ClientIP(), &reqdata)
+	reqdata.Host = ctx.Request.Host
+	reqdata.Host = strings.Replace(reqdata.Host, "www.", "", -1)
+	reqdata.Host = strings.Split(reqdata.Host, ":")[0]
+	reqdata.AppId = ctx.GetHeader("appid")
+	reponse, merr, err := this.service.UserLogin(&reqdata)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.InternalError, err.Error()))
 		return

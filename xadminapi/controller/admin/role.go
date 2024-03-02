@@ -18,7 +18,7 @@ type ControllerAdminRole struct {
 
 func (this *ControllerAdminRole) InitRouter(router *gin.RouterGroup) {
 	this.service = &service.Entries().ServiceAdmin
-	router.GET("/get_admin_role", this.get_admin_role)
+	router.POST("/get_admin_role", this.get_admin_role)
 	router.POST("/create_admin_role", middleware.Authorization("系统管理", "角色管理", "增", "新增角色"), this.create_admin_role)
 	router.PATCH("/update_admin_role", middleware.Authorization("系统管理", "角色管理", "改", "更新角色"), this.update_admin_role)
 	router.DELETE("/delete_admin_role", middleware.Authorization("系统管理", "角色管理", "删", "删除角色"), this.delete_admin_role)
@@ -29,28 +29,14 @@ func (this *ControllerAdminRole) InitRouter(router *gin.RouterGroup) {
 // @Summary 获取角色列表
 // @Param x-token header string true "token"
 // @Param query query service_admin.GetAdminRoleReq false "筛选参数"
-// @Success 200 {object} []model.XAdminRole "成功"
+// @Success 200 {object} service_admin.GetAdminRoleRes "成功"
 func (this *ControllerAdminRole) get_admin_role(ctx *gin.Context) {
 	var reqdata service_admin.GetAdminRoleReq
 	if err := ctx.ShouldBindQuery(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
 		return
 	}
-	token := server.GetToken(ctx)
-	if token == nil {
-		return
-	}
-	reqdata.SellerId = token.SellerId
-	total, data, merr, err := this.service.GetRoleList(&reqdata)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.InternalError, err.Error()))
-		return
-	}
-	if merr != nil {
-		ctx.JSON(http.StatusBadRequest, merr)
-		return
-	}
-	ctx.JSON(http.StatusOK, enum.MakePageSucess(total, data))
+	server.OnRequestEx(ctx, reqdata, this.service.GetRoleList)
 }
 
 // @Router /admin_role/create_admin_role [post]
@@ -71,21 +57,7 @@ func (this *ControllerAdminRole) create_admin_role(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
 		return
 	}
-	token := server.GetToken(ctx)
-	if token == nil {
-		return
-	}
-	reqdata.SellerId = token.SellerId
-	merr, err := this.service.CreateRole(&reqdata)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.InternalError, err.Error()))
-		return
-	}
-	if merr != nil {
-		ctx.JSON(http.StatusBadRequest, merr)
-		return
-	}
-	ctx.JSON(http.StatusOK, enum.Success)
+	server.OnRequest(ctx, reqdata, this.service.CreateRole)
 }
 
 // @Router /admin_role/update_admin_role [patch]
@@ -106,21 +78,7 @@ func (this *ControllerAdminRole) update_admin_role(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
 		return
 	}
-	token := server.GetToken(ctx)
-	if token == nil {
-		return
-	}
-	reqdata.SellerId = token.SellerId
-	merr, err := this.service.UpdateRole(&reqdata)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.InternalError, err.Error()))
-		return
-	}
-	if merr != nil {
-		ctx.JSON(http.StatusBadRequest, merr)
-		return
-	}
-	ctx.JSON(http.StatusOK, enum.Success)
+	server.OnRequest(ctx, reqdata, this.service.UpdateRole)
 }
 
 // @Router /admin_role/delete_admin_role [delete]
@@ -141,19 +99,5 @@ func (this *ControllerAdminRole) delete_admin_role(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
 		return
 	}
-	token := server.GetToken(ctx)
-	if token == nil {
-		return
-	}
-	reqdata.SellerId = token.SellerId
-	rows, merr, err := this.service.DeleteRole(&reqdata)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.InternalError, err.Error()))
-		return
-	}
-	if merr != nil {
-		ctx.JSON(http.StatusBadRequest, merr)
-		return
-	}
-	ctx.JSON(http.StatusOK, enum.MakeSucess(rows))
+	server.OnRequest(ctx, reqdata, this.service.DeleteRole)
 }

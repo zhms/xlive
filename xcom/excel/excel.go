@@ -3,8 +3,10 @@ package excel
 import (
 	"errors"
 	"fmt"
+	"net/url"
 	"xcom/utils"
 
+	"github.com/gin-gonic/gin"
 	"github.com/xuri/excelize/v2"
 )
 
@@ -19,7 +21,6 @@ import (
 */
 
 type ExcelBuilder struct {
-	dir            string
 	fileName       string
 	sheetName      string
 	excelfile      *excelize.File
@@ -28,9 +29,8 @@ type ExcelBuilder struct {
 	titleOptions   map[string]map[string]interface{}
 }
 
-func NewExcelBuilder(dir, fileName string) *ExcelBuilder {
+func NewExcelBuilder(fileName string) *ExcelBuilder {
 	r := &ExcelBuilder{
-		dir:            dir,
 		fileName:       fileName,
 		sheetName:      "Sheet1",
 		excelfile:      nil,
@@ -198,20 +198,12 @@ func (s *ExcelBuilder) SetValue(key string, value interface{}, row int64) (err e
 	return
 }
 
-func (s *ExcelBuilder) Save() (filePath string, err error) {
+func (s *ExcelBuilder) Write(ctx *gin.Context) {
 	if s.excelfile == nil {
-		err = errors.New("excelize File did not open")
 		return
 	}
-	if s.dir == "" {
-		filePath = s.fileName + ".xlsx"
-	} else {
-		if s.dir[len(s.dir)-1] == '/' {
-			filePath = s.dir + s.fileName + ".xlsx"
-		} else {
-			filePath = s.dir + "/" + s.fileName + ".xlsx"
-		}
-	}
-	err = s.excelfile.SaveAs(filePath)
-	return
+	n := url.PathEscape(s.fileName)
+	ctx.Header("Content-Disposition", "attachment; filename="+n+".xlsx")
+	ctx.Header("Content-Type", "application/octet-stream")
+	s.excelfile.Write(ctx.Writer)
 }

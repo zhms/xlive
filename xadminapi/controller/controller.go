@@ -2,6 +2,7 @@ package controller
 
 import (
 	controller_admin "xadminapi/controller/admin"
+	controller_live "xadminapi/controller/live"
 	controller_user "xadminapi/controller/user"
 )
 
@@ -14,6 +15,9 @@ type ControllerEntries struct {
 	controller_admin.ControllerAdminLog
 	controller_admin.ControllerConfig
 	controller_user.ControllerUser
+	controller_live.ControllerLiveRoom
+	controller_live.ControllerLiveChat
+	controller_live.ControllerLiveIpBan
 }
 
 func Entries() *ControllerEntries {

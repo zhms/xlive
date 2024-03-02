@@ -31,7 +31,7 @@ type UserRegisterRes struct {
 	Token  string `json:"token"`
 }
 
-func (this *ServiceUser) UserRegister(host string, ip string, reqdata *UserRegisterReq) (response *UserRegisterRes, merr map[string]interface{}, err error) {
+func (this *ServiceUser) UserRegister(reqdata *UserRegisterReq) (response *UserRegisterRes, merr map[string]interface{}, err error) {
 	locker := enum.Lock_UserRegister + reqdata.Account
 	if !server.Redis().Lock(locker, 5) {
 		return nil, enum.TooManyRequest, nil
@@ -40,7 +40,10 @@ func (this *ServiceUser) UserRegister(host string, ip string, reqdata *UserRegis
 }
 
 type UserLoginReq struct {
-	SellerId  int    `json:"-"`
+	Host  string `json:"-"`
+	AppId string `json:"-"`
+	Ip    string `json:"-"`
+
 	Account   string `validate:"required" json:"account"`
 	Password  string `json:"password"`
 	IsVisitor int    `json:"is_visitor"`
@@ -55,16 +58,16 @@ type UserLoginRes struct {
 	LiveData  string `json:"live_data"`
 }
 
-func (this *ServiceUser) UserLogin(appid string, host string, ip string, reqdata *UserLoginReq) (response *UserLoginRes, merr map[string]interface{}, err error) {
+func (this *ServiceUser) UserLogin(reqdata *UserLoginReq) (response *UserLoginRes, merr map[string]interface{}, err error) {
 	locker := enum.Lock_UserLogin + reqdata.Account
 	if !server.Redis().Lock(locker, 1) {
 		return nil, enum.TooManyRequest, nil
 	}
-	reqdata.SellerId = xcom.GetSellerId(host)
-	if reqdata.SellerId == 0 {
-		reqdata.SellerId = 1
+	SellerId := xcom.GetSellerId(reqdata.Host)
+	if SellerId == 0 {
+		SellerId = 1
 	}
-	livingdata := server.Redis().Client().HGet(context.Background(), "living", fmt.Sprintf("%v_%v", reqdata.SellerId, appid)).Val()
+	livingdata := server.Redis().Client().HGet(context.Background(), "living", fmt.Sprintf("%v_%v", SellerId, reqdata.AppId)).Val()
 	if len(livingdata) == 0 {
 		return nil, enum.LiveNotAvailable, nil
 	}
@@ -74,9 +77,9 @@ func (this *ServiceUser) UserLogin(appid string, host string, ip string, reqdata
 	} else {
 		reqdata.Password = utils.Md5(reqdata.Password)
 	}
-	rediskey := fmt.Sprintf("account:%v:%v", reqdata.SellerId, reqdata.Account)
+	rediskey := fmt.Sprintf("account:%v:%v", SellerId, reqdata.Account)
 	accountdata, err := server.Redis().GetCacheMap(rediskey, func() (*utils.XMap, error) {
-		rows, err := server.Db().Table(edb.TableUser).Where(edb.SellerId+edb.EQ, reqdata.SellerId).Where(edb.Account+edb.EQ, reqdata.Account).Rows()
+		rows, err := server.Db().Table(edb.TableUser).Where(edb.SellerId+edb.EQ, SellerId).Where(edb.Account+edb.EQ, reqdata.Account).Rows()
 		if err != nil {
 			return nil, err
 		}
@@ -100,7 +103,7 @@ func (this *ServiceUser) UserLogin(appid string, host string, ip string, reqdata
 		}
 		UserId := xcom.NewUserId()
 		err := server.Db().Table(edb.TableUser).Create(map[string]interface{}{
-			edb.SellerId:  reqdata.SellerId,
+			edb.SellerId:  SellerId,
 			edb.UserId:    UserId,
 			edb.Account:   reqdata.Account,
 			edb.Password:  reqdata.Password,
@@ -111,7 +114,7 @@ func (this *ServiceUser) UserLogin(appid string, host string, ip string, reqdata
 			logs.Error("UserLogin:", err)
 			return nil, nil, err
 		}
-		rows, err := server.Db().Table(edb.TableUser).Where(edb.SellerId+edb.EQ, reqdata.SellerId).Where(edb.Account+edb.EQ, reqdata.Account).Rows()
+		rows, err := server.Db().Table(edb.TableUser).Where(edb.SellerId+edb.EQ, SellerId).Where(edb.Account+edb.EQ, reqdata.Account).Rows()
 		if err != nil {
 			logs.Error("UserLogin:", err)
 			return nil, nil, err
@@ -132,12 +135,12 @@ func (this *ServiceUser) UserLogin(appid string, host string, ip string, reqdata
 	server.Redis().Client().Set(context.Background(), rediskey, accountdata.ToString(), time.Second*60*60*24).Result()
 
 	tokendata := server.TokenData{}
-	tokendata.SellerId = reqdata.SellerId
+	tokendata.SellerId = SellerId
 	tokendata.Account = accountdata.String(edb.Account)
 	tokendata.UserId = accountdata.Int(edb.UserId)
 	tokendata.IsVisitor = accountdata.Int(edb.IsVisitor)
 	tokendata.Token = accountdata.String(edb.Token)
-	tokendata.Ip = ip
+	tokendata.Ip = reqdata.Ip
 	server.SetToken(accountdata.String(edb.Token), &tokendata)
 	response = &UserLoginRes{}
 	response.Account = accountdata.String(edb.Account)
