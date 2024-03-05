@@ -9,7 +9,7 @@ import (
 	"time"
 	"xclientapi/server"
 	"xcom/edb"
-	"xcom/utils"
+	"xcom/xutils"
 
 	"github.com/gorilla/websocket"
 	"github.com/yinheli/qqwry"
@@ -159,10 +159,10 @@ func (this *ServiceApp) ChatMsg(roomid string, tokendata *server.TokenData, msgd
 		edb.Account:    tokendata.Account,
 		edb.Content:    msgdata,
 		edb.State:      1,
-		edb.CreateTime: utils.Now(),
+		edb.CreateTime: xutils.Now(),
 	})
 
-	chatdata := &ChatData{From: tokendata.Account, Msg: msgdata, Time: utils.Now()}
+	chatdata := &ChatData{From: tokendata.Account, Msg: msgdata, Time: xutils.Now()}
 	bytes, _ := json.Marshal(chatdata)
 	for _, v := range this.users[roomid] {
 		if v.Account == tokendata.Account {

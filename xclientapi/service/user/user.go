@@ -8,8 +8,8 @@ import (
 	"xclientapi/server"
 	"xcom/edb"
 	"xcom/enum"
-	"xcom/utils"
 	"xcom/xcom"
+	"xcom/xutils"
 
 	"github.com/beego/beego/logs"
 	"github.com/gin-gonic/gin"
@@ -79,17 +79,17 @@ func (this *ServiceUser) UserLogin(ctx *gin.Context, idata interface{}) (rdata i
 	}
 
 	if reqdata.IsVisitor == enum.StateYes {
-		reqdata.Password = utils.Md5(reqdata.Account)
+		reqdata.Password = xutils.Md5(reqdata.Account)
 	} else {
-		reqdata.Password = utils.Md5(reqdata.Password)
+		reqdata.Password = xutils.Md5(reqdata.Password)
 	}
 	rediskey := fmt.Sprintf("account:%v:%v", SellerId, reqdata.Account)
-	accountdata, err := server.Redis().GetCacheMap(rediskey, func() (*utils.XMap, error) {
+	accountdata, err := server.Redis().GetCacheMap(rediskey, func() (*xutils.XMap, error) {
 		rows, err := server.Db().Table(edb.TableUser).Where(edb.SellerId+edb.EQ, SellerId).Where(edb.Account+edb.EQ, reqdata.Account).Rows()
 		if err != nil {
 			return nil, err
 		}
-		data := utils.DbFirst(rows)
+		data := xutils.DbFirst(rows)
 		if data == nil {
 			return nil, nil
 		}
@@ -125,7 +125,7 @@ func (this *ServiceUser) UserLogin(ctx *gin.Context, idata interface{}) (rdata i
 			logs.Error("UserLogin:", err)
 			return nil, nil, err
 		}
-		accountdata = utils.DbFirst(rows)
+		accountdata = xutils.DbFirst(rows)
 		_, err = server.Redis().Client().Set(context.Background(), rediskey, accountdata.ToString(), time.Second*60*60*24).Result()
 		if err != nil {
 			logs.Error("UserLogin:", err)
