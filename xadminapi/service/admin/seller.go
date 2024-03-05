@@ -30,9 +30,6 @@ func (this *ServiceAdmin) GetSellerList(ctx *gin.Context, idata interface{}) (rd
 		reqdata.PageSize = 15
 	}
 	token := server.GetToken(ctx)
-	if token == nil {
-		return nil, nil, nil
-	}
 	db := server.Db().Model(&model.XSeller{})
 	db = db.Where(edb.SellerId+edb.EQ, token.SellerId)
 	if reqdata.SellerName != "" {

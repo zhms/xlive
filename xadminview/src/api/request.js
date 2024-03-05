@@ -39,7 +39,13 @@ service.interceptors.response.use(
 		} else if (error.response.status == 404) {
 			Message({ type: 'error', message: 'http status 404' })
 		} else {
-			Message({ type: 'error', message: error.response.data.msg + ' ' + error.response.data.data })
+			if (error.response.data.code == 100102) {
+				error.response.data.data = error.response.data.data || ' 请退出从新登录'
+				Message({ type: 'error', message: error.response.data.msg + ' ' + error.response.data.data })
+			} else {
+				error.response.data.data = error.response.data.data || ''
+				Message({ type: 'error', message: error.response.data.msg + ' ' + error.response.data.data })
+			}
 		}
 		return Promise.reject(error)
 	}
@@ -60,38 +66,6 @@ async function getGoogleCode() {
 }
 
 export default {
-	async get(url, data, options) {
-		data = data || {}
-		options = options || {}
-		data.test = '[1, 2, 3]'
-		let param = ''
-		for (let key in data) {
-			param += `${key}=${data[key]}&`
-		}
-		console.log(param)
-		if (param) param = param.substring(0, param.length - 1)
-		url = `${url}?${param}`
-		options.loading = !options.noloading
-		if (options.loading) {
-			if (loading) loading.close()
-			loading = Loading.service({ lock: true, spinner: 'el-icon-loading', background: 'rgba(0, 0, 0, 0.7)' })
-		}
-		return new Promise((resolve, reject) => {
-			let options = {}
-			options.url = url
-			options.data = data
-			options.method = 'GET'
-			service(options)
-				.then((data) => {
-					if (options.loading) if (loading) loading.close()
-					resolve(data)
-				})
-				.catch((e) => {
-					if (options.loading) if (loading) loading.close()
-					reject(e)
-				})
-		})
-	},
 	async download(url, data = {}, options = {}) {
 		data.export = 1
 		data.seller_id = Number(localStorage.getItem('seller_id') ?? 0) || 1

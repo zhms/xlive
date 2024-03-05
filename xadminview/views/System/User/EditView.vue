@@ -66,7 +66,6 @@ export default {
 			}
 		},
 		onOpen() {
-			this.itemdata.state = 1
 			this.itemdata.seller_id = this.filters.seller_id
 			this.dlgroles = []
 			this.dlgchannels = []
@@ -75,6 +74,7 @@ export default {
 				this.getRoles()
 			}
 			if (this.title == '添加账号') {
+				this.itemdata.state = 1
 				if (!this.zong) {
 					this.getRoles()
 				}

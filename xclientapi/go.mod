@@ -9,7 +9,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/websocket v1.5.1
 	github.com/redis/go-redis/v9 v9.3.0
-	github.com/shopspring/decimal v1.3.1
+	github.com/yinheli/qqwry v0.0.0-20160229183603-f50680010f4a
 	gorm.io/gorm v1.25.5
 )
 
@@ -19,7 +19,10 @@ require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/pquerna/otp v1.4.0 // indirect
 	github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644 // indirect
+	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/spf13/viper v1.17.0 // indirect
+	github.com/ugorji/go/codec v1.2.12 // indirect
+	github.com/yinheli/mahonia v0.0.0-20131226213531-0eef680515cc // indirect
 	gorm.io/driver/mysql v1.5.2 // indirect
 )
 
@@ -63,7 +66,6 @@ require (
 	github.com/swaggo/gin-swagger v1.6.0 // indirect
 	github.com/swaggo/swag v1.16.2
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
-	github.com/ugorji/go/codec v1.2.11 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/arch v0.3.0 // indirect

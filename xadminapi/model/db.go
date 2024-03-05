@@ -122,9 +122,26 @@ type XLiveRoom struct {
 	PullURL    string `gorm:"column:pull_url;type:varchar(1024);charset:utf8mb4;comment:'拉流地址'" json:"pull_url"` // 拉流地址
 	LiveURL    string `gorm:"column:live_url;type:varchar(1024);charset:utf8mb4;comment:'前端地址'" json:"live_url"` // 前端地址
 	State      int    `gorm:"column:state;comment:'状态1正在直播,2未直播'" json:"state"`                                  //状态 1正在直播,2未直播
+	Title      string `gorm:"column:title;type:varchar(32);charset:utf8mb4;comment:'直播间标题'" json:"title"`        // 直播间标题
 	CreateTime string `gorm:"column:create_time;default:CURRENT_TIMESTAMP;comment:'创建时间'" json:"create_time"`    // 创建时间
 }
 
 func (XLiveRoom) TableName() string {
 	return "x_live_room"
+}
+
+type XChatList struct {
+	Id         int    `gorm:"column:id;primaryKey;autoIncrement" json:"id"`            // 自增Id
+	UserId     int    `gorm:"column:user_id" json:"user_id" comment:"会员id"`            // 会员id
+	Account    string `gorm:"column:account" json:"account" comment:"会员账号"`            // 会员账号
+	RoomId     int    `gorm:"column:room_id" json:"room_id" comment:"房价id"`            // 房价id
+	Content    string `gorm:"column:content" json:"content" comment:"内容"`              // 内容
+	Ip         string `gorm:"column:ip" json:"ip" comment:"ip"`                        // ip
+	IpLocation string `gorm:"column:ip_location" json:"ip_location"`                   // ip_location
+	State      int    `gorm:"column:state" json:"state" comment:"状态 1待审核,2审核通过,3审核拒绝"` // 状态 1待审核,2审核通过,3审核拒绝
+	CreateTime string `gorm:"column:create_time" json:"create_time"`                   // 创建时间
+}
+
+func (XChatList) TableName() string {
+	return "x_chat_list"
 }

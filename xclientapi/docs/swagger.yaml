@@ -1,35 +1,38 @@
 basePath: /api/v1
 definitions:
-  service_app.AppGetLiveInfoReq:
-    properties:
-      user_id:
-        type: integer
-    type: object
-  service_app.AppGetLiveInfoRes:
-    properties:
-      user_id:
-        type: integer
-    type: object
   service_user.UserLoginReq:
     properties:
       account:
+        description: 账号
         type: string
       is_visitor:
+        description: 是否游客
         type: integer
       password:
+        description: 密码
         type: string
+      sales_id:
+        description: 业务员
+        type: integer
     required:
     - account
     type: object
   service_user.UserLoginRes:
     properties:
       account:
+        description: 账号
         type: string
       is_visitor:
+        description: 是否游客
         type: integer
+      live_data:
+        description: 直播数据
+        type: string
       token:
+        description: token
         type: string
       user_id:
+        description: 用户Id
         type: integer
     type: object
 info:
@@ -37,27 +40,6 @@ info:
   title: xclientapi
   version: "1.0"
 paths:
-  /app/get_live_info:
-    get:
-      parameters:
-      - description: token
-        in: header
-        name: x-token
-        required: true
-        type: string
-      - description: 筛选参数
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/service_app.AppGetLiveInfoReq'
-      responses:
-        "200":
-          description: 成功
-          schema:
-            $ref: '#/definitions/service_app.AppGetLiveInfoRes'
-      summary: 获取直播信息
-      tags:
-      - 应用
   /user/user_login:
     post:
       parameters:

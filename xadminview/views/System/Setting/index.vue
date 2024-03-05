@@ -78,11 +78,10 @@ export default {
 			// })
 		},
 		ModifyItem(index, next, item) {
-			if (index == 0) next('编辑配置')
+			if (index == 0) return next('编辑配置')
 		},
-		AddItem(index, next, item) {
-			item.ForClient = 1
-			if (index == 0) next('添加配置')
+		AddItem(index, next) {
+			if (index == 0) return next('添加配置', { ForClient: 1 })
 		},
 	},
 }

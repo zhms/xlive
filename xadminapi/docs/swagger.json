@@ -584,6 +584,109 @@
                 }
             }
         },
+        "/live_chat/get_live_chat": {
+            "post": {
+                "tags": [
+                    "直播间-互动列表"
+                ],
+                "summary": "获取互动列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "body参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service_live.GetChatListReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/service_live.GetChatListRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/live_room/create_live_room": {
+            "post": {
+                "tags": [
+                    "直播间"
+                ],
+                "summary": "创建直播间",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "body参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service_live.CreateLiveRoomReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功"
+                    }
+                }
+            }
+        },
+        "/live_room/delete_live_room": {
+            "delete": {
+                "tags": [
+                    "直播间"
+                ],
+                "summary": "删除直播间",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "验证码",
+                        "name": "VerifyCode",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "body参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service_live.DeleteLiveRoomReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功"
+                    }
+                }
+            }
+        },
         "/live_room/get_live_room": {
             "post": {
                 "tags": [
@@ -614,6 +717,44 @@
                         "schema": {
                             "$ref": "#/definitions/service_live.GetLiveRoomListRes"
                         }
+                    }
+                }
+            }
+        },
+        "/live_room/update_live_room": {
+            "patch": {
+                "tags": [
+                    "直播间"
+                ],
+                "summary": "更新直播间",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "验证码",
+                        "name": "VerifyCode",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "body参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service_live.UpdateLiveRoomReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功"
                     }
                 }
             }
@@ -1043,6 +1184,47 @@
                 }
             }
         },
+        "model.XChatList": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "会员账号",
+                    "type": "string"
+                },
+                "content": {
+                    "description": "内容",
+                    "type": "string"
+                },
+                "create_time": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "自增Id",
+                    "type": "integer"
+                },
+                "ip": {
+                    "description": "ip",
+                    "type": "string"
+                },
+                "ip_location": {
+                    "description": "ip_location",
+                    "type": "string"
+                },
+                "room_id": {
+                    "description": "房价id",
+                    "type": "integer"
+                },
+                "state": {
+                    "description": "状态 1待审核,2审核通过,3审核拒绝",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "会员id",
+                    "type": "integer"
+                }
+            }
+        },
         "model.XConfig": {
             "type": "object",
             "properties": {
@@ -1110,6 +1292,10 @@
                 "state": {
                     "description": "状态 1正在直播,2未直播",
                     "type": "integer"
+                },
+                "title": {
+                    "description": "直播间标题",
+                    "type": "string"
                 }
             }
         },
@@ -1656,6 +1842,69 @@
                 }
             }
         },
+        "service_live.CreateLiveRoomReq": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "直播间账号",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "直播间名称",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "直播间状态",
+                    "type": "integer"
+                },
+                "title": {
+                    "description": "直播间标题",
+                    "type": "string"
+                }
+            }
+        },
+        "service_live.DeleteLiveRoomReq": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "直播间Id",
+                    "type": "integer"
+                }
+            }
+        },
+        "service_live.GetChatListReq": {
+            "type": "object",
+            "properties": {
+                "page": {
+                    "description": "页码",
+                    "type": "integer"
+                },
+                "page_size": {
+                    "description": "每页数量",
+                    "type": "integer"
+                },
+                "room_id": {
+                    "description": "房间Id",
+                    "type": "integer"
+                }
+            }
+        },
+        "service_live.GetChatListRes": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "数据",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.XChatList"
+                    }
+                },
+                "total": {
+                    "description": "总数",
+                    "type": "integer"
+                }
+            }
+        },
         "service_live.GetLiveRoomListReq": {
             "type": "object",
             "properties": {
@@ -1682,6 +1931,31 @@
                 "total": {
                     "description": "总数",
                     "type": "integer"
+                }
+            }
+        },
+        "service_live.UpdateLiveRoomReq": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "直播间账号",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "直播间Id",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "直播间名称",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "直播间状态",
+                    "type": "integer"
+                },
+                "title": {
+                    "description": "直播间标题",
+                    "type": "string"
                 }
             }
         },

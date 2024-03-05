@@ -64,7 +64,8 @@ const playerId = ref('e' + +new Date())
 const isPlay = ref(false)
 const liveData = ref(getLiveData())
 let player
-const liveUrl = ref(liveData.value.data.live_url)
+const liveUrl = ref(liveData.value.data.pull_url)
+console.log('liveUrl', liveUrl.value)
 const playData = computed(() => ({
 	type: 'video/x-flv',
 	src: liveUrl.value,

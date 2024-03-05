@@ -8,7 +8,10 @@
 				<el-form-item label="讲师名称:">
 					<el-input v-model="itemdata.account" style="width: 400px"></el-input>
 				</el-form-item>
-				<el-form-item label="状态:">
+				<el-form-item label="聊天标题:">
+					<el-input v-model="itemdata.title" style="width: 400px"></el-input>
+				</el-form-item>
+				<el-form-item label="状态:" v-if="title == '编辑直播间'">
 					<el-radio v-model="itemdata.state" :label="1">开启直播</el-radio>
 					<el-radio v-model="itemdata.state" :label="2">关闭直播</el-radio>
 				</el-form-item>
@@ -27,6 +30,7 @@ export default {
 		return {}
 	},
 	methods: {
+		onOpen() {},
 		commitData(next) {
 			if (this.title == '编辑直播间') {
 				let data = JSON.parse(JSON.stringify(this.itemdata))
@@ -36,18 +40,17 @@ export default {
 				})
 			}
 			if (this.title == '添加直播间') {
-				if (!this.itemdata.account) return this.$message.error('请填写账号')
-				if (!this.itemdata.password) return this.$message.error('请填写密码')
+				if (!this.itemdata.name) return this.$message.error('请填写直播间名称')
+				if (!this.itemdata.account) return this.$message.error('请填写讲师名称')
+				if (!this.itemdata.title) return this.$message.error('请填写聊天标题')
+				this.itemdata.state = this.itemdata.state ?? 2
 				let data = JSON.parse(JSON.stringify(this.itemdata))
-				this.$post('/v1/user/add_user', data, { google: true }).then(() => {
+				this.$post('/v1/live_room/create_live_room', data, { google: true }).then(() => {
 					this.$message.success('添加成功')
 					next(true)
 				})
 			}
 		},
-		onOpen() {},
 	},
 }
 </script>
-
-可以这么理解吧,我的 人事关系,福利关系,汇报对象,负责对象

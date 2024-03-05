@@ -43,7 +43,7 @@ export default {
 			})
 		},
 		AddItem(index, next) {
-			if (index == 0) next(`添加角色`)
+			if (index == 0) return next(`添加角色`, {})
 		},
 		ModifyItem(index, next, item) {
 			if (index == 0 && item.Parent == 'god') return this.$message.error('该角色不可编辑')

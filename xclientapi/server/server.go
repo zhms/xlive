@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"xcom/enum"
 	"xcom/xcom"
 	"xcom/xredis"
 
@@ -9,6 +10,7 @@ import (
 
 	_ "xclientapi/docs" // main 文件中导入 docs 包
 
+	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/websocket"
 	"gorm.io/gorm"
@@ -45,4 +47,30 @@ var WsUpgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
 		return true
 	},
+}
+
+func OnRequest(ctx *gin.Context, reqdata interface{}, cb func(*gin.Context, interface{}) (map[string]interface{}, error)) {
+	merr, err := cb(ctx, reqdata)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.InternalError, err.Error()))
+		return
+	}
+	if merr != nil {
+		ctx.JSON(http.StatusBadRequest, merr)
+		return
+	}
+	ctx.JSON(http.StatusOK, enum.Success)
+}
+
+func OnRequestEx(ctx *gin.Context, reqdata interface{}, cb func(*gin.Context, interface{}) (interface{}, map[string]interface{}, error)) {
+	data, merr, err := cb(ctx, reqdata)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.InternalError, err.Error()))
+		return
+	}
+	if merr != nil {
+		ctx.JSON(http.StatusBadRequest, merr)
+		return
+	}
+	ctx.JSON(http.StatusOK, enum.MakeSucess(data))
 }

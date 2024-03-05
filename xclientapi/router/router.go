@@ -1,13 +1,13 @@
 package router
 
 import (
-	"xclientapi/controller"
+	"xclientapi/api"
 	"xcom/global"
 )
 
 func Init() {
 	router := global.Router.Group("/api/v1")
-	entries := controller.Entries()
-	entries.ControllerApp.InitRouter(router.Group("app"))
-	entries.ControllerUser.InitRouter(router.Group("user"))
+	entries := api.Entries()
+	entries.ApiApp.InitRouter(router.Group("app"))
+	entries.ApiUser.InitRouter(router.Group("user"))
 }

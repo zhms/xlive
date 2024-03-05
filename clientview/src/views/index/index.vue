@@ -31,7 +31,7 @@ import { useStorage } from '@vueuse/core'
 import useMyFetch from '@/script/fetch.js'
 import { useRouter } from 'vue-router'
 import { bodyWidth } from '@/script/base.js'
-import { Sale, wsconn } from '../../script/base'
+import { SaleId, wsconn } from '../../script/base'
 const name = ref('')
 const pwd = ref('')
 const router = useRouter()
@@ -50,7 +50,7 @@ const { execute: loginExecute, isFetching: loginIsFetching } = useMyFetch('/api/
 	account: name.value,
 	password: pwd.value,
 	is_visitor: 2,
-	sale: Sale,
+	sale_id: SaleId,
 }))
 
 function loginCallback(res) {
@@ -97,7 +97,7 @@ function visitorLogin() {
 	}).post(() => ({
 		account: account,
 		is_visitor: 1,
-		sale: Sale,
+		sale_id: SaleId,
 	}))
 }
 

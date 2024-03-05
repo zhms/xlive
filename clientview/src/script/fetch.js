@@ -1,5 +1,5 @@
 import { createFetch, useStorage } from '@vueuse/core'
-import { getToken, login, AppId } from './base'
+import { getToken, login, RoomId } from './base'
 import { showToast } from 'vant'
 
 const useMyFetch = createFetch({
@@ -11,7 +11,7 @@ const useMyFetch = createFetch({
 			options.headers = {
 				...options.headers,
 				'x-token': token,
-				appid: AppId,
+				RoomId: RoomId,
 			}
 		},
 		afterFetch(ctx) {
@@ -28,6 +28,8 @@ const useMyFetch = createFetch({
 				showToast('password not correct')
 			} else if (data.code === 10) {
 				login()
+			} else if (data.code === 6) {
+				showToast('living not available now')
 			}
 			return ctx
 		},

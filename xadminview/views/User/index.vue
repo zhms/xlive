@@ -15,7 +15,6 @@
 			</el-form-item>
 			<el-form-item>
 				<el-button type="primary" icon="el-icon-refresh" v-on:click="handleQuery">查询</el-button>
-
 				<el-button type="primary" icon="el-icon-plus" class="mr10" @click="handleAdd(0)">添加</el-button>
 				<el-button type="primary" icon="el-icon-upload2" class="mr10" @click="handleAdd(1)">批量导入</el-button>
 				<el-button type="primary" icon="el-icon-bottom" class="mr10" @click="ExportUser()">导出</el-button>
@@ -46,8 +45,8 @@
 					<el-button type="text" size="small" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 3)" v-if="scope.row.state == 1">封号</el-button>
 					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 4)" v-if="scope.row.state != 1">解封</el-button>
 
-					<el-button type="text" size="small" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 1)" v-if="scope.row.chat_state != 1">禁言</el-button>
-					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 2)" v-if="scope.row.chat_state == 1">解除禁言</el-button>
+					<el-button type="text" size="small" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 2)" v-if="scope.row.chat_state == 1">禁言</el-button>
+					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 1)" v-if="scope.row.chat_state != 1">解除禁言</el-button>
 				</template>
 			</el-table-column>
 		</el-table>

@@ -3,6 +3,7 @@ package service_user
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 	"xclientapi/server"
 	"xcom/edb"
@@ -11,6 +12,7 @@ import (
 	"xcom/xcom"
 
 	"github.com/beego/beego/logs"
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
@@ -20,6 +22,7 @@ type ServiceUser struct {
 func (this *ServiceUser) Init() {
 }
 
+// 用户注册
 type UserRegisterReq struct {
 	SellerId int    `json:"-"`
 	Account  string `json:"account"`
@@ -39,35 +42,38 @@ func (this *ServiceUser) UserRegister(reqdata *UserRegisterReq) (response *UserR
 	return response, nil, err
 }
 
+// 用户登录
 type UserLoginReq struct {
-	Host  string `json:"-"`
-	AppId string `json:"-"`
-	Ip    string `json:"-"`
-
-	Account   string `validate:"required" json:"account"`
-	Password  string `json:"password"`
-	IsVisitor int    `json:"is_visitor"`
-	Sale      string `json:"sale"`
+	Account   string `validate:"required" json:"account"` // 账号
+	Password  string `json:"password"`                    // 密码
+	IsVisitor int    `json:"is_visitor"`                  // 是否游客
+	SalesId   int    `json:"sales_id"`                    //业务员
 }
 
 type UserLoginRes struct {
-	Account   string `json:"account"`
-	UserId    int    `json:"user_id"`
-	Token     string `json:"token"`
-	IsVisitor int    `json:"is_visitor"`
-	LiveData  string `json:"live_data"`
+	Account   string `json:"account"`    // 账号
+	UserId    int    `json:"user_id"`    // 用户Id
+	Token     string `json:"token"`      // token
+	IsVisitor int    `json:"is_visitor"` // 是否游客
+	LiveData  string `json:"live_data"`  // 直播数据
 }
 
-func (this *ServiceUser) UserLogin(reqdata *UserLoginReq) (response *UserLoginRes, merr map[string]interface{}, err error) {
+func (this *ServiceUser) UserLogin(ctx *gin.Context, idata interface{}) (rdata interface{}, merr map[string]interface{}, err error) {
+	reqdata := idata.(*UserLoginReq)
 	locker := enum.Lock_UserLogin + reqdata.Account
 	if !server.Redis().Lock(locker, 1) {
 		return nil, enum.TooManyRequest, nil
 	}
-	SellerId := xcom.GetSellerId(reqdata.Host)
+	host := ctx.Request.Host
+	host = strings.Replace(host, "www.", "", -1)
+	host = strings.Split(host, ":")[0]
+
+	SellerId := xcom.GetSellerId(host)
 	if SellerId == 0 {
 		SellerId = 1
 	}
-	livingdata := server.Redis().Client().HGet(context.Background(), "living", fmt.Sprintf("%v_%v", SellerId, reqdata.AppId)).Val()
+	RoomId := ctx.Request.Header.Get("RoomId")
+	livingdata := server.Redis().Client().HGet(context.Background(), "living", fmt.Sprintf("%v_%v", SellerId, RoomId)).Val()
 	if len(livingdata) == 0 {
 		return nil, enum.LiveNotAvailable, nil
 	}
@@ -140,9 +146,9 @@ func (this *ServiceUser) UserLogin(reqdata *UserLoginReq) (response *UserLoginRe
 	tokendata.UserId = accountdata.Int(edb.UserId)
 	tokendata.IsVisitor = accountdata.Int(edb.IsVisitor)
 	tokendata.Token = accountdata.String(edb.Token)
-	tokendata.Ip = reqdata.Ip
+	tokendata.Ip = ctx.ClientIP()
 	server.SetToken(accountdata.String(edb.Token), &tokendata)
-	response = &UserLoginRes{}
+	response := &UserLoginRes{}
 	response.Account = accountdata.String(edb.Account)
 	response.UserId = accountdata.Int(edb.UserId)
 	response.Token = accountdata.String(edb.Token)

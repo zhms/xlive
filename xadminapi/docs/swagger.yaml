@@ -114,6 +114,36 @@ definitions:
         description: 状态 1开启,2关闭
         type: integer
     type: object
+  model.XChatList:
+    properties:
+      account:
+        description: 会员账号
+        type: string
+      content:
+        description: 内容
+        type: string
+      create_time:
+        description: 创建时间
+        type: string
+      id:
+        description: 自增Id
+        type: integer
+      ip:
+        description: ip
+        type: string
+      ip_location:
+        description: ip_location
+        type: string
+      room_id:
+        description: 房价id
+        type: integer
+      state:
+        description: 状态 1待审核,2审核通过,3审核拒绝
+        type: string
+      user_id:
+        description: 会员id
+        type: integer
+    type: object
   model.XConfig:
     properties:
       config_name:
@@ -164,6 +194,9 @@ definitions:
       state:
         description: 状态 1正在直播,2未直播
         type: integer
+      title:
+        description: 直播间标题
+        type: string
     type: object
   model.XSeller:
     properties:
@@ -551,6 +584,50 @@ definitions:
     required:
     - seller_id
     type: object
+  service_live.CreateLiveRoomReq:
+    properties:
+      account:
+        description: 直播间账号
+        type: string
+      name:
+        description: 直播间名称
+        type: string
+      state:
+        description: 直播间状态
+        type: integer
+      title:
+        description: 直播间标题
+        type: string
+    type: object
+  service_live.DeleteLiveRoomReq:
+    properties:
+      id:
+        description: 直播间Id
+        type: integer
+    type: object
+  service_live.GetChatListReq:
+    properties:
+      page:
+        description: 页码
+        type: integer
+      page_size:
+        description: 每页数量
+        type: integer
+      room_id:
+        description: 房间Id
+        type: integer
+    type: object
+  service_live.GetChatListRes:
+    properties:
+      data:
+        description: 数据
+        items:
+          $ref: '#/definitions/model.XChatList'
+        type: array
+      total:
+        description: 总数
+        type: integer
+    type: object
   service_live.GetLiveRoomListReq:
     properties:
       page:
@@ -570,6 +647,24 @@ definitions:
       total:
         description: 总数
         type: integer
+    type: object
+  service_live.UpdateLiveRoomReq:
+    properties:
+      account:
+        description: 直播间账号
+        type: string
+      id:
+        description: 直播间Id
+        type: integer
+      name:
+        description: 直播间名称
+        type: string
+      state:
+        description: 直播间状态
+        type: integer
+      title:
+        description: 直播间标题
+        type: string
     type: object
   service_user.AddUserReq:
     properties:
@@ -1015,6 +1110,73 @@ paths:
       summary: 更新配置
       tags:
       - 系统设置
+  /live_chat/get_live_chat:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: body参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/service_live.GetChatListReq'
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/service_live.GetChatListRes'
+      summary: 获取互动列表
+      tags:
+      - 直播间-互动列表
+  /live_room/create_live_room:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: body参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/service_live.CreateLiveRoomReq'
+      responses:
+        "200":
+          description: 成功
+      summary: 创建直播间
+      tags:
+      - 直播间
+  /live_room/delete_live_room:
+    delete:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 验证码
+        in: header
+        name: VerifyCode
+        required: true
+        type: string
+      - description: body参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/service_live.DeleteLiveRoomReq'
+      responses:
+        "200":
+          description: 成功
+      summary: 删除直播间
+      tags:
+      - 直播间
   /live_room/get_live_room:
     post:
       parameters:
@@ -1035,6 +1197,31 @@ paths:
           schema:
             $ref: '#/definitions/service_live.GetLiveRoomListRes'
       summary: 直播间列表
+      tags:
+      - 直播间
+  /live_room/update_live_room:
+    patch:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 验证码
+        in: header
+        name: VerifyCode
+        required: true
+        type: string
+      - description: body参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/service_live.UpdateLiveRoomReq'
+      responses:
+        "200":
+          description: 成功
+      summary: 更新直播间
       tags:
       - 直播间
   /seller/create_seller:

@@ -158,15 +158,12 @@ export default {
 			}
 		},
 		handleAdd(index) {
-			this[`dialog${index}`].itemdata = {}
-			this.AddItem(
-				index,
-				(title) => {
-					this[`dialog${index}`].title = title
-					this[`dialog${index}`].show = true
-				},
-				this[`dialog${index}`].itemdata
-			)
+			this.AddItem(index, (title, item) => {
+				item = item || {}
+				this[`dialog${index}`].itemdata = item
+				this[`dialog${index}`].title = title
+				this[`dialog${index}`].show = true
+			})
 		},
 		handleEdit(item, index) {
 			this[`dialog${index}`].itemdata = JSON.parse(JSON.stringify(item))

@@ -15,39 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/app/get_live_info": {
-            "get": {
-                "tags": [
-                    "应用"
-                ],
-                "summary": "获取直播信息",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "token",
-                        "name": "x-token",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "description": "筛选参数",
-                        "name": "body",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/service_app.AppGetLiveInfoReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "成功",
-                        "schema": {
-                            "$ref": "#/definitions/service_app.AppGetLiveInfoRes"
-                        }
-                    }
-                }
-            }
-        },
         "/user/user_login": {
             "post": {
                 "tags": [
@@ -77,22 +44,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "service_app.AppGetLiveInfoReq": {
-            "type": "object",
-            "properties": {
-                "user_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "service_app.AppGetLiveInfoRes": {
-            "type": "object",
-            "properties": {
-                "user_id": {
-                    "type": "integer"
-                }
-            }
-        },
         "service_user.UserLoginReq": {
             "type": "object",
             "required": [
@@ -100,13 +51,20 @@ const docTemplate = `{
             ],
             "properties": {
                 "account": {
+                    "description": "账号",
                     "type": "string"
                 },
                 "is_visitor": {
+                    "description": "是否游客",
                     "type": "integer"
                 },
                 "password": {
+                    "description": "密码",
                     "type": "string"
+                },
+                "sales_id": {
+                    "description": "业务员",
+                    "type": "integer"
                 }
             }
         },
@@ -114,15 +72,23 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "account": {
+                    "description": "账号",
                     "type": "string"
                 },
                 "is_visitor": {
+                    "description": "是否游客",
                     "type": "integer"
                 },
+                "live_data": {
+                    "description": "直播数据",
+                    "type": "string"
+                },
                 "token": {
+                    "description": "token",
                     "type": "string"
                 },
                 "user_id": {
+                    "description": "用户Id",
                     "type": "integer"
                 }
             }

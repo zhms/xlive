@@ -43,7 +43,7 @@ let routers = [
 			},
 			{
 				path: 'chat_list',
-				component: () => import('../../views/User/index'),
+				component: () => import('../../views/Live/ChatList/index'),
 				meta: { title: '互动列表', icon: 'el-icon-user-solid' },
 			},
 			{

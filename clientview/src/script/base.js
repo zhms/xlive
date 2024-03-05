@@ -16,13 +16,13 @@ useResizeObserver(document.body, () => {
 })
 const rootScale = computed(() => bodyWidth.value / 360)
 const urlQuery = qs.parse(location.search.slice(1))
-let AppId = urlQuery['app']
-if (!AppId) {
-	AppId = '1'
+let RoomId = urlQuery['r']
+if (!RoomId) {
+	RoomId = '1'
 }
-let Sale = urlQuery['sale']
-if (!Sale) {
-	Sale = '0'
+let SaleId = urlQuery['s']
+if (!SaleId) {
+	SaleId = '0'
 }
 
 let scoll_callback = null
@@ -129,7 +129,7 @@ function preloadImage(url) {
 
 // ws地址
 const wsProtocol = location.protocol === 'http:' ? 'ws' : 'wss'
-let wsUrl = `${wsProtocol}://${location.host}/api/v1/app/ws/` + `${getToken()}_${AppId}`
+let wsUrl = `${wsProtocol}://${location.host}/api/v1/app/ws/` + `${getToken()}_${RoomId}`
 let ws
 function wsclose() {
 	if (ws) {
@@ -140,7 +140,7 @@ function wsclose() {
 function wsconn(token) {
 	if (ws) return
 	if (token) {
-		wsUrl = `${wsProtocol}://${location.host}/api/v1/app/ws/` + `${token}_${AppId}`
+		wsUrl = `${wsProtocol}://${location.host}/api/v1/app/ws/` + `${token}_${RoomId}`
 	}
 	ws = useWebSocket(wsUrl, {
 		onMessage: (ws, e) => {
@@ -172,6 +172,10 @@ function wsconn(token) {
 					if (scoll_callback) {
 						scoll_callback()
 					}
+				} else if (data.msg_id == 'chat_limit') {
+					showToast('Chat too fast, please try again later')
+				} else if (data.msg_id == 'chat_ban') {
+					showToast('You have been banned from chatting')
 				}
 			} catch (e) {}
 		},
@@ -301,8 +305,8 @@ export {
 	bodyHeight,
 	rootScale,
 	eventBus,
-	AppId,
-	Sale,
+	RoomId,
+	SaleId,
 	urlQuery,
 	vScrollInto,
 	vClipboard,

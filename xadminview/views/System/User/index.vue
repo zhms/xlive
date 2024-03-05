@@ -84,7 +84,7 @@ export default {
 			})
 		},
 		ModifyItem(index, next, item) {
-			if (index == 0) next('编辑账号')
+			if (index == 0) return next('编辑账号')
 			if (index == 1 || index == 2) {
 				let data = {
 					Account: item.account,
@@ -105,7 +105,7 @@ export default {
 			}
 		},
 		AddItem(index, next) {
-			if (index == 0) next('添加账号')
+			if (index == 0) return next('添加账号')
 		},
 		DeleteItem(item) {
 			this.$delete('/v1/admin_user/delete_admin_user', item, { google: true }).then(() => {

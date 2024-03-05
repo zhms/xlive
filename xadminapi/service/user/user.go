@@ -41,9 +41,6 @@ type GetUserRes struct {
 func (this *ServiceUser) GetUserList(ctx *gin.Context, idata interface{}) (rdata interface{}, merr map[string]interface{}, err error) {
 	reqdata := idata.(GetUserReq)
 	token := server.GetToken(ctx)
-	if token == nil {
-		return nil, nil, nil
-	}
 	if reqdata.Page <= 0 {
 		reqdata.Page = 1
 	}
