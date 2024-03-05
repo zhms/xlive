@@ -5,7 +5,7 @@ import (
 	"xadminapi/server"
 
 	"xcom/edb"
-	"xcom/utils"
+	"xcom/xutils"
 
 	"github.com/beego/beego/logs"
 	"gorm.io/gorm"
@@ -22,7 +22,7 @@ func (this *ServiceAdmin) Init() {
 		return
 	}
 	if result != nil {
-		data := utils.DbResult(result)
+		data := xutils.DbResult(result)
 		if data.Length() > 0 {
 			logs.Warn(data.Index(0).String("Warning"))
 		}

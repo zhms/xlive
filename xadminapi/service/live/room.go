@@ -8,7 +8,7 @@ import (
 	"xadminapi/model"
 	"xadminapi/server"
 	"xcom/edb"
-	"xcom/utils"
+	"xcom/xutils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -40,7 +40,7 @@ func (this *ServiceLiveRoom) GetLiveRoomList(ctx *gin.Context, idata interface{}
 	token := server.GetToken(ctx)
 	data := GetLiveRoomListRes{}
 	db := server.Db().Model(&model.XLiveRoom{})
-	db = utils.DbWhere(db, edb.SellerId, token.SellerId, int(0))
+	db = xutils.DbWhere(db, edb.SellerId, token.SellerId, int(0))
 	db = db.Count(&data.Total)
 	db = db.Offset((reqdata.Page - 1) * reqdata.PageSize)
 	db = db.Limit(reqdata.PageSize)
@@ -126,7 +126,7 @@ func (this *ServiceLiveRoom) UpdateLiveRoom(ctx *gin.Context, idata interface{})
 		return nil, nil
 	}
 	rows, _ := server.Db().Table(edb.TableLiveRoom).Where(edb.Id+edb.EQ, reqdata.Id).Rows()
-	roomdata := utils.DbFirst(rows)
+	roomdata := xutils.DbFirst(rows)
 	updatedata := map[string]interface{}{}
 	if reqdata.Name != "" {
 		updatedata["name"] = reqdata.Name
@@ -161,7 +161,7 @@ func (this *ServiceLiveRoom) UpdateLiveRoom(ctx *gin.Context, idata interface{})
 		if err != nil {
 			return nil, err
 		}
-		roomdata := utils.DbFirst(rows)
+		roomdata := xutils.DbFirst(rows)
 		_, err = server.Redis().Client().HSet(context.Background(), "living", fmt.Sprintf("%v_%v", token.SellerId, reqdata.Id), roomdata.ToString()).Result()
 		if err != nil {
 			return nil, err

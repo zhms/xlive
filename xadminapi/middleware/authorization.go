@@ -10,7 +10,7 @@ import (
 
 	"xcom/enum"
 	"xcom/global"
-	"xcom/utils"
+	"xcom/xutils"
 
 	"github.com/beego/beego/logs"
 	"github.com/gin-gonic/gin"
@@ -60,7 +60,7 @@ func Authorization(mainmenu string, submenu string, opt string, optname string) 
 				c.Abort()
 				return
 			}
-			if !utils.VerifyGoogleCode(tokendata.GoogleSecret, VerifyCode) {
+			if !xutils.VerifyGoogleCode(tokendata.GoogleSecret, VerifyCode) {
 				c.JSON(http.StatusBadRequest, gin.H{
 					"code": enum.VerifyInCorrectCode,
 					"msg":  "谷歌验证码不正确",
@@ -158,7 +158,7 @@ func Authorization(mainmenu string, submenu string, opt string, optname string) 
 		optlog.ReqPath = c.Request.URL.Path
 		optlog.OptName = optname
 		optlog.ReqIp = c.ClientIP()
-		optlog.CreateTime = utils.Now()
+		optlog.CreateTime = xutils.Now()
 		err := server.Db().Model(&optlog).Create(&optlog).Error
 		if err != nil {
 			logs.Error("写入操作日志失败", err.Error())

@@ -4,7 +4,7 @@ import (
 	"xadminapi/model"
 	"xadminapi/server"
 	"xcom/edb"
-	"xcom/utils"
+	"xcom/xutils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -36,12 +36,12 @@ func (this *ServiceAdmin) GetLoginLogList(ctx *gin.Context, idata interface{}) (
 	token := server.GetToken(ctx)
 	data := GetAdminLoginLogRes{}
 	db := server.Db().Model(&model.XAdminLoginLog{})
-	db = utils.DbWhere(db, edb.SellerId+edb.EQ, token.SellerId, int(0))
-	db = utils.DbWhere(db, edb.ChannelId+edb.EQ, reqdata.ChannelId, int(0))
-	db = utils.DbWhere(db, edb.Account+edb.EQ, reqdata.Account, "")
-	db = utils.DbWhere(db, edb.LoginIp+edb.EQ, reqdata.LoginIp, "")
-	db = utils.DbWhere(db, edb.CreateTime+edb.GTE, reqdata.StartTime, "")
-	db = utils.DbWhere(db, edb.CreateTime+edb.LT, reqdata.EndTime, "")
+	db = xutils.DbWhere(db, edb.SellerId+edb.EQ, token.SellerId, int(0))
+	db = xutils.DbWhere(db, edb.ChannelId+edb.EQ, reqdata.ChannelId, int(0))
+	db = xutils.DbWhere(db, edb.Account+edb.EQ, reqdata.Account, "")
+	db = xutils.DbWhere(db, edb.LoginIp+edb.EQ, reqdata.LoginIp, "")
+	db = xutils.DbWhere(db, edb.CreateTime+edb.GTE, reqdata.StartTime, "")
+	db = xutils.DbWhere(db, edb.CreateTime+edb.LT, reqdata.EndTime, "")
 	err = db.Count(&data.Total).Error
 	if err != nil {
 		return err, nil, nil
@@ -86,12 +86,12 @@ func (this *ServiceAdmin) GetOptLogList(ctx *gin.Context, idata interface{}) (rd
 	token := server.GetToken(ctx)
 	data := GetAdminOptLogRes{}
 	db := server.Db().Model(&model.XAdminOptLog{})
-	db = utils.DbWhere(db, edb.SellerId+edb.EQ, token.SellerId, int(0))
-	db = utils.DbWhere(db, edb.ChannelId+edb.EQ, reqdata.ChannelId, int(0))
-	db = utils.DbWhere(db, edb.Account+edb.EQ, reqdata.Account, "")
-	db = utils.DbWhere(db, edb.OptName+edb.EQ, reqdata.OptName, "")
-	db = utils.DbWhere(db, edb.CreateTime+edb.GTE, reqdata.StartTime, "")
-	db = utils.DbWhere(db, edb.CreateTime+edb.LT, reqdata.EndTime, "")
+	db = xutils.DbWhere(db, edb.SellerId+edb.EQ, token.SellerId, int(0))
+	db = xutils.DbWhere(db, edb.ChannelId+edb.EQ, reqdata.ChannelId, int(0))
+	db = xutils.DbWhere(db, edb.Account+edb.EQ, reqdata.Account, "")
+	db = xutils.DbWhere(db, edb.OptName+edb.EQ, reqdata.OptName, "")
+	db = xutils.DbWhere(db, edb.CreateTime+edb.GTE, reqdata.StartTime, "")
+	db = xutils.DbWhere(db, edb.CreateTime+edb.LT, reqdata.EndTime, "")
 	err = db.Count(&data.Total).Error
 	if err != nil {
 		return err, nil, nil

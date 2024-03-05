@@ -7,8 +7,7 @@ import (
 	"xcom/edb"
 	"xcom/enum"
 	"xcom/global"
-
-	"xcom/utils"
+	"xcom/xutils"
 
 	"github.com/beego/beego/logs"
 	"github.com/gin-gonic/gin"
@@ -65,11 +64,11 @@ func (this *ServiceAdmin) AdminUserLogin(ctx *gin.Context, idata interface{}) (r
 		return nil, nil, err
 	}
 
-	if global.IsEnvPrd() && adminuser.LoginGoogle != "" && !utils.VerifyGoogleCode(adminuser.LoginGoogle, verifycode) {
+	if global.IsEnvPrd() && adminuser.LoginGoogle != "" && !xutils.VerifyGoogleCode(adminuser.LoginGoogle, verifycode) {
 		return nil, enum.VerifyInCorrectCode, nil
 	}
 
-	password := utils.Md5(reqdata.Password)
+	password := xutils.Md5(reqdata.Password)
 	if password != adminuser.Password {
 		return nil, enum.UserPasswordError, nil
 	}
@@ -107,7 +106,7 @@ func (this *ServiceAdmin) AdminUserLogin(ctx *gin.Context, idata interface{}) (r
 	response.Account = reqdata.Account
 	response.Token = token
 	response.AuthData = roledata.RoleData
-	response.UtcOffset = utils.UtcOffset()
+	response.UtcOffset = xutils.UtcOffset()
 	response.LoginCount = adminuser.LoginCount + 1
 	response.LoginIp = ip
 	response.LoginTime = adminuser.LoginTime
@@ -117,7 +116,7 @@ func (this *ServiceAdmin) AdminUserLogin(ctx *gin.Context, idata interface{}) (r
 	err = db.Updates(map[string]interface{}{
 		edb.Token:      token,
 		edb.LoginIp:    ip,
-		edb.LoginTime:  utils.Now(),
+		edb.LoginTime:  xutils.Now(),
 		edb.LoginCount: gorm.Expr(edb.LoginCount+edb.PLUS, 1),
 	}).Error
 	if err != nil {
@@ -126,7 +125,7 @@ func (this *ServiceAdmin) AdminUserLogin(ctx *gin.Context, idata interface{}) (r
 	loginlog := model.XAdminLoginLog{}
 	loginlog.SellerId = tokendata.SellerId
 	loginlog.Account = tokendata.Account
-	loginlog.CreateTime = utils.Now()
+	loginlog.CreateTime = xutils.Now()
 	loginlog.Token = token
 	loginlog.LoginIp = ip
 	db = server.Db().Model(&loginlog).Create(&loginlog)
@@ -159,8 +158,8 @@ func (this *ServiceAdmin) GetAdminUserList(ctx *gin.Context, idata interface{}) 
 	}
 	token := server.GetToken(ctx)
 	db := server.Db().Model(&model.XAdminUser{})
-	db = utils.DbWhere(db, edb.SellerId+edb.EQ, token.SellerId, int(0))
-	db = utils.DbWhere(db, edb.Account+edb.EQ, reqdata.Account, "")
+	db = xutils.DbWhere(db, edb.SellerId+edb.EQ, token.SellerId, int(0))
+	db = xutils.DbWhere(db, edb.Account+edb.EQ, reqdata.Account, "")
 
 	data := GetAdminUserRes{}
 
@@ -200,7 +199,7 @@ func (this *ServiceAdmin) CreateAdminUser(ctx *gin.Context, idata interface{}) (
 	err = server.Db().Model(&model.XAdminUser{}).Create(map[string]interface{}{
 		edb.SellerId: token.SellerId,
 		edb.Account:  reqdata.Account,
-		edb.Password: utils.Md5(reqdata.Password),
+		edb.Password: xutils.Md5(reqdata.Password),
 		edb.RoleName: reqdata.RoleName,
 		edb.State:    reqdata.State,
 		edb.Memo:     reqdata.Memo,
@@ -222,7 +221,7 @@ func (this *ServiceAdmin) UpdateAdminUser(ctx *gin.Context, idata interface{}) (
 	updatedata := map[string]interface{}{}
 	token := server.GetToken(ctx)
 	updatedata[edb.Memo] = reqdata.Memo
-	utils.MapSet(&updatedata, edb.RoleName, reqdata.RoleName, "")
+	xutils.MapSet(&updatedata, edb.RoleName, reqdata.RoleName, "")
 	if reqdata.RoleName != "" {
 		exists, err := this.role_exists(token.SellerId, reqdata.RoleName)
 		if err != nil {
@@ -296,15 +295,15 @@ func (this *ServiceAdmin) SetLoginGoogle(ctx *gin.Context, idata interface{}) (r
 	}
 
 	if userdata.OptGoogle != "" {
-		if global.IsEnvPrd() && !utils.VerifyGoogleCode(userdata.OptGoogle, verifycode) {
+		if global.IsEnvPrd() && !xutils.VerifyGoogleCode(userdata.OptGoogle, verifycode) {
 			return nil, enum.VerifyInCorrectCode, nil
 		}
 	} else if userdata.LoginGoogle != "" {
-		if global.IsEnvPrd() && !utils.VerifyGoogleCode(userdata.LoginGoogle, verifycode) {
+		if global.IsEnvPrd() && !xutils.VerifyGoogleCode(userdata.LoginGoogle, verifycode) {
 			return nil, enum.VerifyInCorrectCode, nil
 		}
 	}
-	secret, url := utils.NewGoogleSecret("直播登录", reqdata.Account)
+	secret, url := xutils.NewGoogleSecret("直播登录", reqdata.Account)
 	db = server.Db().Model(&model.XAdminUser{})
 	db = db.Where(edb.SellerId+edb.EQ, token.SellerId)
 	db = db.Where(edb.Account+edb.EQ, reqdata.Account)
@@ -354,15 +353,15 @@ func (this *ServiceAdmin) SetOptGoogle(ctx *gin.Context, idata interface{}) (rda
 	}
 
 	if userdata.OptGoogle != "" {
-		if global.IsEnvPrd() && !utils.VerifyGoogleCode(userdata.OptGoogle, verifycode) {
+		if global.IsEnvPrd() && !xutils.VerifyGoogleCode(userdata.OptGoogle, verifycode) {
 			return nil, enum.VerifyInCorrectCode, nil
 		}
 	} else if userdata.LoginGoogle != "" {
-		if global.IsEnvPrd() && !utils.VerifyGoogleCode(userdata.LoginGoogle, verifycode) {
+		if global.IsEnvPrd() && !xutils.VerifyGoogleCode(userdata.LoginGoogle, verifycode) {
 			return nil, enum.VerifyInCorrectCode, nil
 		}
 	}
-	secret, url := utils.NewGoogleSecret("直播操作", reqdata.Account)
+	secret, url := xutils.NewGoogleSecret("直播操作", reqdata.Account)
 	db = server.Db().Model(&model.XAdminUser{})
 	db = db.Where(edb.SellerId+edb.EQ, token.SellerId)
 	db = db.Where(edb.Account+edb.EQ, reqdata.Account)

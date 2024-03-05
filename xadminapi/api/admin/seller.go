@@ -1,4 +1,4 @@
-package controller_admin
+package api_admin
 
 import (
 	"net/http"
@@ -12,12 +12,12 @@ import (
 	val "github.com/go-playground/validator/v10"
 )
 
-type ControllerAdminSeller struct {
+type ApiAdminSeller struct {
 	service *service_admin.ServiceAdmin
 }
 
 // 初始化路由
-func (this *ControllerAdminSeller) InitRouter(router *gin.RouterGroup) {
+func (this *ApiAdminSeller) InitRouter(router *gin.RouterGroup) {
 	this.service = &service.Entries().ServiceAdmin
 	router.POST("/get_seller", this.get_seller)
 	router.POST("/create_seller", middleware.Authorization("系统管理", "运营商管理", "增", "新增运营商"), this.create_seller)
@@ -31,7 +31,7 @@ func (this *ControllerAdminSeller) InitRouter(router *gin.RouterGroup) {
 // @Param x-token header string true "token"
 // @Param query query service_admin.GetXSellerReq false "筛选参数"
 // @Success 200 {object} service_admin.GetXSellerRes "成功"
-func (this *ControllerAdminSeller) get_seller(ctx *gin.Context) {
+func (this *ApiAdminSeller) get_seller(ctx *gin.Context) {
 	var reqdata service_admin.GetXSellerReq
 	if err := ctx.ShouldBindQuery(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
@@ -52,7 +52,7 @@ func (this *ControllerAdminSeller) get_seller(ctx *gin.Context) {
 // @Param VerifyCode header string true "验证码"
 // @Param body body service_admin.CreateXSellerReq true "body参数"
 // @Success 200 "成功"
-func (this *ControllerAdminSeller) create_seller(ctx *gin.Context) {
+func (this *ApiAdminSeller) create_seller(ctx *gin.Context) {
 	var reqdata service_admin.CreateXSellerReq
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
@@ -73,7 +73,7 @@ func (this *ControllerAdminSeller) create_seller(ctx *gin.Context) {
 // @Param VerifyCode header string true "验证码"
 // @Param body body service_admin.UpdateXSellerReq true "body参数"
 // @Success 200 "成功"
-func (this *ControllerAdminSeller) update_seller(ctx *gin.Context) {
+func (this *ApiAdminSeller) update_seller(ctx *gin.Context) {
 	var reqdata service_admin.UpdateXSellerReq
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
@@ -94,7 +94,7 @@ func (this *ControllerAdminSeller) update_seller(ctx *gin.Context) {
 // @Param VerifyCode header string true "验证码"
 // @Param body body service_admin.DeleteXSellerReq true "body参数"
 // @Success 200 "成功"
-func (this *ControllerAdminSeller) delete_seller(ctx *gin.Context) {
+func (this *ApiAdminSeller) delete_seller(ctx *gin.Context) {
 	var reqdata service_admin.DeleteXSellerReq
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))

@@ -1,25 +1,25 @@
-package controller
+package api
 
 import (
-	controller_admin "xadminapi/controller/admin"
-	controller_live "xadminapi/controller/live"
-	controller_user "xadminapi/controller/user"
+	api_admin "xadminapi/api/admin"
+	api_live "xadminapi/api/live"
+	api_user "xadminapi/api/user"
 )
 
-var entries ControllerEntries
+var entries ApiEntries
 
-type ControllerEntries struct {
-	controller_admin.ControllerAdminSeller
-	controller_admin.ControllerAdminUser
-	controller_admin.ControllerAdminRole
-	controller_admin.ControllerAdminLog
-	controller_admin.ControllerConfig
-	controller_user.ControllerUser
-	controller_live.ControllerLiveRoom
-	controller_live.ControllerLiveChat
-	controller_live.ControllerLiveIpBan
+type ApiEntries struct {
+	api_admin.ApiAdminSeller
+	api_admin.ApiAdminUser
+	api_admin.ApiAdminRole
+	api_admin.ApiAdminLog
+	api_admin.ApiConfig
+	api_user.ApiUser
+	api_live.ApiLiveRoom
+	api_live.ApiLiveChat
+	api_live.ApiLiveIpBan
 }
 
-func Entries() *ControllerEntries {
+func Entries() *ApiEntries {
 	return &entries
 }

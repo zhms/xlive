@@ -4,7 +4,7 @@ import (
 	"xadminapi/model"
 	"xadminapi/server"
 	"xcom/edb"
-	"xcom/utils"
+	"xcom/xutils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -82,7 +82,7 @@ func (this *ServiceAdmin) UpdateSeller(ctx *gin.Context, idata interface{}) (mer
 	reqdata := idata.(UpdateXSellerReq)
 	updatedata := map[string]interface{}{}
 	updatedata[edb.Memo] = reqdata.Memo
-	utils.MapSet(&updatedata, edb.SellerName, reqdata.SellerName, "")
+	xutils.MapSet(&updatedata, edb.SellerName, reqdata.SellerName, "")
 	if reqdata.State == 1 || reqdata.State == 2 {
 		updatedata[edb.State] = reqdata.State
 	}

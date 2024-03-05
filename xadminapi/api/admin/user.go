@@ -1,4 +1,4 @@
-package controller_admin
+package api_admin
 
 import (
 	"net/http"
@@ -12,12 +12,12 @@ import (
 	val "github.com/go-playground/validator/v10"
 )
 
-type ControllerAdminUser struct {
+type ApiAdminUser struct {
 	service *service_admin.ServiceAdmin
 }
 
 // 初始化路由
-func (this *ControllerAdminUser) InitRouter(router *gin.RouterGroup) {
+func (this *ApiAdminUser) InitRouter(router *gin.RouterGroup) {
 	this.service = &service.Entries().ServiceAdmin
 	router.POST("/user_login", this.user_login)
 	router.POST("/user_logout", this.user_logout)
@@ -35,7 +35,7 @@ func (this *ControllerAdminUser) InitRouter(router *gin.RouterGroup) {
 // @Param VerifyCode header string true "验证码"
 // @Param body body service_admin.AdminUserLoginReq true "body参数"
 // @Success 200 {object} service_admin.AdminUserLoginRes "成功"
-func (this *ControllerAdminUser) user_login(ctx *gin.Context) {
+func (this *ApiAdminUser) user_login(ctx *gin.Context) {
 	var reqdata service_admin.AdminUserLoginReq
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
@@ -54,7 +54,7 @@ func (this *ControllerAdminUser) user_login(ctx *gin.Context) {
 // @Summary 管理员退出
 // @Param x-token header string true "token"
 // @Success 200 "成功"
-func (this *ControllerAdminUser) user_logout(ctx *gin.Context) {
+func (this *ApiAdminUser) user_logout(ctx *gin.Context) {
 	token := ctx.Request.Header.Get("x-token")
 	server.DelToken(token)
 	ctx.JSON(http.StatusOK, enum.Success)
@@ -66,7 +66,7 @@ func (this *ControllerAdminUser) user_logout(ctx *gin.Context) {
 // @Param x-token header string true "token"
 // @Param query query service_admin.GetAdminUserReq false "筛选参数"
 // @Success 200 {object} service_admin.GetAdminUserRes "成功"
-func (this *ControllerAdminUser) get_admin_user(ctx *gin.Context) {
+func (this *ApiAdminUser) get_admin_user(ctx *gin.Context) {
 	var reqdata service_admin.GetAdminUserReq
 	if err := ctx.ShouldBindQuery(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
@@ -87,7 +87,7 @@ func (this *ControllerAdminUser) get_admin_user(ctx *gin.Context) {
 // @Param VerifyCode header string true "验证码"
 // @Param body body service_admin.CreateAdminUserReq true "body参数"
 // @Success 200 "成功"
-func (this *ControllerAdminUser) create_admin_user(ctx *gin.Context) {
+func (this *ApiAdminUser) create_admin_user(ctx *gin.Context) {
 	var reqdata service_admin.CreateAdminUserReq
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
@@ -108,7 +108,7 @@ func (this *ControllerAdminUser) create_admin_user(ctx *gin.Context) {
 // @Param VerifyCode header string true "验证码"
 // @Param body body service_admin.UpdateAdminUserReq true "body参数"
 // @Success 200 "成功"
-func (this *ControllerAdminUser) update_admin_user(ctx *gin.Context) {
+func (this *ApiAdminUser) update_admin_user(ctx *gin.Context) {
 	var reqdata service_admin.UpdateAdminUserReq
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
@@ -129,7 +129,7 @@ func (this *ControllerAdminUser) update_admin_user(ctx *gin.Context) {
 // @Param VerifyCode header string true "验证码"
 // @Param body body service_admin.DeleteAdminUserReq true "body参数"
 // @Success 200 "成功"
-func (this *ControllerAdminUser) delete_admin_user(ctx *gin.Context) {
+func (this *ApiAdminUser) delete_admin_user(ctx *gin.Context) {
 	var reqdata service_admin.DeleteAdminUserReq
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
@@ -150,7 +150,7 @@ func (this *ControllerAdminUser) delete_admin_user(ctx *gin.Context) {
 // @Param VerifyCode header string true "验证码"
 // @Param body body service_admin.SetLoginGoogleReq true "body参数"
 // @Success 200 {object}  service_admin.SetLoginGoogleRes "成功"
-func (this *ControllerAdminUser) set_login_googlesecret(ctx *gin.Context) {
+func (this *ApiAdminUser) set_login_googlesecret(ctx *gin.Context) {
 	var reqdata service_admin.SetLoginGoogleReq
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
@@ -171,7 +171,7 @@ func (this *ControllerAdminUser) set_login_googlesecret(ctx *gin.Context) {
 // @Param VerifyCode header string true "验证码"
 // @Param body body service_admin.SetOptGoogleReq true "body参数"
 // @Success 200 {object}  service_admin.SetOptGoogleRes "成功"
-func (this *ControllerAdminUser) set_opt_googlesecret(ctx *gin.Context) {
+func (this *ApiAdminUser) set_opt_googlesecret(ctx *gin.Context) {
 	var reqdata service_admin.SetOptGoogleReq
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))

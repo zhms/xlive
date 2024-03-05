@@ -1,4 +1,4 @@
-package controller_live
+package api_live
 
 import (
 	"net/http"
@@ -12,11 +12,11 @@ import (
 	val "github.com/go-playground/validator/v10"
 )
 
-type ControllerLiveRoom struct {
+type ApiLiveRoom struct {
 	service *service_live.ServiceLiveRoom
 }
 
-func (this *ControllerLiveRoom) InitRouter(router *gin.RouterGroup) {
+func (this *ApiLiveRoom) InitRouter(router *gin.RouterGroup) {
 	this.service = &service.Entries().ServiceLiveRoom
 	router.POST("/get_live_room", middleware.Authorization("直播间", "直播间列表", "查", ""), this.get_live_room)
 	router.POST("/create_live_room", middleware.Authorization("直播间", "直播间列表", "增", "创建直播间"), this.create_live_room)
@@ -30,7 +30,7 @@ func (this *ControllerLiveRoom) InitRouter(router *gin.RouterGroup) {
 // @Param x-token header string true "token"
 // @Param body body service_live.GetLiveRoomListReq true "body参数"
 // @Success 200 {object} service_live.GetLiveRoomListRes "成功"
-func (this *ControllerLiveRoom) get_live_room(ctx *gin.Context) {
+func (this *ApiLiveRoom) get_live_room(ctx *gin.Context) {
 	var reqdata service_live.GetLiveRoomListReq
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
@@ -50,7 +50,7 @@ func (this *ControllerLiveRoom) get_live_room(ctx *gin.Context) {
 // @Param x-token header string true "token"
 // @Param body body service_live.CreateLiveRoomReq true "body参数"
 // @Success 200 "成功"
-func (this *ControllerLiveRoom) create_live_room(ctx *gin.Context) {
+func (this *ApiLiveRoom) create_live_room(ctx *gin.Context) {
 	var reqdata service_live.CreateLiveRoomReq
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
@@ -71,7 +71,7 @@ func (this *ControllerLiveRoom) create_live_room(ctx *gin.Context) {
 // @Param VerifyCode header string true "验证码"
 // @Param body body service_live.UpdateLiveRoomReq true "body参数"
 // @Success 200 "成功"
-func (this *ControllerLiveRoom) update_live_room(ctx *gin.Context) {
+func (this *ApiLiveRoom) update_live_room(ctx *gin.Context) {
 	var reqdata service_live.UpdateLiveRoomReq
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
@@ -92,7 +92,7 @@ func (this *ControllerLiveRoom) update_live_room(ctx *gin.Context) {
 // @Param VerifyCode header string true "验证码"
 // @Param body body service_live.DeleteLiveRoomReq true "body参数"
 // @Success 200 "成功"
-func (this *ControllerLiveRoom) delete_live_room(ctx *gin.Context) {
+func (this *ApiLiveRoom) delete_live_room(ctx *gin.Context) {
 	var reqdata service_live.DeleteLiveRoomReq
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))

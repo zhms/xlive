@@ -1,4 +1,4 @@
-package controller_user
+package api_user
 
 import (
 	"net/http"
@@ -12,11 +12,11 @@ import (
 	val "github.com/go-playground/validator/v10"
 )
 
-type ControllerUser struct {
+type ApiUser struct {
 	service *service_user.ServiceUser
 }
 
-func (this *ControllerUser) InitRouter(router *gin.RouterGroup) {
+func (this *ApiUser) InitRouter(router *gin.RouterGroup) {
 	this.service = &service.Entries().ServiceUser
 	router.POST("/get_user", middleware.Authorization("会员管理", "会员列表", "查", ""), this.get_user)
 	router.POST("/add_user", middleware.Authorization("会员管理", "会员列表", "增", "添加会员"), this.add_user)
@@ -29,7 +29,7 @@ func (this *ControllerUser) InitRouter(router *gin.RouterGroup) {
 // @Param x-token header string true "token"
 // @Param body body service_user.GetUserReq true "body参数"
 // @Success 200 {object} service_user.GetUserRes "成功"
-func (this *ControllerUser) get_user(ctx *gin.Context) {
+func (this *ApiUser) get_user(ctx *gin.Context) {
 	var reqdata service_user.GetUserReq
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
@@ -50,7 +50,7 @@ func (this *ControllerUser) get_user(ctx *gin.Context) {
 // @Param VerifyCode header string true "验证码"
 // @Param body body service_user.AddUserReq true "body参数"
 // @Success 200 "成功"
-func (this *ControllerUser) add_user(ctx *gin.Context) {
+func (this *ApiUser) add_user(ctx *gin.Context) {
 	var reqdata service_user.AddUserReq
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
@@ -71,7 +71,7 @@ func (this *ControllerUser) add_user(ctx *gin.Context) {
 // @Param VerifyCode header string true "验证码"
 // @Param body body service_user.UpdateUserReq true "body参数"
 // @Success 200 "成功"
-func (this *ControllerUser) update_user(ctx *gin.Context) {
+func (this *ApiUser) update_user(ctx *gin.Context) {
 	var reqdata service_user.UpdateUserReq
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))

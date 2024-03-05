@@ -1,4 +1,4 @@
-package controller_live
+package api_live
 
 import (
 	"xadminapi/service"
@@ -7,10 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ControllerLiveIpBan struct {
+type ApiLiveIpBan struct {
 	service *service_live.ServiceLiveIpBan
 }
 
-func (this *ControllerLiveIpBan) InitRouter(router *gin.RouterGroup) {
+func (this *ApiLiveIpBan) InitRouter(router *gin.RouterGroup) {
 	this.service = &service.Entries().ServiceLiveIpBan
 }

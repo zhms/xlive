@@ -5,7 +5,7 @@ import (
 	"xadminapi/server"
 	"xcom/edb"
 	"xcom/enum"
-	"xcom/utils"
+	"xcom/xutils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -33,8 +33,8 @@ func (this *ServiceAdmin) GetRoleList(ctx *gin.Context, idata interface{}) (rdat
 	token := server.GetToken(ctx)
 	data := GetAdminRoleRes{}
 	db := server.Db().Model(&model.XAdminRole{})
-	db = utils.DbWhere(db, edb.SellerId, token.SellerId, int(0))
-	db = utils.DbWhere(db, edb.RoleName, reqdata.RoleName, "")
+	db = xutils.DbWhere(db, edb.SellerId, token.SellerId, int(0))
+	db = xutils.DbWhere(db, edb.RoleName, reqdata.RoleName, "")
 	err = db.Count(&data.Total).Error
 	if err != nil {
 		return nil, nil, err
@@ -96,7 +96,7 @@ func (this *ServiceAdmin) UpdateRole(ctx *gin.Context, idata interface{}) (merr 
 	}
 	token := server.GetToken(ctx)
 	updatedata := map[string]interface{}{}
-	utils.MapSet(&updatedata, edb.Memo, reqdata.Memo, "")
+	xutils.MapSet(&updatedata, edb.Memo, reqdata.Memo, "")
 	if reqdata.Parent != "" {
 		exists, err := this.role_exists(token.SellerId, reqdata.Parent)
 		if err != nil {
@@ -105,10 +105,10 @@ func (this *ServiceAdmin) UpdateRole(ctx *gin.Context, idata interface{}) (merr 
 		if !exists {
 			return enum.ParentRoleNotFound, nil
 		}
-		utils.MapSet(&updatedata, edb.Parent, reqdata.Parent, "")
+		xutils.MapSet(&updatedata, edb.Parent, reqdata.Parent, "")
 	}
-	utils.MapSet(&updatedata, edb.RoleData, reqdata.RoleData, "")
-	utils.MapSetIn(&updatedata, edb.State, reqdata.State, []interface{}{int(1), int(2)})
+	xutils.MapSet(&updatedata, edb.RoleData, reqdata.RoleData, "")
+	xutils.MapSetIn(&updatedata, edb.State, reqdata.State, []interface{}{int(1), int(2)})
 	db := server.Db().Model(&model.XAdminRole{})
 	db = db.Where(edb.SellerId+edb.EQ, token.SellerId)
 	db = db.Where(edb.RoleName+edb.EQ, reqdata.RoleName)

@@ -5,7 +5,7 @@ import (
 	"xadminapi/model"
 	"xadminapi/server"
 	"xcom/edb"
-	"xcom/utils"
+	"xcom/xutils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -40,8 +40,8 @@ func (this *ServiceLiveChat) GetChatList(ctx *gin.Context, idata interface{}) (r
 	token := server.GetToken(ctx)
 	data := GetChatListRes{}
 	db := server.Db().Model(&model.XChatList{})
-	db = utils.DbWhere(db, edb.SellerId, token.SellerId, int(0))
-	db = utils.DbWhere(db, edb.RoomId, reqdata.RoomId, int(0))
+	db = xutils.DbWhere(db, edb.SellerId, token.SellerId, int(0))
+	db = xutils.DbWhere(db, edb.RoomId, reqdata.RoomId, int(0))
 	db = db.Count(&data.Total)
 	db = db.Offset((reqdata.Page - 1) * reqdata.PageSize)
 	db = db.Limit(reqdata.PageSize)

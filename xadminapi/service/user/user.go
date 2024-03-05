@@ -8,8 +8,8 @@ import (
 	"xcom/edb"
 	"xcom/enum"
 	"xcom/excel"
-	"xcom/utils"
 	"xcom/xcom"
+	"xcom/xutils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -52,11 +52,11 @@ func (this *ServiceUser) GetUserList(ctx *gin.Context, idata interface{}) (rdata
 	}
 	data := GetUserRes{}
 	db := server.Db().Omit(edb.Password).Model(&model.XUser{})
-	db = utils.DbWhere(db, edb.SellerId, token.SellerId, int(0))
-	db = utils.DbWhere(db, edb.UserId, reqdata.UserId, int(0))
-	db = utils.DbWhere(db, edb.Account, reqdata.Account, "")
-	db = utils.DbWhere(db, edb.Agent, reqdata.Agent, "")
-	db = utils.DbWhere(db, edb.LoginIp, reqdata.LoginIp, "")
+	db = xutils.DbWhere(db, edb.SellerId, token.SellerId, int(0))
+	db = xutils.DbWhere(db, edb.UserId, reqdata.UserId, int(0))
+	db = xutils.DbWhere(db, edb.Account, reqdata.Account, "")
+	db = xutils.DbWhere(db, edb.Agent, reqdata.Agent, "")
+	db = xutils.DbWhere(db, edb.LoginIp, reqdata.LoginIp, "")
 	err = db.Count(&data.Total).Error
 	if err != nil {
 		return err, nil, nil
@@ -69,7 +69,7 @@ func (this *ServiceUser) GetUserList(ctx *gin.Context, idata interface{}) (rdata
 		return err, nil, nil
 	}
 	if reqdata.Export == 1 {
-		e := excel.NewExcelBuilder("会员列表_" + fmt.Sprint(utils.Now()))
+		e := excel.NewExcelBuilder("会员列表_" + fmt.Sprint(xutils.Now()))
 		defer e.Close()
 		e.SetTitle(edb.Id, "Id")
 		e.SetTitle(edb.UserId, "会员Id")
@@ -126,7 +126,7 @@ func (this *ServiceUser) AddUser(ctx *gin.Context, idata interface{}) (merr map[
 	if UserId <= 0 {
 		return enum.NewIdError, nil
 	}
-	Password := utils.Md5(reqdata.Password)
+	Password := xutils.Md5(reqdata.Password)
 	err = server.Db().Table(edb.TableUser).Create(map[string]interface{}{
 		edb.SellerId:   token.SellerId,
 		edb.UserId:     UserId,
@@ -135,7 +135,7 @@ func (this *ServiceUser) AddUser(ctx *gin.Context, idata interface{}) (merr map[
 		edb.State:      1,
 		edb.Agent:      token.Account,
 		edb.IsVisitor:  enum.StateNo,
-		edb.CreateTime: utils.Now(),
+		edb.CreateTime: xutils.Now(),
 	}).Error
 	if err != nil {
 		return nil, err
@@ -157,7 +157,7 @@ func (this *ServiceUser) UpdateUser(ctx *gin.Context, idata interface{}) (merr m
 	if token == nil {
 		return nil, nil
 	}
-	reqdata.Password = utils.Md5(reqdata.Password)
+	reqdata.Password = xutils.Md5(reqdata.Password)
 	updatedata := map[string]interface{}{}
 	if reqdata.Password != "" {
 		updatedata[edb.Password] = reqdata.Password
