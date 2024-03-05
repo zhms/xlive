@@ -12,15 +12,19 @@
 			<el-table-column align="center" prop="id" label="id" width="100"></el-table-column>
 			<el-table-column align="center" prop="user_id" label="会员Id" width="100"></el-table-column>
 			<el-table-column align="center" prop="account" label="账号" width="200"> </el-table-column>
-			<el-table-column align="center" prop="content" label="内容" width="300"></el-table-column>
+			<el-table-column align="center" prop="content" label="内容" width="300" show-overflow-tooltip></el-table-column>
+			<el-table-column align="center" label="状态" width="100">
+				<template slot-scope="scope">
+					<span>{{ scope.row.state == 1 ? '待审核' : scope.row.state == 2 ? '通过' : '拒绝' }}</span>
+				</template>
+			</el-table-column>
 			<el-table-column align="center" prop="ip" label="ip" width="120"></el-table-column>
 			<el-table-column align="center" prop="ip_location" label="ip地区" width="150"></el-table-column>
 			<el-table-column label="操作" align="left" width="300">
 				<template slot-scope="scope">
-					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 0)" v-if="scope.row.state == 1">通过</el-button>
-					<el-button type="text" size="small" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 1)" v-if="scope.row.state == 1">拒绝</el-button>
-					<el-button type="text" size="small" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 3)" v-if="scope.row.state == 1">封ip</el-button>
-					<el-button type="text" size="small" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 2)" v-if="scope.row.state == 1">封号</el-button>
+					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 2)" v-if="scope.row.state == 1">通过</el-button>
+					<el-button type="text" size="small" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 3)" v-if="scope.row.state == 1">拒绝</el-button>
+					<el-button type="text" size="small" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 4)" v-if="scope.row.state == 1">封ip</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -55,11 +59,16 @@ export default {
 			})
 		},
 		ModifyItem(index, next, item) {
-			if (index == 0) {
-				let data = JSON.parse(JSON.stringify(item))
-				data.state = 2
-				this.$patch('/v1/live_chat/audit_live_chat', data).then((result) => {})
-			}
+			let data = JSON.parse(JSON.stringify(item))
+			data.state = index
+			this.$patch('/v1/live_chat/audit_live_chat', data).then((result) => {
+				for (let i = 0; i < this.table_data.length; i++) {
+					if (this.table_data[i].id == item.id) {
+						this.table_data[i].state = index
+						break
+					}
+				}
+			})
 		},
 	},
 }

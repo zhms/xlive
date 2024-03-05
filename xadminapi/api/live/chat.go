@@ -19,7 +19,7 @@ type ApiLiveChat struct {
 func (this *ApiLiveChat) InitRouter(router *gin.RouterGroup) {
 	this.service = &service.Entries().ServiceLiveChat
 	router.POST("/get_live_chat", middleware.Authorization("直播间", "互动列表", "查", ""), this.get_live_chat)
-	router.PATCH("/audit_live_chat", middleware.Authorization("直播间", "互动列表", "改", "审核互动"), this.audit_live_chat)
+	router.POST("/audit_live_chat", middleware.Authorization("直播间", "互动列表", "改", "审核互动"), this.audit_live_chat)
 }
 
 // @Router /live_chat/get_live_chat [post]
@@ -42,7 +42,7 @@ func (this *ApiLiveChat) get_live_chat(ctx *gin.Context) {
 	server.OnRequestEx(ctx, reqdata, this.service.GetChatList)
 }
 
-// @Router /live_chat/audit_live_chat [patch]
+// @Router /live_chat/audit_live_chat [post]
 // @Tags 直播间-互动列表
 // @Summary 审核互动
 // @Param x-token header string true "token"

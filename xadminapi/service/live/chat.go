@@ -5,6 +5,7 @@ import (
 	"xadminapi/model"
 	"xadminapi/server"
 	"xcom/edb"
+	"xcom/enum"
 	"xcom/xutils"
 
 	"github.com/gin-gonic/gin"
@@ -45,7 +46,7 @@ func (this *ServiceLiveChat) GetChatList(ctx *gin.Context, idata interface{}) (r
 	db = db.Count(&data.Total)
 	db = db.Offset((reqdata.Page - 1) * reqdata.PageSize)
 	db = db.Limit(reqdata.PageSize)
-	db = db.Order(edb.Id + edb.ASC)
+	db = db.Order(edb.Id + edb.DESC)
 	err = db.Find(&data.Data).Error
 	if err != nil {
 		return nil, nil, err
@@ -55,7 +56,7 @@ func (this *ServiceLiveChat) GetChatList(ctx *gin.Context, idata interface{}) (r
 
 type ChatAuditReq struct {
 	Id    int `json:"id"`    // id
-	State int `json:"state"` // 状态 2通过,3拒绝,4封ip,5封号
+	State int `json:"state"` // 状态 2通过,3拒绝,4封ip
 }
 
 func (this *ServiceLiveChat) ChatAudit(ctx *gin.Context, idata interface{}) (rdata interface{}, merr map[string]interface{}, err error) {
@@ -67,9 +68,12 @@ func (this *ServiceLiveChat) ChatAudit(ctx *gin.Context, idata interface{}) (rda
 	if err != nil {
 		return nil, nil, err
 	}
+	if chatdata.State != 1 {
+		return nil, enum.AlreadyAudited, nil
+	}
 	if reqdata.State == 2 || reqdata.State == 3 {
 		err = server.Db().Model(&model.XChatList{}).Where(edb.SellerId+edb.EQ, token.SellerId).
-			Where(edb.Id+edb.EQ, reqdata.Id).Update(edb.State, reqdata.State).Error
+			Where(edb.Id+edb.EQ, reqdata.Id).Where(edb.State+edb.EQ, 1).Update(edb.State, reqdata.State).Error
 		if err != nil {
 			return nil, nil, err
 		}
@@ -80,7 +84,7 @@ func (this *ServiceLiveChat) ChatAudit(ctx *gin.Context, idata interface{}) (rda
 	}
 	if reqdata.State == 4 || reqdata.State == 5 {
 		err = server.Db().Model(&model.XChatList{}).Where(edb.SellerId+edb.EQ, token.SellerId).
-			Where(edb.Id+edb.EQ, reqdata.Id).Update(edb.State, 3).Error
+			Where(edb.Id+edb.EQ, reqdata.Id).Where(edb.State+edb.EQ, 1).Update(edb.State, 3).Error
 		if err != nil {
 			return nil, nil, err
 		}
@@ -89,15 +93,8 @@ func (this *ServiceLiveChat) ChatAudit(ctx *gin.Context, idata interface{}) (rda
 				edb.Ip:           chatdata.Ip,
 				edb.AdminAccount: token.Account,
 			})
-			server.Redis().Client().SAdd(ctx, "ip_ban:", chatdata.Ip)
-		}
-		if reqdata.State == 5 {
-			server.Db().Table(edb.TableChatBanIp).Create(map[string]interface{}{
-				edb.SellerId: token.SellerId,
-			})
-			server.Redis().Client().SAdd(ctx, "user_ban:", chatdata.UserId)
+			server.Redis().Client().SAdd(ctx, "ip_ban", chatdata.Ip)
 		}
 	}
-
 	return nil, nil, nil
 }

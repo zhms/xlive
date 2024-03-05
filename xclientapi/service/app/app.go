@@ -104,18 +104,18 @@ func (this *ServiceApp) ChatMsg(roomid string, tokendata *server.TokenData, msgd
 	this.locker.Lock()
 	defer this.locker.Unlock()
 
-	locker := "locker:chatmsg:" + tokendata.Account
-	if !server.Redis().Lock(locker, 10) {
-		for _, v := range this.users[roomid] {
-			if v.Account == tokendata.Account {
-				this.SendMsg(v.Conn, "chat_limit", "")
-				break
-			}
-		}
-		return
-	}
+	// locker := "locker:chatmsg:" + tokendata.Account
+	// if !server.Redis().Lock(locker, 10) {
+	// 	for _, v := range this.users[roomid] {
+	// 		if v.Account == tokendata.Account {
+	// 			this.SendMsg(v.Conn, "chat_limit", "")
+	// 			break
+	// 		}
+	// 	}
+	// 	return
+	// }
 
-	exists, err := server.Redis().Client().SIsMember(context.Background(), "ip_ban:", tokendata.Ip).Result()
+	exists, err := server.Redis().Client().SIsMember(context.Background(), "ip_ban", tokendata.Ip).Result()
 	if err != nil {
 		return
 	}

@@ -59,7 +59,7 @@ type UserLoginRes struct {
 }
 
 func (this *ServiceUser) UserLogin(ctx *gin.Context, idata interface{}) (rdata interface{}, merr map[string]interface{}, err error) {
-	reqdata := idata.(*UserLoginReq)
+	reqdata := idata.(UserLoginReq)
 	locker := enum.Lock_UserLogin + reqdata.Account
 	if !server.Redis().Lock(locker, 1) {
 		return nil, enum.TooManyRequest, nil

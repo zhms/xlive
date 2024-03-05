@@ -20,7 +20,7 @@ func (this *ApiUser) InitRouter(router *gin.RouterGroup) {
 	this.service = &service.Entries().ServiceUser
 	router.POST("/get_user", middleware.Authorization("会员管理", "会员列表", "查", ""), this.get_user)
 	router.POST("/add_user", middleware.Authorization("会员管理", "会员列表", "增", "添加会员"), this.add_user)
-	router.PATCH("/update_user", middleware.Authorization("会员管理", "会员列表", "改", "更新会员"), this.update_user)
+	router.POST("/update_user", middleware.Authorization("会员管理", "会员列表", "改", "更新会员"), this.update_user)
 }
 
 // @Router /user/get_user [post]
@@ -64,7 +64,7 @@ func (this *ApiUser) add_user(ctx *gin.Context) {
 	server.OnRequest(ctx, reqdata, this.service.AddUser)
 }
 
-// @Router /user/update_user [patch]
+// @Router /user/update_user [post]
 // @Tags 会员管理
 // @Summary 更新会员
 // @Param x-token header string true "token"

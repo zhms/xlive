@@ -36,5 +36,5 @@ func (this *ApiUser) user_login(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
 		return
 	}
-	server.OnRequestEx(ctx, &reqdata, this.service.UserLogin)
+	server.OnRequestEx(ctx, reqdata, this.service.UserLogin)
 }
