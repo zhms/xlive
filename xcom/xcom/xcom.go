@@ -19,9 +19,9 @@ import (
 	"time"
 	"xcom/edb"
 	"xcom/global"
-	"xcom/utils"
 	"xcom/xdb"
 	"xcom/xredis"
+	"xcom/xutils"
 
 	"github.com/beego/beego/logs"
 	"github.com/gin-gonic/gin"
@@ -242,7 +242,7 @@ func GetSellerId(host string) int {
 	}
 	seller_id := 0
 	if seller != "" {
-		seller_id = utils.ToInt(seller)
+		seller_id = xutils.ToInt(seller)
 		return seller_id
 	}
 	err = Db.Gorm().Table(edb.TableHostSeller).Where("host = ?", host).Select("seller_id").Row().Scan(&seller_id)

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 	"xcom/global"
-	"xcom/utils"
+	"xcom/xutils"
 
 	"github.com/beego/beego/logs"
 	"github.com/redis/go-redis/v9"
@@ -67,7 +67,7 @@ func (this *XRedis) Client() *redis.Client {
 	return this.client
 }
 
-func (this *XRedis) GetCacheMap(key string, cb func() (*utils.XMap, error)) (*utils.XMap, error) {
+func (this *XRedis) GetCacheMap(key string, cb func() (*xutils.XMap, error)) (*xutils.XMap, error) {
 	data, err := this.client.Get(context.Background(), key).Bytes()
 	if err != nil && !errors.Is(err, redis.Nil) {
 		logs.Error("GetCacheMap error:", key, err.Error())
@@ -76,7 +76,7 @@ func (this *XRedis) GetCacheMap(key string, cb func() (*utils.XMap, error)) (*ut
 	if data != nil {
 		jdata := map[string]interface{}{}
 		json.Unmarshal(data, &jdata)
-		xmap := utils.XMap{}
+		xmap := xutils.XMap{}
 		xmap.RawData = jdata
 		return &xmap, nil
 	} else {
@@ -84,7 +84,7 @@ func (this *XRedis) GetCacheMap(key string, cb func() (*utils.XMap, error)) (*ut
 	}
 }
 
-func (this *XRedis) GetCacheMaps(key string, cb func() (*utils.XMaps, error)) (*utils.XMaps, error) {
+func (this *XRedis) GetCacheMaps(key string, cb func() (*xutils.XMaps, error)) (*xutils.XMaps, error) {
 	data, err := this.client.Get(context.Background(), key).Bytes()
 	if err != nil {
 		logs.Error("GetCacheMaps error:", key, err.Error())
@@ -93,7 +93,7 @@ func (this *XRedis) GetCacheMaps(key string, cb func() (*utils.XMaps, error)) (*
 	if data != nil {
 		jdata := []map[string]interface{}{}
 		json.Unmarshal(data, &jdata)
-		xmaps := utils.XMaps{RawData: jdata}
+		xmaps := xutils.XMaps{RawData: jdata}
 		return &xmaps, nil
 	} else {
 		return cb()
@@ -135,7 +135,7 @@ func (this *XRedis) GetCacheInt(key string, cb func() (int64, error)) (int64, er
 		return 0, err
 	}
 	if data != nil {
-		return utils.ToInt64(data), nil
+		return xutils.ToInt64(data), nil
 	} else {
 		return cb()
 	}
@@ -184,7 +184,7 @@ func (this *XRedis) Lock(key string, expire_second int) bool {
 		if r == nil {
 			return false
 		}
-		ir := utils.ToInt(r)
+		ir := xutils.ToInt(r)
 		return ir == 1
 	} else {
 		r, err := this.client.Do(context.Background(), "set", key, "1", "EX", expire_second, "NX").Result()
@@ -194,7 +194,7 @@ func (this *XRedis) Lock(key string, expire_second int) bool {
 		if r == nil {
 			return false
 		}
-		ir := utils.ToString(r)
+		ir := xutils.ToString(r)
 		return ir == "OK"
 	}
 }
