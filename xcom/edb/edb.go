@@ -1,13 +1,17 @@
 package edb
 
 const (
-	TableSeller     = "x_seller"       // 运营商表
-	TableUser       = "x_user"         // 用户表
-	TableRole       = "x_role"         // 角色表
-	TableConfig     = "x_config"       // 配置表
-	TableUserIdPool = "x_user_id_pool" // 用户池
-	TableHostSeller = "x_host_seller"  // 域名对应运营商
-	TableKv         = "x_kv"           // 键值对
+	TableSeller      = "x_seller"        // 运营商表
+	TableUser        = "x_user"          // 用户表
+	TableRole        = "x_role"          // 角色表
+	TableConfig      = "x_config"        // 配置表
+	TableUserIdPool  = "x_user_id_pool"  // 用户池
+	TableHostSeller  = "x_host_seller"   // 域名对应运营商
+	TableKv          = "x_kv"            // 键值对
+	TableLiveRoom    = "x_live_room"     // 直播间
+	TableChatList    = "x_chat_list"     // 聊天列表
+	TableChatBanIp   = "x_chat_ban_ip"   // IP禁言
+	TableChatBanUser = "x_chat_ban_user" // 用户禁言
 )
 
 const (
@@ -67,4 +71,9 @@ const (
 	Agent         = "agent"          // 代理商
 	ChatState     = "chat_state"     // 聊天状态
 	LoginLocation = "login_location" // IP位置
+	RoomId        = "room_id"        // 房间Id
+	Content       = "content"        // 内容
+	Ip            = "ip"             // IP
+	IpLocation    = "ip_location"    // IP位置
+	AdminAccount  = "admin_account"  // 管理员账号
 )
