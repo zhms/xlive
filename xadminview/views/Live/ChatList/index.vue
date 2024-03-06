@@ -2,14 +2,15 @@
 	<div class="container">
 		<el-form :inline="true" :model="filters">
 			<el-form-item label="">
-				<el-input v-model.number="filters.room_id" placeholder="房间Id" style="width: 150px" :clearable="true"></el-input>
+				<el-input v-model.number="filters.room_id" placeholder="房间Id" size="small" style="width: 150px" :clearable="true"></el-input>
 			</el-form-item>
 			<el-form-item>
-				<el-button type="primary" icon="el-icon-refresh" v-on:click="handleQuery">查询</el-button>
+				<el-button type="primary" icon="el-icon-refresh" size="small" v-on:click="handleQuery">查询</el-button>
 			</el-form-item>
 		</el-form>
-		<el-table :data="table_data" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
+		<el-table :data="table_data" style="margin-top: -15px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
 			<el-table-column align="center" prop="id" label="id" width="100"></el-table-column>
+			<el-table-column align="center" prop="room_id" label="房间Id" width="100"></el-table-column>
 			<el-table-column align="center" prop="user_id" label="会员Id" width="100"></el-table-column>
 			<el-table-column align="center" prop="account" label="账号" width="200"> </el-table-column>
 			<el-table-column align="center" prop="content" label="内容" width="300" show-overflow-tooltip></el-table-column>
@@ -22,9 +23,9 @@
 			<el-table-column align="center" prop="ip_location" label="ip地区" width="150"></el-table-column>
 			<el-table-column label="操作" align="left" width="300">
 				<template slot-scope="scope">
-					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 2)" v-if="scope.row.state == 1">通过</el-button>
-					<el-button type="text" size="small" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 3)" v-if="scope.row.state == 1">拒绝</el-button>
-					<el-button type="text" size="small" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 4)" v-if="scope.row.state == 1">封ip</el-button>
+					<el-button type="text" size="mini" icon="el-icon-edit" @click="handleEdit(scope.row, 2)" v-if="scope.row.state == 1">通过</el-button>
+					<el-button type="text" size="mini" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 3)" v-if="scope.row.state == 1">拒绝</el-button>
+					<el-button type="text" size="mini" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 4)" v-if="scope.row.state == 1">封ip</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -61,7 +62,7 @@ export default {
 		ModifyItem(index, next, item) {
 			let data = JSON.parse(JSON.stringify(item))
 			data.state = index
-			this.$patch('/v1/live_chat/audit_live_chat', data).then((result) => {
+			this.$post('/v1/live_chat/audit_live_chat', data).then((result) => {
 				for (let i = 0; i < this.table_data.length; i++) {
 					if (this.table_data[i].id == item.id) {
 						this.table_data[i].state = index

@@ -71,7 +71,7 @@ export default {
 					memo: this.itemdata.memo,
 					parent: this.itemdata.parent,
 				}
-				this.$patch('/v1/admin_role/update_admin_role', data, { google: true }).then(() => {
+				this.$post('/v1/admin_role/update_admin_role', data, { google: true }).then(() => {
 					this.$message.success('编辑成功')
 					next(true)
 				})

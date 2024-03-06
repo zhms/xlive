@@ -6,25 +6,20 @@
 					<el-option v-for="item in sellers" :key="item.seller_id" :label="item.SellerName" :value="item.seller_id"> </el-option>
 				</el-select>
 			</el-form-item>
-			<!-- <el-form-item label="" v-if="filters.seller_id > 0">
-				<el-select v-model="filters.channel_id" placeholder="渠道" style="width: 150px" clearable @change="channelChange">
-					<el-option v-for="item in channels" :key="item.channel_id" :label="item.channel_name" :value="item.channel_id"> </el-option>
-				</el-select>
-			</el-form-item> -->
 			<el-form-item label="">
-				<el-input v-model="filters.account" placeholder="管理员" style="width: 150px" :clearable="true"></el-input>
+				<el-input v-model="filters.account" placeholder="管理员" style="width: 150px" size="small" :clearable="true"></el-input>
 			</el-form-item>
 			<el-form-item label="">
-				<el-input v-model="filters.opt_name" placeholder="操作" style="width: 150px" :clearable="true"></el-input>
+				<el-input v-model="filters.opt_name" placeholder="操作" style="width: 150px" size="small" :clearable="true"></el-input>
 			</el-form-item>
 			<el-form-item label="">
-				<el-date-picker v-model="filters.DateRange" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" clearable> </el-date-picker>
+				<el-date-picker v-model="filters.DateRange" size="small" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" clearable> </el-date-picker>
 			</el-form-item>
 			<el-form-item>
-				<el-button type="primary" icon="el-icon-refresh" @click="handleQuery">查询</el-button>
+				<el-button type="primary" icon="el-icon-refresh" size="small" @click="handleQuery">查询</el-button>
 			</el-form-item>
 		</el-form>
-		<el-table :data="table_data" border class="table" max-height="670px" :cell-style="{ padding: '3px' }" :highlight-current-row="true">
+		<el-table style="margin-top: -15px" :data="table_data" border class="table" max-height="670px" :cell-style="{ padding: '3px' }" :highlight-current-row="true">
 			<el-table-column align="center" prop="id" label="序号" width="80"></el-table-column>
 			<el-table-column align="center" prop="account" label="管理员" width="100"></el-table-column>
 			<el-table-column align="center" prop="SellerName" label="运营商" width="100" v-if="zong">
@@ -32,11 +27,6 @@
 					<span>{{ getSellerName(scope.row) }}</span>
 				</template>
 			</el-table-column>
-			<!-- <el-table-column align="center" label="渠道" width="100">
-				<template slot-scope="scope">
-					<span>{{ getchannel_name(scope.row) }}</span>
-				</template>
-			</el-table-column> -->
 			<el-table-column align="center" prop="opt_name" label="操作" width="200"></el-table-column>
 			<el-table-column align="center" prop="req_ip" label="ip" width="130"></el-table-column>
 			<el-table-column align="center" prop="create_time" label="时间" width="200"></el-table-column>

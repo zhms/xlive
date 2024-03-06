@@ -2,26 +2,26 @@
 	<div class="container">
 		<el-form :inline="true" :model="filters">
 			<el-form-item label="">
-				<el-input v-model="filters.user_id" placeholder="会员Id" style="width: 150px" :clearable="true"></el-input>
+				<el-input v-model="filters.user_id" placeholder="会员Id" size="small" style="width: 150px" :clearable="true"></el-input>
 			</el-form-item>
 			<el-form-item label="">
-				<el-input v-model="filters.account" placeholder="账号" style="width: 150px" :clearable="true"></el-input>
+				<el-input v-model="filters.account" placeholder="账号" size="small" style="width: 150px" :clearable="true"></el-input>
 			</el-form-item>
 			<el-form-item label="">
-				<el-input v-model="filters.agent" placeholder="业务员" style="width: 150px" :clearable="true"></el-input>
+				<el-input v-model="filters.agent" placeholder="业务员" size="small" style="width: 150px" :clearable="true"></el-input>
 			</el-form-item>
 			<el-form-item label="">
-				<el-input v-model="filters.login_ip" placeholder="登录Ip" style="width: 150px" :clearable="true"></el-input>
+				<el-input v-model="filters.login_ip" placeholder="登录Ip" size="small" style="width: 150px" :clearable="true"></el-input>
 			</el-form-item>
 			<el-form-item>
-				<el-button type="primary" icon="el-icon-refresh" v-on:click="handleQuery">查询</el-button>
-				<el-button type="primary" icon="el-icon-plus" class="mr10" @click="handleAdd(0)">添加</el-button>
-				<el-button type="primary" icon="el-icon-upload2" class="mr10" @click="handleAdd(1)">批量导入</el-button>
-				<el-button type="primary" icon="el-icon-bottom" class="mr10" @click="ExportUser()">导出</el-button>
-				<el-button type="primary" icon="el-icon-download" class="mr10" @click="DownLoadExcelTemplate()">下载导入模板</el-button>
+				<el-button type="primary" icon="el-icon-refresh" size="small" v-on:click="handleQuery">查询</el-button>
+				<el-button type="primary" icon="el-icon-plus" size="small" class="mr10" @click="handleAdd(0)">添加</el-button>
+				<el-button type="primary" icon="el-icon-upload2" size="small" class="mr10" @click="handleAdd(1)">批量导入</el-button>
+				<el-button type="primary" icon="el-icon-bottom" size="small" class="mr10" @click="ExportUser()">导出</el-button>
+				<el-button type="primary" icon="el-icon-download" size="small" class="mr10" @click="DownLoadExcelTemplate()">下载导入模板</el-button>
 			</el-form-item>
 		</el-form>
-		<el-table :data="table_data" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
+		<el-table :data="table_data" style="margin-top: -15px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
 			<el-table-column align="center" prop="id" label="id" width="100"></el-table-column>
 			<el-table-column align="center" prop="user_id" label="会员Id" width="100"></el-table-column>
 			<el-table-column align="center" prop="account" label="账号" width="200">
@@ -32,12 +32,12 @@
 			<el-table-column align="center" prop="agent" label="业务员" width="120"></el-table-column>
 			<el-table-column align="center" label="状态" width="100">
 				<template slot-scope="scope">
-					<span :class="scope.row.state == 1 ? 'blue' : 'red'">{{ getStateName(scope.row) }}</span>
+					<span :class="scope.row.state == 1 ? '' : 'red'">{{ scope.row.state == 1 ? '正常' : '禁用' }}</span>
 				</template>
 			</el-table-column>
 			<el-table-column align="center" prop="login_count" label="登录次数" width="100"></el-table-column>
 			<el-table-column align="center" prop="login_ip" label="登录Ip" width="150"></el-table-column>
-			<el-table-column align="center" prop="login_location" label="登录地区" width="120"></el-table-column>
+			<el-table-column align="center" prop="login_location" label="登录地区" width="200"></el-table-column>
 			<el-table-column align="center" prop="create_time" label="注册时间" width="160"></el-table-column>
 
 			<el-table-column label="操作" align="left" width="300">
@@ -101,7 +101,7 @@ export default {
 			} else if (index == 4) {
 				reqdata.state = 1
 			}
-			this.$patch('/v1/user_list/update_user', reqdata, { google: true }).then(() => {
+			this.$post('/v1/user_list/update_user', reqdata, { google: true }).then(() => {
 				this.$message.success('修改成功')
 				this.getTableData()
 			})

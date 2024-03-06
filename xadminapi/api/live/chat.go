@@ -42,7 +42,7 @@ func (this *ApiLiveChat) get_live_chat(ctx *gin.Context) {
 	server.OnRequestEx(ctx, reqdata, this.service.GetChatList)
 }
 
-// @Router /live_chat/audit_live_chat [post]
+// @Router /live_chat/audit_live_chat [patch]
 // @Tags 直播间-互动列表
 // @Summary 审核互动
 // @Param x-token header string true "token"

@@ -2,10 +2,10 @@
 	<div class="container">
 		<el-form :inline="true" :model="filters">
 			<el-form-item>
-				<el-button type="primary" icon="el-icon-plus" class="mr10" @click="handleAdd(0)">添加</el-button>
+				<el-button type="primary" icon="el-icon-plus" size="small" class="mr10" @click="handleAdd(0)">添加</el-button>
 			</el-form-item>
 		</el-form>
-		<el-table :data="table_data" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
+		<el-table :data="table_data" border class="table" max-height="670px" style="margin-top: -15px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
 			<el-table-column align="center" type="index" label="序号" width="100"></el-table-column>
 			<el-table-column align="center" prop="role_name" label="角色名" width="200"></el-table-column>
 			<el-table-column align="center" prop="parent" label="上级角色" width="200"></el-table-column>
@@ -51,7 +51,7 @@ export default {
 		},
 		DeleteItem(item) {
 			if (item.Parent == 'god') return this.$message.error('该角色不可删除')
-			this.$delete('/v1/admin_role/delete_admin_role', item, { google: true }).then(() => {
+			this.$post('/v1/admin_role/delete_admin_role', item, { google: true }).then(() => {
 				this.$message.success('删除成功')
 				this.getTableData()
 			})

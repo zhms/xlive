@@ -40,7 +40,7 @@ export default {
 			if (this.title == '编辑会员') {
 				if (!this.itemdata.password) return this.$message.error('请填写密码')
 				let data = JSON.parse(JSON.stringify(this.itemdata))
-				this.$patch('/v1/user_list/update_user', data, { google: true }).then(() => {
+				this.$post('/v1/user_list/update_user', data, { google: true }).then(() => {
 					this.$message.success('修改成功')
 					next(true)
 				})

@@ -1,20 +1,15 @@
 <template>
 	<div class="container">
 		<el-form :inline="true" :model="filters">
-			<!-- <el-form-item label="">
-				<el-select v-model="filters.channel_id" placeholder="渠道" style="width: 150px" clearable @change="channelChange">
-					<el-option v-for="item in channels" :key="item.channel_id" :label="item.channel_name" :value="item.channel_id"> </el-option>
-				</el-select>
-			</el-form-item> -->
 			<el-form-item label="">
-				<el-input v-model="filters.account" placeholder="账号" style="width: 150px" :clearable="true"></el-input>
+				<el-input v-model="filters.account" placeholder="账号" size="small" style="width: 150px" :clearable="true"></el-input>
 			</el-form-item>
 			<el-form-item>
-				<el-button type="primary" icon="el-icon-refresh" v-on:click="handleQuery">查询</el-button>
-				<el-button type="primary" icon="el-icon-plus" class="mr10" @click="handleAdd(0)">添加</el-button>
+				<el-button type="primary" icon="el-icon-refresh" size="small" v-on:click="handleQuery">查询</el-button>
+				<el-button type="primary" icon="el-icon-plus" size="small" class="mr10" @click="handleAdd(0)">添加</el-button>
 			</el-form-item>
 		</el-form>
-		<el-table :data="table_data" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
+		<el-table :data="table_data" style="margin-top: -15px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
 			<el-table-column align="center" prop="id" label="id" width="80"></el-table-column>
 			<el-table-column align="center" prop="account" label="账号" width="100">
 				<template slot-scope="scope">
@@ -108,7 +103,7 @@ export default {
 			if (index == 0) return next('添加账号')
 		},
 		DeleteItem(item) {
-			this.$delete('/v1/admin_user/delete_admin_user', item, { google: true }).then(() => {
+			this.$post('/v1/admin_user/delete_admin_user', item, { google: true }).then(() => {
 				this.$message.success('删除成功')
 				this.getTableData()
 			})

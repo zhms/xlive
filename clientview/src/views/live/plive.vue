@@ -7,26 +7,25 @@
 			<div class="user-head flex flex-center">
 				<div>Online({{ OnlineCount || 0 }})</div>
 			</div>
-			<User></User>
+			<User />
 		</div>
 		<div class="player">
-			<Icon name="play-circle-o" class="play-icon" @click="play" size="100" :style="{ left: (playerWidth - 100) / 2 + 'px', top: (playerHeight - 60) / 2 + 'px' }" v-if="!isPlay"></Icon>
+			<Icon name="play-circle-o" class="play-icon" @click="play" size="100" :style="{ left: playerWidth / 2 + 'px', top: (playerHeight - 60) / 2 + 'px' }" v-if="!isPlay"></Icon>
 			<div class="teacher-info flex">
 				<div>{{ liveData?.data.name }} | Current Lecturer: {{ liveData?.data.account }}</div>
-				<!-- <div class="logout" v-if="isVisitor" @click="$router.push('/')">Login</div> -->
-				<!-- <div class="logout" v-else @click="logout">Logout</div> -->
 				<div class="logout" @click="logout">Logout</div>
 			</div>
-			<canvas id="canvas" :style="{ width: playerWidth + 'px', height: playerHeight + 'px' }"></canvas>
-			<video :id="playerId" webkit-playsinline="true" playsinline="true" preload="auto" :height="playerHeight" @click="play" :poster="poster" class="video-js test"></video>
+			<canvas id="canvas"></canvas>
+			<video :id="playerId" webkit-playsinline="true" playsinline="true" preload="auto" @click="play" :poster="poster" class="video-js"></video>
+
 			<div class="course">
-				<img src="https://static.lotterybox.com/game/live/2023-12-30 10.54.47.jpg" :style="{ width: playerWidth + 'px', height: bodyHeight * 0.3 + 'px' }" />
+				<img src="https://static.lotterybox.com/game/live/2023-12-30 10.54.47.jpg" />
 			</div>
 		</div>
 
 		<div class="chat-box">
 			<NoticeBar :text="liveData?.data.title" left-icon="volume-o"></NoticeBar>
-			<Chat></Chat>
+			<Chat />
 		</div>
 	</div>
 </template>
@@ -121,6 +120,7 @@ setTimeout(() => wsconn(), 1000)
 
 <style lang="scss" scoped>
 .player {
+	background-color: #3a4f7f;
 	flex-shrink: 0;
 	position: relative;
 	height: 100vh;
@@ -206,9 +206,12 @@ setTimeout(() => wsconn(), 1000)
 	}
 }
 .course {
+	height: 30%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	img {
-		width: 100%;
-		height: 400px;
+		max-height: 100%;
 	}
 }
 
@@ -219,5 +222,7 @@ setTimeout(() => wsconn(), 1000)
 .video-js {
 	background: #000;
 	flex: 1;
+	width: 100%;
+	height: 70%;
 }
 </style>

@@ -20,8 +20,8 @@ func (this *ApiLiveRoom) InitRouter(router *gin.RouterGroup) {
 	this.service = &service.Entries().ServiceLiveRoom
 	router.POST("/get_live_room", middleware.Authorization("直播间", "直播间列表", "查", ""), this.get_live_room)
 	router.POST("/create_live_room", middleware.Authorization("直播间", "直播间列表", "增", "创建直播间"), this.create_live_room)
-	router.PATCH("/update_live_room", middleware.Authorization("直播间", "直播间列表", "改", "修改直播间"), this.update_live_room)
-	router.DELETE("/delete_live_room", middleware.Authorization("直播间", "直播间列表", "删", "删除直播间"), this.delete_live_room)
+	router.POST("/update_live_room", middleware.Authorization("直播间", "直播间列表", "改", "修改直播间"), this.update_live_room)
+	router.POST("/delete_live_room", middleware.Authorization("直播间", "直播间列表", "删", "删除直播间"), this.delete_live_room)
 }
 
 // @Router /live_room/get_live_room [post]
@@ -64,7 +64,7 @@ func (this *ApiLiveRoom) create_live_room(ctx *gin.Context) {
 	server.OnRequest(ctx, reqdata, this.service.CreateLiveRoom)
 }
 
-// @Router /live_room/update_live_room [patch]
+// @Router /live_room/update_live_room [post]
 // @Tags 直播间
 // @Summary 更新直播间
 // @Param x-token header string true "token"
@@ -85,7 +85,7 @@ func (this *ApiLiveRoom) update_live_room(ctx *gin.Context) {
 	server.OnRequest(ctx, reqdata, this.service.UpdateLiveRoom)
 }
 
-// @Router /live_room/delete_live_room [delete]
+// @Router /live_room/delete_live_room [post]
 // @Tags 直播间
 // @Summary 删除直播间
 // @Param x-token header string true "token"

@@ -20,11 +20,11 @@ func (this *ApiAdminRole) InitRouter(router *gin.RouterGroup) {
 	this.service = &service.Entries().ServiceAdmin
 	router.POST("/get_admin_role", this.get_admin_role)
 	router.POST("/create_admin_role", middleware.Authorization("系统管理", "角色管理", "增", "新增角色"), this.create_admin_role)
-	router.PATCH("/update_admin_role", middleware.Authorization("系统管理", "角色管理", "改", "更新角色"), this.update_admin_role)
-	router.DELETE("/delete_admin_role", middleware.Authorization("系统管理", "角色管理", "删", "删除角色"), this.delete_admin_role)
+	router.POST("/update_admin_role", middleware.Authorization("系统管理", "角色管理", "改", "更新角色"), this.update_admin_role)
+	router.POST("/delete_admin_role", middleware.Authorization("系统管理", "角色管理", "删", "删除角色"), this.delete_admin_role)
 }
 
-// @Router /admin_role/get_admin_role [get]
+// @Router /admin_role/get_admin_role [post]
 // @Tags 后台角色
 // @Summary 获取角色列表
 // @Param x-token header string true "token"
@@ -60,7 +60,7 @@ func (this *ApiAdminRole) create_admin_role(ctx *gin.Context) {
 	server.OnRequest(ctx, reqdata, this.service.CreateRole)
 }
 
-// @Router /admin_role/update_admin_role [patch]
+// @Router /admin_role/update_admin_role [post]
 // @Tags 后台角色
 // @Summary 更新角色
 // @Param x-token header string true "token"
@@ -81,7 +81,7 @@ func (this *ApiAdminRole) update_admin_role(ctx *gin.Context) {
 	server.OnRequest(ctx, reqdata, this.service.UpdateRole)
 }
 
-// @Router /admin_role/delete_admin_role [delete]
+// @Router /admin_role/delete_admin_role [post]
 // @Tags 后台角色
 // @Summary 删除角色
 // @Param x-token header string true "token"

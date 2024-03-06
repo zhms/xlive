@@ -23,8 +23,8 @@ func (this *ApiAdminUser) InitRouter(router *gin.RouterGroup) {
 	router.POST("/user_logout", this.user_logout)
 	router.POST("/get_admin_user", middleware.Authorization("系统管理", "账号管理", "查", ""), this.get_admin_user)
 	router.POST("/create_admin_user", middleware.Authorization("系统管理", "账号管理", "增", "新增管理员"), this.create_admin_user)
-	router.PATCH("/update_admin_user", middleware.Authorization("系统管理", "账号管理", "改", "更新管理员"), this.update_admin_user)
-	router.DELETE("/delete_admin_user", middleware.Authorization("系统管理", "账号管理", "删", "删除管理员"), this.delete_admin_user)
+	router.POST("/update_admin_user", middleware.Authorization("系统管理", "账号管理", "改", "更新管理员"), this.update_admin_user)
+	router.POST("/delete_admin_user", middleware.Authorization("系统管理", "账号管理", "删", "删除管理员"), this.delete_admin_user)
 	router.POST("/set_login_googlesecret", middleware.Authorization("系统管理", "账号管理", "设置登录验证码", "设置登歌验证码"), this.set_login_googlesecret)
 	router.POST("/set_opt_googlesecret", middleware.Authorization("系统管理", "账号管理", "设置操作验证码", "设置操作验证码"), this.set_opt_googlesecret)
 }
@@ -101,7 +101,7 @@ func (this *ApiAdminUser) create_admin_user(ctx *gin.Context) {
 	server.OnRequest(ctx, reqdata, this.service.CreateAdminUser)
 }
 
-// @Router /admin_user/update_admin_user [patch]
+// @Router /admin_user/update_admin_user [post]
 // @Tags 后台用户
 // @Summary 更新管理员账号
 // @Param x-token header string true "token"
@@ -122,7 +122,7 @@ func (this *ApiAdminUser) update_admin_user(ctx *gin.Context) {
 	server.OnRequest(ctx, reqdata, this.service.UpdateAdminUser)
 }
 
-// @Router /admin_user/delete_admin_user [delete]
+// @Router /admin_user/delete_admin_user [post]
 // @Tags 后台用户
 // @Summary 删除管理员账号
 // @Param x-token header string true "token"

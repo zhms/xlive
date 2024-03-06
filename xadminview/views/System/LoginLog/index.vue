@@ -1,36 +1,21 @@
 <template>
 	<div class="container">
 		<el-form :inline="true" :model="filters">
-			<el-form-item label="运营商:" v-show="zong">
-				<el-select v-model="filters.seller_id" placeholder="运营商" style="width: 150px" clearable @change="sellerChange">
-					<el-option v-for="item in sellers" :key="item.seller_id" :label="item.SellerName" :value="item.seller_id"> </el-option>
-				</el-select>
-			</el-form-item>
-			<!-- <el-form-item label="" v-if="filters.seller_id > 0">
-				<el-select v-model="filters.channel_id" placeholder="渠道" style="width: 150px" clearable @change="channelChange">
-					<el-option v-for="item in channels" :key="item.channel_id" :label="item.channel_name" :value="item.channel_id"> </el-option>
-				</el-select>
-			</el-form-item> -->
 			<el-form-item label="">
-				<el-input v-model="filters.account" placeholder="管理员" style="width: 150px" clearable></el-input>
+				<el-input v-model="filters.account" size="small" placeholder="管理员" style="width: 150px" clearable></el-input>
 			</el-form-item>
 			<el-form-item label="">
-				<el-input v-model="filters.login_ip" placeholder="登录Ip" style="width: 150px" clearable></el-input>
+				<el-input v-model="filters.login_ip" size="small" placeholder="登录Ip" style="width: 150px" clearable></el-input>
 			</el-form-item>
 			<el-form-item label="">
-				<el-date-picker v-model="filters.DateRange" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" clearable> </el-date-picker>
+				<el-date-picker v-model="filters.DateRange" size="small" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" clearable> </el-date-picker>
 			</el-form-item>
 			<el-form-item>
-				<el-button type="primary" icon="el-icon-refresh" v-on:click="handleQuery">查询</el-button>
+				<el-button type="primary" icon="el-icon-refresh" size="small" v-on:click="handleQuery">查询</el-button>
 			</el-form-item>
 		</el-form>
-		<el-table :data="table_data" border class="table" max-height="670px" :cell-style="{ padding: '3px' }" :highlight-current-row="true">
+		<el-table :data="table_data" border class="table" max-height="670px" style="margin-top: -15px" :cell-style="{ padding: '3px' }" :highlight-current-row="true">
 			<el-table-column align="center" prop="id" label="序号" width="80" v-if="column['序号']"></el-table-column>
-			<!-- <el-table-column align="center" label="渠道" width="120" v-if="column['渠道']">
-				<template slot-scope="scope">
-					<span>{{ getchannel_name(scope.row) }}</span>
-				</template>
-			</el-table-column> -->
 			<el-table-column align="center" prop="account" label="管理员" width="150" v-if="column['管理员']"></el-table-column>
 			<el-table-column align="center" prop="login_ip" label="登录IP" width="200" v-if="column['登录Ip']"></el-table-column>
 			<el-table-column align="center" prop="ip_location" label="登录地区" width="300"></el-table-column>

@@ -2,10 +2,10 @@
 	<div class="container">
 		<el-form :inline="true" :model="filters">
 			<el-form-item>
-				<el-button type="primary" icon="el-icon-plus" class="mr10" @click="handleAdd(0)">添加</el-button>
+				<el-button type="primary" icon="el-icon-plus" class="mr10" size="small" @click="handleAdd(0)">添加</el-button>
 			</el-form-item>
 		</el-form>
-		<el-table :data="table_data" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
+		<el-table :data="table_data" style="margin-top: -15px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
 			<el-table-column align="center" prop="id" label="房间Id" width="150"></el-table-column>
 			<el-table-column align="center" prop="name" label="房间名称" width="150">
 				<template slot-scope="scope">
@@ -89,7 +89,7 @@ export default {
 			let data = {
 				id: item.id,
 			}
-			this.$delete('/v1/live_room/delete_live_room', data, { google: true }).then(() => {
+			this.$post('/v1/live_room/delete_live_room', data, { google: true }).then(() => {
 				this.$message.success('删除成功')
 				this.getTableData()
 			})

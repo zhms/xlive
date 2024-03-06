@@ -48,7 +48,7 @@ let routers = [
 			},
 			{
 				path: 'banip_list',
-				component: () => import('../../views/User/index'),
+				component: () => import('../../views/Live/BanIp/index'),
 				meta: { title: 'Ip封禁', icon: 'el-icon-user-solid' },
 			},
 		],

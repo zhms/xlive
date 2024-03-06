@@ -34,7 +34,7 @@ export default {
 		commitData(next) {
 			if (this.title == '编辑直播间') {
 				let data = JSON.parse(JSON.stringify(this.itemdata))
-				this.$patch('/v1/live_room/update_live_room', data, { google: true }).then(() => {
+				this.$post('/v1/live_room/update_live_room', data, { google: true }).then(() => {
 					this.$message.success('修改成功')
 					next(true)
 				})

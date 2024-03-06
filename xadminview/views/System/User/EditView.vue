@@ -48,7 +48,7 @@ export default {
 				if (data.password && data.password.length > 0) {
 					data.password = this.$md5(data.password)
 				}
-				this.$patch('/v1/admin_user/update_admin_user', data, { google: true }).then(() => {
+				this.$post('/v1/admin_user/update_admin_user', data, { google: true }).then(() => {
 					this.$message.success('修改成功')
 					next(true)
 				})

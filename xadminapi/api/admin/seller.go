@@ -21,11 +21,11 @@ func (this *ApiAdminSeller) InitRouter(router *gin.RouterGroup) {
 	this.service = &service.Entries().ServiceAdmin
 	router.POST("/get_seller", this.get_seller)
 	router.POST("/create_seller", middleware.Authorization("系统管理", "运营商管理", "增", "新增运营商"), this.create_seller)
-	router.PATCH("/update_seller", middleware.Authorization("系统管理", "运营商管理", "改", "更新运营商"), this.update_seller)
-	router.DELETE("/delete_seller", middleware.Authorization("系统管理", "运营商管理", "删", "删除运营商"), this.delete_seller)
+	router.POST("/update_seller", middleware.Authorization("系统管理", "运营商管理", "改", "更新运营商"), this.update_seller)
+	router.POST("/delete_seller", middleware.Authorization("系统管理", "运营商管理", "删", "删除运营商"), this.delete_seller)
 }
 
-// @Router /seller/get_seller [get]
+// @Router /seller/get_seller [post]
 // @Tags 运营商
 // @Summary 获取运营商列表
 // @Param x-token header string true "token"
@@ -66,7 +66,7 @@ func (this *ApiAdminSeller) create_seller(ctx *gin.Context) {
 	server.OnRequest(ctx, reqdata, this.service.CreateSeller)
 }
 
-// @Router /seller/update_seller [patch]
+// @Router /seller/update_seller [post]
 // @Tags 运营商
 // @Summary 更新运营商
 // @Param x-token header string true "token"
@@ -87,7 +87,7 @@ func (this *ApiAdminSeller) update_seller(ctx *gin.Context) {
 	server.OnRequest(ctx, reqdata, this.service.UpdateSeller)
 }
 
-// @Router /seller/delete_seller [delete]
+// @Router /seller/delete_seller [post]
 // @Tags 运营商
 // @Summary 删除运营商
 // @Param x-token header string true "token"

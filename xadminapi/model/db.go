@@ -145,3 +145,14 @@ type XChatList struct {
 func (XChatList) TableName() string {
 	return "x_chat_list"
 }
+
+type XChatBanIP struct {
+	ID           int    `gorm:"column:id;primaryKey;autoIncrement" json:"id"`
+	IP           string `gorm:"column:ip;type:varchar(32);charset:utf8mb4;not null" json:"ip"`
+	AdminAccount string `gorm:"column:admin_account;type:varchar(32);charset:utf8mb4" json:"admin_account"`
+	CreateTime   string `gorm:"column:create_time;default:CURRENT_TIMESTAMP" json:"create_time"`
+}
+
+func (XChatBanIP) TableName() string {
+	return "x_chat_ban_ip"
+}

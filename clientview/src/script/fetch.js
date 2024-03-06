@@ -30,6 +30,8 @@ const useMyFetch = createFetch({
 				login()
 			} else if (data.code === 6) {
 				showToast('living not available now')
+			} else if (data.code === 100203) {
+				showToast('account has been baned')
 			}
 			return ctx
 		},

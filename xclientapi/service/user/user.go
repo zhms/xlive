@@ -14,6 +14,7 @@ import (
 	"github.com/beego/beego/logs"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/yinheli/qqwry"
 )
 
 type ServiceUser struct {
@@ -133,6 +134,10 @@ func (this *ServiceUser) UserLogin(ctx *gin.Context, idata interface{}) (rdata i
 		}
 	}
 
+	if accountdata.Int(edb.State) != enum.StateYes {
+		return nil, enum.UserStateError, nil
+	}
+
 	if accountdata.String(edb.Password) != reqdata.Password {
 		return nil, enum.UserPasswordError, nil
 	}
@@ -154,5 +159,16 @@ func (this *ServiceUser) UserLogin(ctx *gin.Context, idata interface{}) (rdata i
 	response.Token = accountdata.String(edb.Token)
 	response.IsVisitor = accountdata.Int(edb.IsVisitor)
 	response.LiveData = livingdata
+
+	iplocation := ""
+	ipdata := qqwry.NewQQwry("./config/ipdata.dat")
+	if ipdata != nil && strings.Index(tokendata.Ip, ".") > 0 {
+		ipdata.Find(tokendata.Ip)
+		iplocation = fmt.Sprintf("%s %s", ipdata.Country, ipdata.City)
+	}
+	server.Db().Table(edb.TableUser).Where(edb.UserId+edb.EQ, tokendata.UserId).Updates(map[string]interface{}{
+		edb.LoginIp:       tokendata.Ip,
+		edb.LoginLocation: iplocation,
+	})
 	return response, nil, err
 }
