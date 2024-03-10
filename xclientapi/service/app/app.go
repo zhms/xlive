@@ -36,6 +36,7 @@ type ServiceApp struct {
 func (this *ServiceApp) Init() {
 	this.users = make(map[string]map[string]*UserData)
 	this.maxconn = make(map[string]int)
+	go this.audit_chat()
 }
 
 func (this *ServiceApp) SendMsg(conn *websocket.Conn, msgid string, data interface{}) {
@@ -182,4 +183,33 @@ func (this *ServiceApp) ChatMsg(roomid string, tokendata *server.TokenData, msgd
 
 	// 	this.SendMsg(v.Conn, "chat", string(bytes))
 	// }
+}
+
+func (this *ServiceApp) audit_chat() {
+	for {
+		chatstr, err := server.Redis().Client().LPop(context.Background(), "chat_audit").Result()
+		if err != nil {
+			time.Sleep(time.Second)
+			continue
+		}
+		chatdata := xutils.XMap{}
+		json.Unmarshal([]byte(chatstr), &chatdata.RawData)
+
+		roomid := chatdata.String(edb.RoomId)
+
+		chatmsg := &ChatData{From: chatdata.String(edb.Account), Msg: chatdata.String(edb.Content), Time: chatdata.String(edb.CreateTime)}
+
+		bytes, _ := json.Marshal(chatmsg)
+
+		server.Redis().Client().LPush(context.Background(), "chat_queue:"+roomid, string(bytes))
+		llen, _ := server.Redis().Client().LLen(context.Background(), "chat_queue:"+roomid).Result()
+		if llen > 200 {
+			server.Redis().Client().RPop(context.Background(), "chat_queue:"+roomid)
+		}
+		for _, v := range this.users[roomid] {
+			if chatdata.String(edb.Account) != v.Account {
+				this.SendMsg(v.Conn, "chat", string(bytes))
+			}
+		}
+	}
 }

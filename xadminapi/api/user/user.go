@@ -18,9 +18,9 @@ type ApiUser struct {
 
 func (this *ApiUser) InitRouter(router *gin.RouterGroup) {
 	this.service = &service.Entries().ServiceUser
-	router.POST("/get_user", middleware.Authorization("会员管理", "会员列表", "查", ""), this.get_user)
-	router.POST("/add_user", middleware.Authorization("会员管理", "会员列表", "增", "添加会员"), this.add_user)
-	router.POST("/update_user", middleware.Authorization("会员管理", "会员列表", "改", "更新会员"), this.update_user)
+	router.POST("/get_user", middleware.Authorization("会员管理", "会员管理", "查", ""), this.get_user)
+	router.POST("/add_user", middleware.Authorization("会员管理", "会员管理", "增", "添加会员"), this.add_user)
+	router.POST("/update_user", middleware.Authorization("会员管理", "会员管理", "改", "更新会员"), this.update_user)
 }
 
 // @Router /user/get_user [post]

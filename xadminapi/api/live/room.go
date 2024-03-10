@@ -18,10 +18,25 @@ type ApiLiveRoom struct {
 
 func (this *ApiLiveRoom) InitRouter(router *gin.RouterGroup) {
 	this.service = &service.Entries().ServiceLiveRoom
+	router.POST("/get_live_room_id", this.get_live_room_id)
 	router.POST("/get_live_room", middleware.Authorization("直播间", "直播间列表", "查", ""), this.get_live_room)
 	router.POST("/create_live_room", middleware.Authorization("直播间", "直播间列表", "增", "创建直播间"), this.create_live_room)
 	router.POST("/update_live_room", middleware.Authorization("直播间", "直播间列表", "改", "修改直播间"), this.update_live_room)
 	router.POST("/delete_live_room", middleware.Authorization("直播间", "直播间列表", "删", "删除直播间"), this.delete_live_room)
+}
+
+func (this *ApiLiveRoom) get_live_room_id(ctx *gin.Context) {
+	var reqdata service_live.GetLiveRoomIdReq
+	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
+		return
+	}
+	validator := val.New()
+	if err := validator.Struct(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, enum.MakeError(enum.BadParams, err.Error()))
+		return
+	}
+	server.OnRequestEx(ctx, reqdata, this.service.GetLiveRoomId)
 }
 
 // @Router /live_room/get_live_room [post]

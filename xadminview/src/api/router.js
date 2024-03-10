@@ -19,6 +19,29 @@ let routers = [
 			},
 		],
 	},
+
+	{
+		path: '/live',
+		component: Layout,
+		meta: { title: '直播间', icon: 'el-icon-video-camera-solid' },
+		children: [
+			{
+				path: 'live_list',
+				component: () => import('../../views/Live/LiveRoom/index'),
+				meta: { title: '直播间列表', icon: 'el-icon-video-camera' },
+			},
+			{
+				path: 'chat_list',
+				component: () => import('../../views/Live/ChatList/index'),
+				meta: { title: '互动列表', icon: 'el-icon-chat-dot-round' },
+			},
+			{
+				path: 'banip_list',
+				component: () => import('../../views/Live/BanIp/index'),
+				meta: { title: 'Ip封禁', icon: 'el-icon-close' },
+			},
+		],
+	},
 	{
 		path: '/user',
 		component: Layout,
@@ -27,63 +50,53 @@ let routers = [
 			{
 				path: 'user_list',
 				component: () => import('../../views/User/index'),
-				meta: { title: '会员列表', icon: 'el-icon-user-solid' },
+				meta: { title: '会员管理', icon: 'el-icon-user-solid' },
 			},
 		],
 	},
 	{
-		path: '/live',
+		path: '/hongbao',
 		component: Layout,
-		meta: { title: '直播间', icon: 'el-icon-user-solid' },
+		meta: { title: '红包管理', icon: 'el-icon-present' },
 		children: [
 			{
-				path: 'live_list',
-				component: () => import('../../views/Live/LiveRoom/index'),
-				meta: { title: '直播间列表', icon: 'el-icon-user-solid' },
-			},
-			{
-				path: 'chat_list',
-				component: () => import('../../views/Live/ChatList/index'),
-				meta: { title: '互动列表', icon: 'el-icon-user-solid' },
-			},
-			{
-				path: 'banip_list',
-				component: () => import('../../views/Live/BanIp/index'),
-				meta: { title: 'Ip封禁', icon: 'el-icon-user-solid' },
+				path: 'hongbao_list',
+				component: () => import('../../views/Hongbao/index'),
+				meta: { title: '红包管理', icon: 'el-icon-present' },
 			},
 		],
 	},
 	{
 		path: '/data',
 		component: Layout,
-		meta: { title: '数据分析', icon: 'el-icon-user-solid' },
+		meta: { title: '数据分析', icon: 'el-icon-cpu' },
 		children: [
 			{
 				path: 'online_list',
 				component: () => import('../../views/User/index'),
-				meta: { title: '在线管理', icon: 'el-icon-user-solid' },
+				meta: { title: '在线管理', icon: 'el-icon-document' },
 			},
 			{
 				path: 'online_chart',
 				component: () => import('../../views/User/index'),
-				meta: { title: '在线图表', icon: 'el-icon-user-solid' },
+				meta: { title: '在线图表', icon: 'el-icon-location' },
 			},
 			{
 				path: 'peak_chart',
 				component: () => import('../../views/User/index'),
-				meta: { title: '峰值图表', icon: 'el-icon-user-solid' },
+				meta: { title: '峰值图表', icon: 'el-icon-location-outline' },
 			},
 		],
 	},
 	{
 		path: '/robot',
 		component: Layout,
-		meta: { title: '机器人管理', icon: 'el-icon-user-solid' },
+		meta: { title: '机器人管理', icon: 'el-icon-service' },
 		children: [
 			{
 				path: 'robot_list',
 				component: () => import('../../views/User/index'),
-				meta: { title: '机器人列表', icon: 'el-icon-user-solid' },
+				meta: { title: '机器人列表', icon: 'el-icon-service' },
 			},
 		],
 	},

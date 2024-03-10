@@ -63,32 +63,32 @@ func (this *ServiceLiveChat) ChatAudit(ctx *gin.Context, idata interface{}) (rda
 	reqdata := idata.(ChatAuditReq)
 	token := server.GetToken(ctx)
 	chatdata := model.XChatList{}
-	err = server.Db().Model(&model.XChatList{}).Where(edb.SellerId+edb.EQ, token.SellerId).
-		Where(edb.Id+edb.EQ, reqdata.Id).First(&chatdata).Error
-	if err != nil {
-		return nil, nil, err
+	db := server.Db().Model(&model.XChatList{}).Where(edb.SellerId+edb.EQ, token.SellerId).
+		Where(edb.Id+edb.EQ, reqdata.Id).First(&chatdata)
+	if db.Error != nil {
+		return nil, nil, db.Error
 	}
 	if chatdata.State != 1 {
 		return nil, enum.AlreadyAudited, nil
 	}
 	if reqdata.State == 2 || reqdata.State == 3 {
-		err = server.Db().Model(&model.XChatList{}).Where(edb.SellerId+edb.EQ, token.SellerId).
-			Where(edb.Id+edb.EQ, reqdata.Id).Where(edb.State+edb.EQ, 1).Update(edb.State, reqdata.State).Error
-		if err != nil {
-			return nil, nil, err
+		db = server.Db().Model(&model.XChatList{}).Where(edb.SellerId+edb.EQ, token.SellerId).
+			Where(edb.Id+edb.EQ, reqdata.Id).Where(edb.State+edb.EQ, 1).Update(edb.State, reqdata.State)
+		if db.Error != nil {
+			return nil, nil, db.Error
 		}
-		if reqdata.State == 2 {
+		if reqdata.State == 2 && db.RowsAffected > 0 {
 			bytes, _ := json.Marshal(chatdata)
 			server.Redis().Client().RPush(ctx, "chat_audit", string(bytes))
 		}
 	}
 	if reqdata.State == 4 || reqdata.State == 5 {
-		err = server.Db().Model(&model.XChatList{}).Where(edb.SellerId+edb.EQ, token.SellerId).
-			Where(edb.Id+edb.EQ, reqdata.Id).Where(edb.State+edb.EQ, 1).Update(edb.State, 3).Error
-		if err != nil {
-			return nil, nil, err
+		db = server.Db().Model(&model.XChatList{}).Where(edb.SellerId+edb.EQ, token.SellerId).
+			Where(edb.Id+edb.EQ, reqdata.Id).Where(edb.State+edb.EQ, 1).Update(edb.State, 3)
+		if db.Error != nil {
+			return nil, nil, db.Error
 		}
-		if reqdata.State == 4 {
+		if reqdata.State == 4 && db.RowsAffected > 0 {
 			server.Db().Table(edb.TableChatBanIp).Create(map[string]interface{}{
 				edb.Ip:           chatdata.Ip,
 				edb.AdminAccount: token.Account,

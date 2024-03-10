@@ -12,6 +12,7 @@ const (
 	TableChatList    = "x_chat_list"     // 聊天列表
 	TableChatBanIp   = "x_chat_ban_ip"   // IP禁言
 	TableChatBanUser = "x_chat_ban_user" // 用户禁言
+	TableHongbao     = "x_hongbao"       // 红包
 )
 
 const (
@@ -76,4 +77,7 @@ const (
 	Ip            = "ip"             // IP
 	IpLocation    = "ip_location"    // IP位置
 	AdminAccount  = "admin_account"  // 管理员账号
+	TotalAmount   = "total_amount"   // 总金额
+	TotalCount    = "total_count"    // 总数量
+	Sender        = "sender"         // 发送者
 )

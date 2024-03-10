@@ -21,4 +21,6 @@ func Init() {
 	entries.ApiLiveRoom.InitRouter(router.Group("/live_room"))
 	entries.ApiLiveChat.InitRouter(router.Group("/live_chat"))
 	entries.ApiLiveIpBan.InitRouter(router.Group("/live_ip_ban"))
+
+	entries.ApiHongbao.InitRouter(router.Group("/hongbao"))
 }

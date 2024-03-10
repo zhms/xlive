@@ -2,6 +2,7 @@ package api
 
 import (
 	api_admin "xadminapi/api/admin"
+	api_hongbao "xadminapi/api/hongbao"
 	api_live "xadminapi/api/live"
 	api_user "xadminapi/api/user"
 )
@@ -18,6 +19,7 @@ type ApiEntries struct {
 	api_live.ApiLiveRoom
 	api_live.ApiLiveChat
 	api_live.ApiLiveIpBan
+	api_hongbao.ApiHongbao
 }
 
 func Entries() *ApiEntries {

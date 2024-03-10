@@ -1,6 +1,8 @@
 package service_live
 
 import (
+	"context"
+	"fmt"
 	"xadminapi/model"
 	"xadminapi/server"
 	"xcom/edb"
@@ -58,9 +60,16 @@ type DeleteBanIpReq struct {
 
 func (this *ServiceLiveIpBan) DeleteBanIp(ctx *gin.Context, idata interface{}) (rdata interface{}, merr map[string]interface{}, err error) {
 	reqdata := idata.(DeleteBanIpReq)
+	banip := &model.XChatBanIP{}
+	err = server.Db().Where(edb.Id+edb.EQ, reqdata.Id).First(banip).Error
+	if err != nil {
+		return nil, nil, err
+	}
 	err = server.Db().Where(edb.Id+edb.EQ, reqdata.Id).Delete(&model.XChatBanIP{}).Error
 	if err != nil {
 		return nil, nil, err
 	}
+	fmt.Println("删除禁言", banip.Ip)
+	server.Redis().Client().SRem(context.Background(), "ip_ban", banip.Ip)
 	return nil, nil, nil
 }

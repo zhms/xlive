@@ -13,13 +13,13 @@
 			<el-table-column align="center" prop="room_id" label="房间Id" width="100"></el-table-column>
 			<el-table-column align="center" prop="user_id" label="会员Id" width="100"></el-table-column>
 			<el-table-column align="center" prop="account" label="账号" width="200"> </el-table-column>
-			<el-table-column align="center" prop="content" label="内容" width="300" show-overflow-tooltip></el-table-column>
+			<el-table-column align="center" prop="content" label="内容" width="500" show-overflow-tooltip></el-table-column>
 			<el-table-column align="center" label="状态" width="100">
 				<template slot-scope="scope">
 					<span>{{ scope.row.state == 1 ? '待审核' : scope.row.state == 2 ? '通过' : '拒绝' }}</span>
 				</template>
 			</el-table-column>
-			<el-table-column align="center" prop="ip" label="ip" width="120"></el-table-column>
+			<el-table-column align="center" prop="ip" label="Ip地址" width="120"></el-table-column>
 			<el-table-column align="center" prop="ip_location" label="ip地区" width="150"></el-table-column>
 			<el-table-column label="操作" align="left" width="300">
 				<template slot-scope="scope">

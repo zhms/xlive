@@ -19,6 +19,24 @@ type ServiceLiveRoom struct {
 func (this *ServiceLiveRoom) Init() {
 }
 
+type GetLiveRoomIdReq struct {
+}
+
+type GetLiveRoomIdRes struct {
+	Ids []int `json:"ids"`
+}
+
+func (this *ServiceLiveRoom) GetLiveRoomId(ctx *gin.Context, idata interface{}) (rdata interface{}, merr map[string]interface{}, err error) {
+	token := server.GetToken(ctx)
+	data := GetLiveRoomIdRes{}
+	db := server.Db().Model(&model.XLiveRoom{}).Select("id").Where(edb.SellerId+edb.EQ, token.SellerId)
+	err = db.Find(&data.Ids).Error
+	if err != nil {
+		return nil, nil, err
+	}
+	return data, nil, nil
+}
+
 type GetLiveRoomListReq struct {
 	Page     int `json:"page"`      // 页码
 	PageSize int `json:"page_size"` // 每页数量

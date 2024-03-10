@@ -147,12 +147,29 @@ func (XChatList) TableName() string {
 }
 
 type XChatBanIP struct {
-	ID           int    `gorm:"column:id;primaryKey;autoIncrement" json:"id"`
-	IP           string `gorm:"column:ip;type:varchar(32);charset:utf8mb4;not null" json:"ip"`
+	Id           int    `gorm:"column:id;primaryKey;autoIncrement" json:"id"`
+	Ip           string `gorm:"column:ip;type:varchar(32);charset:utf8mb4;not null" json:"ip"`
 	AdminAccount string `gorm:"column:admin_account;type:varchar(32);charset:utf8mb4" json:"admin_account"`
 	CreateTime   string `gorm:"column:create_time;default:CURRENT_TIMESTAMP" json:"create_time"`
 }
 
 func (XChatBanIP) TableName() string {
 	return "x_chat_ban_ip"
+}
+
+type XHongbao struct {
+	Id          int     `gorm:"column:id;primary_key;AUTO_INCREMENT;comment:'id'" json:"id"`                      // id
+	SellerId    int     `gorm:"column:seller_id;comment:'运营商'" json:"seller_id"`                                  // 运营商
+	RoomId      int     `gorm:"column:room_id;comment:'房间Id'" json:"room_id"`                                     // 房间Id
+	TotalAmount float64 `gorm:"column:total_amount;type:decimal(50,6);comment:'红包总金额'" json:"total_amount"`       // 红包总金额
+	TotalCount  int     `gorm:"column:total_count;comment:'红包个数'" json:"total_count"`                             // 红包个数
+	UsedAmount  float64 `gorm:"column:used_amount;type:decimal(50,6);comment:'已领取金额'" json:"used_amount"`         // 已领取金额
+	UsedCount   int     `gorm:"column:used_count;comment:'已领取个数'" json:"used_count"`                              // 已领取个数
+	Sender      string  `gorm:"column:sender;type:varchar(32);charset:utf8mb4;comment:'发送者'" json:"sender"`       // 发送者
+	Memo        string  `gorm:"column:memo;type:varchar(255);charset:utf8mb4;comment:'备注'" json:"memo"`           // 备注
+	CreateTime  string  `gorm:"column:create_time;default:CURRENT_TIMESTAMP;comment:'红包发送时间'" json:"create_time"` // 红包发送时间
+}
+
+func (XHongbao) TableName() string {
+	return "x_hongbao"
 }
