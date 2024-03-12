@@ -34,7 +34,7 @@ export default {
 		commitData(next) {
 			if (this.title == '编辑直播间') {
 				let data = JSON.parse(JSON.stringify(this.itemdata))
-				this.$post('/v1/live_room/update_live_room', data, { google: true }).then(() => {
+				this.$post('/v1/update_live_room', data, { google: true }).then(() => {
 					this.$message.success('修改成功')
 					next(true)
 				})
@@ -45,7 +45,7 @@ export default {
 				if (!this.itemdata.title) return this.$message.error('请填写聊天标题')
 				this.itemdata.state = this.itemdata.state ?? 2
 				let data = JSON.parse(JSON.stringify(this.itemdata))
-				this.$post('/v1/live_room/create_live_room', data, { google: true }).then(() => {
+				this.$post('/v1/create_live_room', data, { google: true }).then(() => {
 					this.$message.success('添加成功')
 					next(true)
 				})

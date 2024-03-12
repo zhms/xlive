@@ -41,7 +41,8 @@ export default {
 		},
 	},
 	created() {
-		let AuthData = JSON.parse(JSON.parse(sessionStorage.getItem('userinfo')).auth_data)
+		let userinfo = JSON.parse(sessionStorage.getItem('userinfo'))
+		let AuthData = JSON.parse(userinfo.auth_data)
 		let routes = getRouters()
 		let final_routes = []
 		for (let i = 0; i < routes.length; i++) {
@@ -64,7 +65,13 @@ export default {
 						let a = routes[i].meta.title
 						let b = routes[i].children[j].meta.title
 						if (AuthData[a] && AuthData[a][b] && AuthData[a][b]['查']) {
-							m.children.push(routes[i].children[j])
+							if (b == '系统工具') {
+								if (userinfo.env.indexOf('prd') < 0) {
+									m.children.push(routes[i].children[j])
+								}
+							} else {
+								m.children.push(routes[i].children[j])
+							}
 						}
 					}
 					if (m.children.length > 0) {

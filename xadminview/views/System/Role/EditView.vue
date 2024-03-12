@@ -65,27 +65,26 @@ export default {
 			}
 			if (this.title == '编辑角色') {
 				let data = {
-					seller_id: this.itemdata.seller_id,
 					role_name: this.itemdata.role_name,
 					role_data: JSON.stringify(newroledata),
 					memo: this.itemdata.memo,
 					parent: this.itemdata.parent,
+					state: this.itemdata.state,
 				}
-				this.$post('/v1/admin_role/update_admin_role', data, { google: true }).then(() => {
+				this.$post('/v1/admin_update_role', data, { google: true }).then(() => {
 					this.$message.success('编辑成功')
 					next(true)
 				})
 			}
 			if (this.title == '添加角色') {
 				let data = {
-					seller_id: this.itemdata.seller_id || this.seller_id,
 					parent: this.itemdata.parent,
 					role_name: this.itemdata.role_name,
 					role_data: JSON.stringify(newroledata),
 					memo: this.itemdata.memo,
 					state: 1,
 				}
-				this.$post('/v1/admin_role/create_admin_role', data, { google: true }).then(() => {
+				this.$post('/v1/admin_create_role', data, { google: true }).then(() => {
 					this.$message.success('添加成功')
 					next(true)
 				})
@@ -104,10 +103,8 @@ export default {
 		},
 		getRoles() {
 			setTimeout(() => {
-				let data = {
-					seller_id: this.itemdata.seller_id || this.seller_id,
-				}
-				this.$post('/v1/admin_role/get_admin_role', data).then((roledata) => {
+				let data = {}
+				this.$post('/v1/admin_get_role', data).then((roledata) => {
 					this.roles = roledata.data
 				})
 			}, 200)
@@ -118,23 +115,20 @@ export default {
 				return
 			}
 			let data1 = {
-				seller_id: this.itemdata.seller_id || this.seller_id,
 				role_name: this.itemdata.parent,
 			}
-			if (data1.role_name == 'god') data1.role_name = '运营商超管'
-			this.$post('/v1/admin_role/get_admin_role', data1).then((parentrole) => {
+			if (data1.role_name == 'god') data1.role_name = '超级管理员'
+			this.$post('/v1/admin_get_role', data1).then((parentrole) => {
 				this.parentroledata = JSON.parse(parentrole.data[0].role_data)
 				let data2 = {
-					seller_id: this.itemdata.seller_id || this.seller_id,
-					role_name: '运营商超管',
+					role_name: '超级管理员',
 				}
-				this.$post('/v1/admin_role/get_admin_role', data2).then((superrole) => {
+				this.$post('/v1/admin_get_role', data2).then((superrole) => {
 					this.superroledata = JSON.parse(superrole.data[0].role_data)
 					let data3 = {
-						seller_id: this.itemdata.seller_id || this.seller_id,
 						role_name: this.itemdata.role_name || '-',
 					}
-					this.$post('/v1/admin_role/get_admin_role', data3).then((roledata) => {
+					this.$post('/v1/admin_get_role', data3).then((roledata) => {
 						console.log(roledata)
 						if (roledata.data.length == 0) {
 							roledata.data = [

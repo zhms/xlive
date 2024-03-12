@@ -123,12 +123,17 @@ let routers = [
 			{
 				path: 'login',
 				component: () => import('../../views/System/LoginLog/index'),
-				meta: { title: '登录日志', icon: 'el-icon-notebook-1' },
+				meta: { title: '登录日志', icon: 'el-icon-notebook-2' },
 			},
 			{
 				path: 'action',
 				component: () => import('../../views/System/ActionLog/index'),
-				meta: { title: '操作日志', icon: 'el-icon-notebook-1' },
+				meta: { title: '操作日志', icon: 'el-icon-reading' },
+			},
+			{
+				path: 'tools',
+				component: () => import('../../views/System/Tools/index'),
+				meta: { title: '系统工具', icon: 'el-icon-magic-stick' },
 			},
 		],
 	},

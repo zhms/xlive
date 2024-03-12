@@ -1,11 +1,6 @@
 <template>
 	<div class="container">
 		<el-form :inline="true" :model="filters">
-			<!-- <el-form-item label="" v-if="filters.seller_id > 0">
-				<el-select v-model="filters.channel_id" placeholder="渠道" style="width: 150px" clearable @change="channelChange">
-					<el-option v-for="item in channels" :key="item.channel_id" :label="item.channel_name" :value="item.channel_id"> </el-option>
-				</el-select>
-			</el-form-item> -->
 			<el-form-item label="">
 				<el-input v-model="filters.ConfigName" style="width: 200px" clearable placeholder="配置名"></el-input>
 			</el-form-item>
@@ -19,11 +14,6 @@
 		</el-form>
 		<el-table :data="table_data" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
 			<el-table-column align="center" prop="Id" label="序号" width="50" v-if="column['序号']"> </el-table-column>
-			<!-- <el-table-column align="center" label="渠道" width="100" v-if="column['渠道']">
-				<template slot-scope="scope">
-					<span>{{ getchannel_name(scope.row) }}</span>
-				</template>
-			</el-table-column> -->
 			<el-table-column align="center" label="前端" width="200" v-if="column['前端']">
 				<template slot-scope="scope">
 					<span>{{ MapYesNo[scope.row.ForClient] }}</span>

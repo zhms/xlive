@@ -41,7 +41,7 @@ const isMobile = computed(() => mediaWidth.value > bodyWidth.value)
 
 const btnDisabled = computed(() => !name.value.trim() || !pwd.value || loginIsFetching.value)
 
-const { execute: loginExecute, isFetching: loginIsFetching } = useMyFetch('/api/v1/user/user_login', {
+const { execute: loginExecute, isFetching: loginIsFetching } = useMyFetch('/api/v1/user_login', {
 	immediate: false,
 	afterFetch: (res) => {
 		loginCallback(res)
@@ -89,7 +89,7 @@ function visitorLogin() {
 			}
 		}
 	} catch (e) {}
-	useMyFetch('/api/v1/user/user_login', {
+	useMyFetch('/api/v1/user_login', {
 		immediate: true,
 		afterFetch: (res) => {
 			loginCallback(res)

@@ -61,7 +61,7 @@ export default {
 			this.$store.dispatch('app/toggleSideBar')
 		},
 		async logout() {
-			this.$post('/v1/admin_user/user_logout', { Token: sessionStorage.getItem('x-token') }).then(() => {})
+			this.$post('/v1/admin_user_logout', { Token: sessionStorage.getItem('x-token') }).then(() => {})
 			sessionStorage.removeItem('userinfo')
 			sessionStorage.removeItem('x-token')
 			this.$router.push({ path: '/' })

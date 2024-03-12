@@ -28,7 +28,7 @@ const useMyFetch = createFetch({
 				showToast('password not correct')
 			} else if (data.code === 10) {
 				login()
-			} else if (data.code === 6) {
+			} else if (data.code === 4) {
 				showToast('living not available now')
 			} else if (data.code === 100203) {
 				showToast('account has been baned')

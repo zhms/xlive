@@ -1,9 +1,9 @@
 package main
 
 import (
-	"xclientapi/router"
-	"xclientapi/server"
-	"xclientapi/service"
+	"xapp/xapp"
+	api_app "xclientapi/api/app"
+	api_user "xclientapi/api/user"
 )
 
 // @title           xclientapi
@@ -18,9 +18,9 @@ import (
 // swag init -g main.go
 
 func main() {
-	server.Init()
-	server.Run(func() {
-		service.Init()
-		router.Init()
+	xapp.Init()
+	xapp.Run(func() {
+		api_app.Init()
+		api_user.Init()
 	})
 }

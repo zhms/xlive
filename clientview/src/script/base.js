@@ -129,7 +129,7 @@ function preloadImage(url) {
 
 // ws地址
 const wsProtocol = location.protocol === 'http:' ? 'ws' : 'wss'
-let wsUrl = `${wsProtocol}://${location.host}/api/v1/app/ws/` + `${getToken()}_${RoomId}`
+let wsUrl = `${wsProtocol}://${location.host}/api/v1/ws/` + `${getToken()}_${RoomId}`
 let ws
 function wsclose() {
 	if (ws) {
@@ -140,7 +140,7 @@ function wsclose() {
 function wsconn(token) {
 	if (ws) return
 	if (token) {
-		wsUrl = `${wsProtocol}://${location.host}/api/v1/app/ws/` + `${token}_${RoomId}`
+		wsUrl = `${wsProtocol}://${location.host}/api/v1/ws/` + `${token}_${RoomId}`
 	}
 	ws = useWebSocket(wsUrl, {
 		onMessage: (ws, e) => {

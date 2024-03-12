@@ -42,7 +42,6 @@ export default {
 				this.itemdata.channel_id = Number(this.itemdata.channel_id)
 				this.itemdata.ForClient = Number(this.itemdata.ForClient)
 				let reqdata = {
-					seller_id: this.itemdata.seller_id,
 					Config: [
 						{
 							channel_id: this.itemdata.channel_id,

@@ -4,8 +4,6 @@ export default {
 	extends: enums,
 	data() {
 		return {
-			seller_id: JSON.parse(sessionStorage.getItem('userinfo') ?? '{}').seller_id,
-			zong: JSON.parse(sessionStorage.getItem('userinfo') || '{}').seller_id == -1,
 			table_data: [],
 		}
 	},

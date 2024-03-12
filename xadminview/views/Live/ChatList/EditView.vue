@@ -57,7 +57,6 @@ export default {
 		},
 		onOpen() {
 			this.itemdata.state = 1
-			this.itemdata.seller_id = this.filters.seller_id
 			this.dlgroles = []
 			this.dlgchannels = []
 			if (this.title == '编辑会员') {

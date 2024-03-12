@@ -1,11 +1,6 @@
 <template>
 	<div class="container">
 		<el-form :inline="true" :model="filters">
-			<el-form-item label="运营商:" v-show="zong">
-				<el-select v-model="filters.seller_id" placeholder="运营商" style="width: 150px" clearable @change="sellerChange">
-					<el-option v-for="item in sellers" :key="item.seller_id" :label="item.SellerName" :value="item.seller_id"> </el-option>
-				</el-select>
-			</el-form-item>
 			<el-form-item label="">
 				<el-input v-model="filters.account" placeholder="管理员" style="width: 150px" size="small" :clearable="true"></el-input>
 			</el-form-item>
@@ -22,15 +17,10 @@
 		<el-table style="margin-top: -15px" :data="table_data" border class="table" max-height="670px" :cell-style="{ padding: '3px' }" :highlight-current-row="true">
 			<el-table-column align="center" prop="id" label="序号" width="80"></el-table-column>
 			<el-table-column align="center" prop="account" label="管理员" width="100"></el-table-column>
-			<el-table-column align="center" prop="SellerName" label="运营商" width="100" v-if="zong">
-				<template slot-scope="scope">
-					<span>{{ getSellerName(scope.row) }}</span>
-				</template>
-			</el-table-column>
 			<el-table-column align="center" prop="opt_name" label="操作" width="200"></el-table-column>
 			<el-table-column align="center" prop="req_ip" label="ip" width="130"></el-table-column>
 			<el-table-column align="center" prop="create_time" label="时间" width="200"></el-table-column>
-			<el-table-column label="内容">
+			<el-table-column label="内容" show-overflow-tooltip>
 				<template slot-scope="scope">
 					<span type="text" style="cursor: pointer" @click="copy(scope.row.req_data)"> {{ scope.row.req_data }}</span>
 				</template>
@@ -61,8 +51,8 @@ export default {
 		getTableData() {
 			let data = this.getQueryData()
 			data.channel_id = Number(data.channel_id)
-			this.$post('/v1/admin_log/get_opt_log', data).then((result) => {
-				this.table_data = this.dealData(result.data)
+			this.$post('/v1/admin_get_opt_log', data).then((result) => {
+				this.table_data = result.data
 				this.total = result.total
 			})
 		},

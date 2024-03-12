@@ -9,12 +9,7 @@ export default {
 	extends: enums,
 	data() {
 		return {
-			filters: {
-				seller_id: Number(localStorage.getItem('seller_id') ?? 0) || null,
-				channel_id: Number(localStorage.getItem('channel_id') ?? 0) || null,
-			},
-			seller_id: JSON.parse(sessionStorage.getItem('userinfo') ?? '{}').seller_id,
-			zong: JSON.parse(sessionStorage.getItem('userinfo') ?? '{}').seller_id == -1,
+			filters: {},
 			page: 1,
 			page_size: 15,
 			page_sizes: [15, 50, 100, 200, 500, 1000, 1500],
@@ -90,7 +85,6 @@ export default {
 		...mapGetters(['sellers', 'channels', 'games', 'rooms', 'states']),
 	},
 	created() {
-		this.getSeller()
 		if (this.columns) {
 			let key = `column_${this.$vnode.key}`
 			let data = localStorage.getItem(key)
@@ -105,36 +99,6 @@ export default {
 		}
 	},
 	methods: {
-		getSeller() {
-			request.post('/v1/seller/get_seller', { page_size: 1000 }, { noloading: true }).then((data) => {
-				store.dispatch('app/setSellers', data)
-			})
-			//this.getChannel(this.filters.seller_id)
-		},
-		getChannel(seller_id) {
-			if (!seller_id) {
-				this.filters.channel_id = null
-				this.channel = []
-			} else {
-				let data = {
-					seller_id: seller_id,
-					page: 1,
-					page_size: 1000,
-				}
-				request.post('/v1/channel/get_channel', data, { noloading: true }).then((channels) => {
-					store.dispatch('app/setChannels', channels.data)
-				})
-			}
-		},
-		sellerChange(seller_id) {
-			localStorage.setItem('seller_id', seller_id)
-			this.filters.channel_id = null
-			localStorage.removeItem('channel_id')
-			this.getChannel(seller_id || -1)
-		},
-		channelChange(channel_id) {
-			localStorage.setItem('channel_id', channel_id)
-		},
 		pageChange(page) {
 			this.page = page
 			this.getTableData()
@@ -203,13 +167,13 @@ export default {
 			return retdata
 		},
 		copy(data) {
-			let oInput = document.createElement('input')
+			let oInput = document.createElement('textarea')
 			oInput.value = `${data}`
 			document.body.appendChild(oInput)
 			oInput.select()
 			document.execCommand('copy')
 			oInput.remove()
-			Message({ type: 'success', message: '复制成功' })
+			Message({ type: 'success', message: '复制成功', center: true })
 		},
 		getSummaries(param) {
 			const { columns } = param
@@ -232,40 +196,6 @@ export default {
 			})
 			return sums
 		},
-		getSellerName(item) {
-			let map = {}
-			for (let i = 0; i < this.sellers.length; i++) {
-				map[this.sellers[i].seller_id] = this.sellers[i].seller_name
-			}
-			return map[item.seller_id]
-		},
-		getchannel_name(item) {
-			let map = {}
-			for (let i = 0; i < this.channels.length; i++) {
-				map[this.channels[i].channel_id] = this.channels[i].channel_name
-			}
-			return map[item.channel_id]
-		},
-		getStateName(item) {
-			return this.getMap(this.states)[item.state]
-		},
-		getMap(arr) {
-			let map = {}
-			for (let i = 0; i < arr.length; i++) {
-				map[arr[i].id] = arr[i].name
-			}
-			return map
-		},
-		numDeal(t, n) {
-			if (t == 0) return 0
-			let f = t / Math.abs(t)
-			n = n || 6
-			if (n < 0) n = 0
-			t = t * Math.pow(10, n)
-			t = Math.abs(t)
-			t = Math.floor(t)
-			return (t / Math.pow(10, n)) * f
-		},
 		selectColumn() {
 			this.columnpicker = true
 		},
@@ -275,14 +205,6 @@ export default {
 			}
 			let key = `column_${this.$vnode.key}`
 			localStorage.setItem(key, JSON.stringify(this.column))
-		},
-		dealData(data) {
-			data.forEach((element) => {
-				if (element.CreateTime) element.CreateTime = moment(element.CreateTime).format('YYYY-MM-DD HH:mm:ss')
-				if (element.LoginTime) element.LoginTime = moment(element.LoginTime).format('YYYY-MM-DD HH:mm:ss')
-				if (element.RegisterTime) element.RegisterTime = moment(element.RegisterTime).format('YYYY-MM-DD HH:mm:ss')
-			})
-			return data
 		},
 	},
 }

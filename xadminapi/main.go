@@ -1,9 +1,11 @@
 package main
 
 import (
-	"xadminapi/router"
-	"xadminapi/server"
-	"xadminapi/service"
+	"embed"
+	api_admin "xadminapi/api/admin"
+	api_live_room "xadminapi/api/live/room"
+	_ "xadminapi/docs"
+	"xapp/xapp"
 )
 
 // @title          adminapi
@@ -16,11 +18,14 @@ import (
 // @name x-token
 
 // swag init -g main.go
+//
+//go:embed www
+var www embed.FS
 
 func main() {
-	server.Init()
-	server.Run(func() {
-		service.Init()
-		router.Init()
+	xapp.Init()
+	xapp.Run(func() {
+		api_admin.Init(&www)
+		api_live_room.Init()
 	})
 }

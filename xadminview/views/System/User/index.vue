@@ -16,20 +16,10 @@
 					<span style="cursor: pointer" class="blue" @click="handleEdit(scope.row, 0)">{{ scope.row.account }}</span>
 				</template>
 			</el-table-column>
-			<el-table-column align="center" prop="SellerName" label="运营商" width="130" v-if="zong">
-				<template slot-scope="scope">
-					<span>{{ getSellerName(scope.row) }}</span>
-				</template>
-			</el-table-column>
-			<!-- <el-table-column align="center" label="渠道" width="100">
-				<template slot-scope="scope">
-					<span>{{ getSellerName(scope.row) }}</span>
-				</template>
-			</el-table-column> -->
 			<el-table-column align="center" prop="role_name" label="角色" width="150"></el-table-column>
 			<el-table-column align="center" label="状态" width="100">
 				<template slot-scope="scope">
-					<span :class="scope.row.state == 1 ? 'blue' : 'red'">{{ getStateName(scope.row) }}</span>
+					<span :class="scope.row.state == 1 ? '' : 'red'">{{ scope.row.state == 1 ? '启用' : '禁用' }}</span>
 				</template>
 			</el-table-column>
 			<el-table-column align="center" prop="login_time" label="登录时间" width="160"></el-table-column>
@@ -39,8 +29,6 @@
 			<el-table-column label="操作" align="left" width="300">
 				<template slot-scope="scope">
 					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 0)">编辑</el-button>
-					<!-- <el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 1)">登录验证码</el-button>
-					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 2)">操作验证码</el-button> -->
 					<el-button type="text" size="small" icon="el-icon-delete" class="red" @click="handleDelete(scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
@@ -73,8 +61,8 @@ export default {
 	methods: {
 		getTableData() {
 			let data = this.getQueryData()
-			this.$post('/v1/admin_user/get_admin_user', data).then((result) => {
-				this.table_data = this.dealData(result.data)
+			this.$post('/v1/admin_get_user', data).then((result) => {
+				this.table_data = result.data
 				this.total = result.total
 			})
 		},
@@ -84,26 +72,14 @@ export default {
 				let data = {
 					Account: item.account,
 				}
-				if (index == 1) {
-					this.$post('/v1/admin_user/set_login_googlesecret', data, { google: true }).then((result) => {
-						this.dialog1.show = true
-						this.dialog1.url = result.url
-						this.dialog1.title = '登录验证码'
-					})
-				} else if (index == 2) {
-					this.$post('/v1/admin_user/set_opt_googlesecret', data, { google: true }).then((result) => {
-						this.dialog1.show = true
-						this.dialog1.url = result.url
-						this.dialog1.title = '操作验证码'
-					})
-				}
 			}
 		},
 		AddItem(index, next) {
 			if (index == 0) return next('添加账号')
 		},
 		DeleteItem(item) {
-			this.$post('/v1/admin_user/delete_admin_user', item, { google: true }).then(() => {
+			if (item.account.indexOf('admin') == 0) return this.$message.error('该账号不可删除')
+			this.$post('/v1/admin_delete_user', item, { google: true }).then(() => {
 				this.$message.success('删除成功')
 				this.getTableData()
 			})

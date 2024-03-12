@@ -67,8 +67,8 @@ export default {
 	methods: {
 		getTableData() {
 			let data = this.getQueryData()
-			this.$post('/v1/live_room/get_live_room', data).then((result) => {
-				this.table_data = this.dealData(result.data)
+			this.$post('/v1/get_live_room', data).then((result) => {
+				this.table_data = result.data
 				this.total = result.total
 			})
 		},
@@ -89,7 +89,7 @@ export default {
 			let data = {
 				id: item.id,
 			}
-			this.$post('/v1/live_room/delete_live_room', data, { google: true }).then(() => {
+			this.$post('/v1/delete_live_room', data, { google: true }).then(() => {
 				this.$message.success('删除成功')
 				this.getTableData()
 			})

@@ -1,18 +1,23 @@
 {
 	"folders": [
 		{
+			"name": "xapp",
+			"path": "xapp"
+		},
+		{
+			"name": "xadminapi",
 			"path": "xadminapi"
 		},
 		{
+			"name": "xadminview",
 			"path": "xadminview"
 		},
 		{
+			"name": "xclientapi",
 			"path": "xclientapi"
 		},
 		{
-			"path": "xcom"
-		},
-		{
+			"name": "clientview",
 			"path": "clientview"
 		}
 	]

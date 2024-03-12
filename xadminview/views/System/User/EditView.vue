@@ -5,11 +5,6 @@
 				<el-form-item label="账号:">
 					<el-input v-model="itemdata.account" :disabled="title == '编辑账号'" style="width: 400px"></el-input>
 				</el-form-item>
-				<!-- <el-form-item label="渠道:" v-show="title != '编辑账号'">
-					<el-select v-model="itemdata.channel_id" placeholder="渠道" style="width: 350px" clearable>
-						<el-option v-for="item in dlgchannels" :key="item.channel_id" :label="item.channel_name" :value="item.channel_id"> </el-option>
-					</el-select>
-				</el-form-item> -->
 				<el-form-item label="密码:">
 					<el-input v-model="itemdata.password" show-password style="width: 400px"></el-input>
 				</el-form-item>
@@ -48,7 +43,7 @@ export default {
 				if (data.password && data.password.length > 0) {
 					data.password = this.$md5(data.password)
 				}
-				this.$post('/v1/admin_user/update_admin_user', data, { google: true }).then(() => {
+				this.$post('/v1/admin_update_user', data, { google: true }).then(() => {
 					this.$message.success('修改成功')
 					next(true)
 				})
@@ -59,14 +54,13 @@ export default {
 				if (!this.itemdata.role_name) return this.$message.error('请选择角色')
 				let data = JSON.parse(JSON.stringify(this.itemdata))
 				data.password = this.$md5(data.password)
-				this.$post('/v1/admin_user/create_admin_user', data, { google: true }).then(() => {
+				this.$post('/v1/admin_create_user', data, { google: true }).then(() => {
 					this.$message.success('添加成功')
 					next(true)
 				})
 			}
 		},
 		onOpen() {
-			this.itemdata.seller_id = this.filters.seller_id
 			this.dlgroles = []
 			this.dlgchannels = []
 			if (this.title == '编辑账号') {
@@ -84,10 +78,8 @@ export default {
 			this.getRoles()
 		},
 		getRoles() {
-			let data = {
-				seller_id: this.itemdata.seller_id,
-			}
-			this.$post('/v1/admin_role/get_admin_role', data, { noloading: true }).then((roledata) => {
+			let data = {}
+			this.$post('/v1/admin_get_role', data, { noloading: true }).then((roledata) => {
 				this.dlgroles = roledata.data
 			})
 		},

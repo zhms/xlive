@@ -36,7 +36,7 @@ export default {
 	methods: {
 		getTableData() {
 			let data = this.getQueryData()
-			this.$post('/v1/admin_role/get_admin_role', data).then((result) => {
+			this.$post('/v1/admin_get_role', data).then((result) => {
 				this.table_data = result.data
 				this.total = result.total
 			})
@@ -45,12 +45,12 @@ export default {
 			if (index == 0) return next(`添加角色`, {})
 		},
 		ModifyItem(index, next, item) {
-			if (index == 0 && item.Parent == 'god') return this.$message.error('该角色不可编辑')
+			if (index == 0 && item.parent == 'god') return this.$message.error('该角色不可编辑')
 			if (index == 0) next(`编辑角色`)
 		},
 		DeleteItem(item) {
-			if (item.Parent == 'god') return this.$message.error('该角色不可删除')
-			this.$post('/v1/admin_role/delete_admin_role', item, { google: true }).then(() => {
+			if (item.parent == 'god') return this.$message.error('该角色不可删除')
+			this.$post('/v1/admin_delete_role', item, { google: true }).then(() => {
 				this.$message.success('删除成功')
 				this.getTableData()
 			})

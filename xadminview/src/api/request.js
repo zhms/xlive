@@ -26,7 +26,7 @@ service.interceptors.response.use(
 		}
 		const res = response.data
 		if (res.code != 0) {
-			Message({ type: 'error', message: res.data })
+			Message({ type: 'error', message: res.data, center: true })
 			return Promise.reject(new Error(res.data))
 		} else {
 			return res.data
@@ -35,16 +35,16 @@ service.interceptors.response.use(
 	(error, b) => {
 		if (loading) loading.close()
 		if (error.response.status == 500) {
-			Message({ type: 'error', message: 'http status 500' })
+			Message({ type: 'error', message: 'http status 500', center: true })
 		} else if (error.response.status == 404) {
-			Message({ type: 'error', message: 'http status 404' })
+			Message({ type: 'error', message: 'http status 404', center: true })
 		} else {
 			if (error.response.data.code == 100102) {
 				error.response.data.data = error.response.data.data || ' 请退出从新登录'
-				Message({ type: 'error', message: error.response.data.msg + ' ' + error.response.data.data })
+				Message({ type: 'error', message: error.response.data.msg + ' ' + error.response.data.data, center: true })
 			} else {
 				error.response.data.data = error.response.data.data || ''
-				Message({ type: 'error', message: error.response.data.msg + ' ' + error.response.data.data })
+				Message({ type: 'error', message: error.response.data.msg + ' ' + error.response.data.data, center: true })
 			}
 		}
 		return Promise.reject(error)
@@ -53,13 +53,10 @@ service.interceptors.response.use(
 
 async function getGoogleCode() {
 	try {
-		let ret = await MessageBox.prompt('请输入谷歌验证码', '身份验证', {
+		let ret = await MessageBox.prompt('请输入验证码', '身份验证', {
 			confirmButtonText: '确定',
 			cancelButtonText: '取消',
 		})
-		if (!ret.value) {
-			Message({ type: 'error', message: '请输入谷歌验证码' })
-		}
 		return ret.value
 	} catch (e) {}
 	return null
@@ -68,7 +65,6 @@ async function getGoogleCode() {
 export default {
 	async download(url, data = {}, options = {}) {
 		data.export = 1
-		data.seller_id = Number(localStorage.getItem('seller_id') ?? 0) || 1
 		options.loading = !options.noloading
 		if (options.loading) {
 			if (loading) loading.close()
@@ -92,7 +88,6 @@ export default {
 	},
 	async post(url, data = {}, options = {}) {
 		let googlecode
-		data.seller_id = Number(localStorage.getItem('seller_id') ?? 0) || 1
 		options.loading = !options.noloading
 		if (options.google) {
 			googlecode = await getGoogleCode()
@@ -111,70 +106,6 @@ export default {
 			options.url = url
 			options.data = data
 			options.method = 'POST'
-			options.headers = { VerifyCode: googlecode }
-			service(options)
-				.then((data) => {
-					if (options.loading) if (loading) loading.close()
-					resolve(data)
-				})
-				.catch((e) => {
-					if (options.loading) if (loading) loading.close()
-				})
-		})
-	},
-	async patch(url, data = {}, options = {}) {
-		let googlecode
-		data.seller_id = Number(localStorage.getItem('seller_id') ?? 0) || 1
-		options.loading = !options.noloading
-		if (options.google) {
-			googlecode = await getGoogleCode()
-			if (!googlecode) {
-				return new Promise((resolve, reject) => {
-					reject()
-				})
-			}
-		}
-		if (options.loading) {
-			if (loading) loading.close()
-			loading = Loading.service({ lock: true, spinner: 'el-icon-loading', background: 'rgba(0, 0, 0, 0.7)' })
-		}
-		return new Promise((resolve, reject) => {
-			let options = {}
-			options.url = url
-			options.data = data
-			options.method = 'PATCH'
-			options.headers = { VerifyCode: googlecode }
-			service(options)
-				.then((data) => {
-					if (options.loading) if (loading) loading.close()
-					resolve(data)
-				})
-				.catch((e) => {
-					if (options.loading) if (loading) loading.close()
-				})
-		})
-	},
-	async delete(url, data = {}, options = {}) {
-		let googlecode
-		data.seller_id = Number(localStorage.getItem('seller_id') ?? 0) || 1
-		options.loading = !options.noloading
-		if (options.google) {
-			googlecode = await getGoogleCode()
-			if (!googlecode) {
-				return new Promise((resolve, reject) => {
-					reject()
-				})
-			}
-		}
-		if (options.loading) {
-			if (loading) loading.close()
-			loading = Loading.service({ lock: true, spinner: 'el-icon-loading', background: 'rgba(0, 0, 0, 0.7)' })
-		}
-		return new Promise((resolve, reject) => {
-			let options = {}
-			options.url = url
-			options.data = data
-			options.method = 'DELETE'
 			options.headers = { VerifyCode: googlecode }
 			service(options)
 				.then((data) => {

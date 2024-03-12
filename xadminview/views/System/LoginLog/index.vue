@@ -18,7 +18,7 @@
 			<el-table-column align="center" prop="id" label="序号" width="80" v-if="column['序号']"></el-table-column>
 			<el-table-column align="center" prop="account" label="管理员" width="150" v-if="column['管理员']"></el-table-column>
 			<el-table-column align="center" prop="login_ip" label="登录IP" width="200" v-if="column['登录Ip']"></el-table-column>
-			<el-table-column align="center" prop="ip_location" label="登录地区" width="300"></el-table-column>
+			<el-table-column align="center" prop="login_ip_location" label="登录地区" width="300"></el-table-column>
 			<el-table-column align="center" prop="create_time" label="登录时间" width="170" v-if="column['登录时间']"></el-table-column>
 		</el-table>
 		<div class="pagination">
@@ -49,9 +49,8 @@ export default {
 	methods: {
 		getTableData() {
 			let data = this.getQueryData()
-			data.channel_id = Number(data.channel_id)
-			this.$post('/v1/admin_log/get_login_log', data).then((result) => {
-				this.table_data = this.dealData(result.data)
+			this.$post('/v1/admin_get_login_log', data).then((result) => {
+				this.table_data = result.data
 				this.total = result.total
 			})
 		},
