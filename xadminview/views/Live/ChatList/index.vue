@@ -11,7 +11,6 @@
 		<el-table :data="table_data" style="margin-top: -15px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
 			<el-table-column align="center" prop="id" label="id" width="100"></el-table-column>
 			<el-table-column align="center" prop="room_id" label="房间Id" width="100"></el-table-column>
-			<el-table-column align="center" prop="user_id" label="会员Id" width="100"></el-table-column>
 			<el-table-column align="center" prop="account" label="账号" width="200"> </el-table-column>
 			<el-table-column align="center" prop="content" label="内容" width="500" show-overflow-tooltip></el-table-column>
 			<el-table-column align="center" label="状态" width="100">
@@ -32,18 +31,13 @@
 		<div class="pagination">
 			<el-pagination style="margin-right: 10px" background layout="sizes,total, prev, pager, next, jumper" @size-change="page_sizeChange" :current-page="page" @current-change="pageChange" :page-sizes="page_sizes" :total="total" :page-size="page_size"></el-pagination>
 		</div>
-		<edit-view :show.sync="dialog0.show" :title="dialog0.title" :itemdata="dialog0.itemdata" :filters="filters" @getTableData="getTableData" />
-		<edit-view :show.sync="dialog1.show" :title="dialog1.title" :itemdata="dialog1.itemdata" :filters="filters" @getTableData="getTableData" />
 	</div>
 </template>
 <script>
 import '@/styles/main.css'
 import base from '@/api/base'
-import vueqr from 'vue-qr'
-import EditView from './EditView.vue'
 export default {
 	extends: base,
-	components: { EditView, vueqr },
 	data() {
 		return {}
 	},
@@ -54,15 +48,15 @@ export default {
 		getTableData() {
 			let data = this.getQueryData()
 			data.room_id = Number(this.filters.room_id) || 0
-			this.$post('/v1/live_chat/get_live_chat', data).then((result) => {
-				this.table_data = this.dealData(result.data)
+			this.$post('/v1/get_chat_data', data).then((result) => {
+				this.table_data = result.data
 				this.total = result.total
 			})
 		},
 		ModifyItem(index, next, item) {
 			let data = JSON.parse(JSON.stringify(item))
 			data.state = index
-			this.$post('/v1/live_chat/audit_live_chat', data).then((result) => {
+			this.$post('/v1/update_chat_data', data).then((result) => {
 				for (let i = 0; i < this.table_data.length; i++) {
 					if (this.table_data[i].id == item.id) {
 						this.table_data[i].state = index

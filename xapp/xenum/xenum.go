@@ -63,3 +63,5 @@ var RoleBaned = map[string]interface{}{"code": 100302, "msg": "角色已被禁�
 var AuthTokenNotFound = map[string]interface{}{"code": 100401, "msg": "未填写token"}
 var AuthGetTokenError = map[string]interface{}{"code": 100402, "msg": "获取token失败"}
 var AuthTokenExpired = map[string]interface{}{"code": 100403, "msg": "未登录或登录已过期"}
+
+var AlreadyAudited = map[string]interface{}{"code": 100501, "msg": "已审核"}

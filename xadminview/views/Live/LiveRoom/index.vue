@@ -52,12 +52,11 @@
 <script>
 import '@/styles/main.css'
 import base from '@/api/base'
-import vueqr from 'vue-qr'
 import EditView from './EditView.vue'
 
 export default {
 	extends: base,
-	components: { EditView, vueqr },
+	components: { EditView },
 	data() {
 		return {}
 	},

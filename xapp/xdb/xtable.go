@@ -6,7 +6,7 @@ const (
 	TableXAdminRole     = "x_admin_role"
 	TableXAdminUser     = "x_admin_user"
 	TableXChatBanIp     = "x_chat_ban_ip"
-	TableXChatList      = "x_chat_list"
+	TableXChatData      = "x_chat_data"
 	TableXHongbao       = "x_hongbao"
 	TableXHostSeller    = "x_host_seller"
 	TableXKv            = "x_kv"
@@ -14,5 +14,4 @@ const (
 	TableXLiveRoom      = "x_live_room"
 	TableXSeller        = "x_seller"
 	TableXUser          = "x_user"
-	TableXUserIdPool    = "x_user_id_pool"
 )

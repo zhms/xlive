@@ -37,3 +37,30 @@ type XUser struct {
 func (XUser) TableName() string {
 	return "x_user"
 }
+
+type XChatBanIp struct {
+	Id           int    `gorm:"column:id;primaryKey;autoIncrement;comment:'id'" json:"id"`
+	Ip           string `gorm:"column:ip;type:varchar(32);charset:utf8mb4;comment:'IP地址'" json:"ip"`
+	AdminAccount string `gorm:"column:admin_account;type:varchar(32);charset:utf8mb4;comment:'管理员账号'" json:"admin_account"`
+	CreateTime   string `gorm:"column:create_time;default:CURRENT_TIMESTAMP;comment:'创建时间'" json:"create_time"`
+}
+
+func (XChatBanIp) TableName() string {
+	return "x_chat_ban_ip"
+}
+
+type XChatData struct {
+	Id         int    `gorm:"column:id;primaryKey;autoIncrement;comment:'id'" json:"id"`
+	SellerId   int    `gorm:"column:seller_id" json:"seller_id"`
+	Account    string `gorm:"column:account;type:varchar(32);comment:'会员账号'" json:"account"`
+	RoomId     int    `gorm:"column:room_id;comment:'房价id'" json:"room_id"`
+	Content    string `gorm:"column:content;type:varchar(1024);comment:'内容'" json:"content"`
+	Ip         string `gorm:"column:ip;type:varchar(32);comment:'ip'" json:"ip"`
+	IpLocation string `gorm:"column:ip_location;type:varchar(255)" json:"ip_location"`
+	State      int    `gorm:"column:state;type:varchar(255);comment:'状态 1待审核,2审核通过,3审核拒绝'" json:"state"`
+	CreateTime string `gorm:"column:create_time;comment:'创建时间'" json:"create_time"`
+}
+
+func (XChatData) TableName() string {
+	return "x_chat_data"
+}

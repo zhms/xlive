@@ -118,7 +118,6 @@ func socket_handler(ctx *gin.Context) {
 		if msgdata.MsgId == "chat" {
 			chat_msg(ids[1], tokendata, msgdata.MsgData["msg"].(string))
 		}
-		break
 	}
 	user_leave(conn, ids[1], tokendata)
 }
@@ -218,7 +217,7 @@ func chat_msg(roomid string, tokendata *api_user.TokenData, msgdata string) {
 		iplocation = fmt.Sprintf("%s %s", ipdata.Country, ipdata.City)
 	}
 
-	xapp.Db().Table(xdb.TableXChatList).Create(map[string]interface{}{
+	db := xapp.Db().Model(&xdb.XChatData{}).Create(map[string]interface{}{
 		xdb.SellerId:   tokendata.SellerId,
 		xdb.Ip:         tokendata.Ip,
 		xdb.IpLocation: iplocation,
@@ -228,6 +227,10 @@ func chat_msg(roomid string, tokendata *api_user.TokenData, msgdata string) {
 		xdb.State:      1,
 		xdb.CreateTime: xutils.Now(),
 	})
+	if db.Error != nil {
+		logs.Error("Create chat data error:", db.Error.Error())
+		return
+	}
 
 	chatdata := &ChatData{From: tokendata.Account, Msg: msgdata, Time: xutils.Now()}
 	bytes, _ := json.Marshal(chatdata)

@@ -27,10 +27,8 @@
 <script>
 import '@/styles/main.css'
 import base from '@/api/base'
-import vueqr from 'vue-qr'
 export default {
 	extends: base,
-	components: { vueqr },
 	data() {
 		return {}
 	},
@@ -40,13 +38,13 @@ export default {
 	methods: {
 		getTableData() {
 			let data = this.getQueryData()
-			this.$post('/v1/live_ip_ban/get_ban_ip', data).then((result) => {
-				this.table_data = this.dealData(result.data)
+			this.$post('/v1/get_ip_ban', data).then((result) => {
+				this.table_data = result.data
 				this.total = result.total
 			})
 		},
 		DeleteItem(item) {
-			this.$post('/v1/live_ip_ban/delete_ban_ip', item).then((result) => {
+			this.$post('/v1/delete_ip_ban', item, { google: true }).then((result) => {
 				this.getTableData()
 			})
 		},
