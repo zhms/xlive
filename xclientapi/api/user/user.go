@@ -19,6 +19,7 @@ import (
 	val "github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"
+	"github.com/yinheli/qqwry"
 	"gorm.io/gorm"
 )
 
@@ -97,6 +98,18 @@ type user_login_res struct {
 	LiveData  string `json:"live_data"`
 }
 
+func GetLocation(ip string) string {
+	ipdata := qqwry.NewQQwry("./config/qqwry.dat")
+	if ipdata == nil {
+		ipdata = qqwry.NewQQwry("./qqwry.dat")
+	}
+	if ipdata != nil && strings.Index(ip, ".") > 0 {
+		ipdata.Find(ip)
+		return fmt.Sprintf("%s %s", ipdata.Country, ipdata.City)
+	}
+	return ""
+}
+
 // @Router /user_login [post]
 // @Tags 用户
 // @Summary 登录
@@ -169,6 +182,14 @@ func user_login(ctx *gin.Context) {
 	tokendata.Token = userdata.Token
 	tokendata.Ip = ctx.ClientIP()
 	SetToken(tokendata.Token, &tokendata)
+
+	xapp.Db().Model(&xdb.XUser{}).Where(xdb.Id+xdb.EQ, userdata.Id).Updates(map[string]interface{}{
+		xdb.LoginIp:                  tokendata.Ip,
+		xdb.LoginTime:                xutils.Now(),
+		xdb.Token:                    userdata.Token,
+		xdb.LoginCount:               gorm.Expr(xdb.LoginCount+xdb.PLUS, 1),
+		xdb.LoginIpLocation + xdb.EQ: GetLocation(tokendata.Ip),
+	})
 
 	response.Account = userdata.Account
 	response.Token = userdata.Token
