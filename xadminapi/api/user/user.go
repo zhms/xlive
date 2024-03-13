@@ -1,4 +1,4 @@
-package api_user
+package user
 
 func Init() {
 

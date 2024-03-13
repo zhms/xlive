@@ -393,37 +393,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/create_ip_ban": {
-            "post": {
-                "tags": [
-                    "直播间 - Ip封禁"
-                ],
-                "summary": "封禁Ip",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "token",
-                        "name": "x-token",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "description": "请求参数",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/live_ban.create_ip_ban_req"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "响应数据"
-                    }
-                }
-            }
-        },
         "/create_live_room": {
             "post": {
                 "tags": [
@@ -444,7 +413,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/live_room.create_live_room_req"
+                            "$ref": "#/definitions/api_live_room.create_live_room_req"
                         }
                     }
                 ],
@@ -506,7 +475,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/live_room.delete_live_room_req"
+                            "$ref": "#/definitions/api_live_room.delete_live_room_req"
                         }
                     }
                 ],
@@ -537,7 +506,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/live_chat.get_chat_req"
+                            "$ref": "#/definitions/api_live_chat.get_chat_req"
                         }
                     }
                 ],
@@ -545,7 +514,7 @@ const docTemplate = `{
                     "200": {
                         "description": "响应数据",
                         "schema": {
-                            "$ref": "#/definitions/live_chat.get_chat_res"
+                            "$ref": "#/definitions/api_live_chat.get_chat_res"
                         }
                     }
                 }
@@ -605,7 +574,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/live_room.get_live_room_req"
+                            "$ref": "#/definitions/api_live_room.get_live_room_req"
                         }
                     }
                 ],
@@ -613,7 +582,7 @@ const docTemplate = `{
                     "200": {
                         "description": "响应数据",
                         "schema": {
-                            "$ref": "#/definitions/live_room.get_live_room_res"
+                            "$ref": "#/definitions/api_live_room.get_live_room_res"
                         }
                     }
                 }
@@ -639,7 +608,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/live_chat.update_chat_req"
+                            "$ref": "#/definitions/api_live_chat.update_chat_req"
                         }
                     }
                 ],
@@ -670,7 +639,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/live_room.update_live_room_req"
+                            "$ref": "#/definitions/api_live_room.update_live_room_req"
                         }
                     }
                 ],
@@ -1124,25 +1093,46 @@ const docTemplate = `{
                 }
             }
         },
-        "live_ban.create_ip_ban_req": {
-            "type": "object"
-        },
         "live_ban.delete_ip_ban_req": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
         },
         "live_ban.get_ip_ban_req": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                }
+            }
         },
         "live_ban.get_ip_ban_res": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/xdb.XChatBanIP"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "api_live_chat.get_chat_req": {
             "type": "object"
         },
-        "live_chat.get_chat_req": {
+        "api_live_chat.get_chat_res": {
             "type": "object"
         },
-        "live_chat.get_chat_res": {
-            "type": "object"
-        },
-        "live_chat.update_chat_req": {
+        "api_live_chat.update_chat_req": {
             "type": "object",
             "required": [
                 "id",
@@ -1158,20 +1148,154 @@ const docTemplate = `{
                 }
             }
         },
-        "live_room.create_live_room_req": {
-            "type": "object"
+        "api_live_room.create_live_room_req": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "直播间账号",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "直播间名称",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "直播间状态",
+                    "type": "integer"
+                },
+                "title": {
+                    "description": "直播间标题",
+                    "type": "string"
+                }
+            }
         },
-        "live_room.delete_live_room_req": {
-            "type": "object"
+        "api_live_room.delete_live_room_req": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "description": "直播间Id",
+                    "type": "integer"
+                }
+            }
         },
-        "live_room.get_live_room_req": {
-            "type": "object"
+        "api_live_room.get_live_room_req": {
+            "type": "object",
+            "properties": {
+                "page": {
+                    "description": "页码",
+                    "type": "integer"
+                },
+                "page_size": {
+                    "description": "每页数量",
+                    "type": "integer"
+                }
+            }
         },
-        "live_room.get_live_room_res": {
-            "type": "object"
+        "api_live_room.get_live_room_res": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "数据",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/xdb.XLiveRoom"
+                    }
+                },
+                "total": {
+                    "description": "总数",
+                    "type": "integer"
+                }
+            }
         },
-        "live_room.update_live_room_req": {
-            "type": "object"
+        "api_live_room.update_live_room_req": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "直播间账号",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "直播间Id",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "直播间名称",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "直播间状态",
+                    "type": "integer"
+                },
+                "title": {
+                    "description": "直播间标题",
+                    "type": "string"
+                }
+            }
+        },
+        "xdb.XChatBanIP": {
+            "type": "object",
+            "properties": {
+                "admin_account": {
+                    "type": "string"
+                },
+                "create_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "ip": {
+                    "type": "string"
+                }
+            }
+        },
+        "xdb.XLiveRoom": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "主播账号",
+                    "type": "string"
+                },
+                "create_time": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "id",
+                    "type": "integer"
+                },
+                "live_url": {
+                    "description": "前端地址",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "直播间名称",
+                    "type": "string"
+                },
+                "pull_url": {
+                    "description": "拉流地址",
+                    "type": "string"
+                },
+                "push_url": {
+                    "description": "推流地址",
+                    "type": "string"
+                },
+                "seller_id": {
+                    "description": "运营商",
+                    "type": "integer"
+                },
+                "state": {
+                    "description": "状态 1正在直播,2未直播",
+                    "type": "integer"
+                },
+                "title": {
+                    "description": "直播间标题",
+                    "type": "string"
+                }
+            }
         }
     },
     "securityDefinitions": {

@@ -1,4 +1,4 @@
-package api_hongbao
+package hongbao
 
 func Init() {
 

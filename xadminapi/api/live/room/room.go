@@ -1,4 +1,4 @@
-package api_live_room
+package live_room
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-	api_admin "xadminapi/api/admin"
+	"xadminapi/api/admin"
 	"xapp/xapp"
 	"xapp/xdb"
 	"xapp/xenum"
@@ -18,10 +18,10 @@ import (
 )
 
 func Init() {
-	xglobal.ApiV1.POST("/get_live_room", api_admin.Auth("系统管理", "角色管理", "查", ""), get_live_room)
-	xglobal.ApiV1.POST("/create_live_room", api_admin.Auth("系统管理", "角色管理", "增", "创建直播间"), create_live_room)
-	xglobal.ApiV1.POST("/update_live_room", api_admin.Auth("系统管理", "角色管理", "改", "更新直播间"), update_live_room)
-	xglobal.ApiV1.POST("/delete_live_room", api_admin.Auth("系统管理", "角色管理", "删", "删除直播间"), delete_live_room)
+	xglobal.ApiV1.POST("/get_live_room", admin.Auth("系统管理", "角色管理", "查", ""), get_live_room)
+	xglobal.ApiV1.POST("/create_live_room", admin.Auth("系统管理", "角色管理", "增", "创建直播间"), create_live_room)
+	xglobal.ApiV1.POST("/update_live_room", admin.Auth("系统管理", "角色管理", "改", "更新直播间"), update_live_room)
+	xglobal.ApiV1.POST("/delete_live_room", admin.Auth("系统管理", "角色管理", "删", "删除直播间"), delete_live_room)
 }
 
 func push_url(pushDomain, pushKey, appName, streamName string, expireTime int) string {
@@ -83,7 +83,7 @@ func get_live_room(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
 		return
 	}
-	token := api_admin.GetToken(ctx)
+	token := admin.GetToken(ctx)
 	if token == nil {
 		return
 	}
@@ -126,7 +126,7 @@ func create_live_room(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
 		return
 	}
-	token := api_admin.GetToken(ctx)
+	token := admin.GetToken(ctx)
 	if token == nil {
 		return
 	}
@@ -170,7 +170,7 @@ func update_live_room(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
 		return
 	}
-	token := api_admin.GetToken(ctx)
+	token := admin.GetToken(ctx)
 	if token == nil {
 		return
 	}
@@ -253,7 +253,7 @@ func delete_live_room(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
 		return
 	}
-	token := api_admin.GetToken(ctx)
+	token := admin.GetToken(ctx)
 	if token == nil {
 		return
 	}
