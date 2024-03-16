@@ -16,6 +16,7 @@ import (
 	"time"
 	"xapp/xapp"
 	"xapp/xdb"
+	"xapp/xdb/model"
 	"xapp/xenum"
 	"xapp/xglobal"
 	"xapp/xutils"
@@ -23,6 +24,7 @@ import (
 	"github.com/beego/beego/logs"
 	"github.com/gin-gonic/gin"
 	val "github.com/go-playground/validator/v10"
+	"github.com/golang-module/carbon/v2"
 	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"
 	"github.com/yinheli/qqwry"
@@ -46,14 +48,14 @@ func Init(static *embed.FS) {
 
 	xglobal.ApiV1.POST("/admin_user_login", admin_user_login)
 	xglobal.ApiV1.POST("/admin_user_logout", admin_user_logout)
-	xglobal.ApiV1.POST("/admin_get_role", Auth("系统管理", "角色管理", "查", ""), admin_get_role)
+	xglobal.ApiV1.POST("/admin_get_role", admin_get_role)
 	xglobal.ApiV1.POST("/admin_create_role", Auth("系统管理", "角色管理", "增", "创建角色"), admin_create_role)
 	xglobal.ApiV1.POST("/admin_update_role", Auth("系统管理", "角色管理", "改", "更新角色"), admin_update_role)
 	xglobal.ApiV1.POST("/admin_delete_role", Auth("系统管理", "角色管理", "删", "删除角色"), admin_delete_role)
-	xglobal.ApiV1.POST("/admin_get_user", Auth("系统管理", "账号管理", "查", ""), admin_get_user)
-	xglobal.ApiV1.POST("/admin_create_user", Auth("系统管理", "账号管理", "查", "创建管理员"), admin_create_user)
-	xglobal.ApiV1.POST("/admin_update_user", Auth("系统管理", "账号管理", "查", "更新管理员"), admin_update_user)
-	xglobal.ApiV1.POST("/admin_delete_user", Auth("系统管理", "账号管理", "查", "删除管理员"), admin_delete_user)
+	xglobal.ApiV1.POST("/admin_get_user", Auth("系统管理", "后台账号", "查", ""), admin_get_user)
+	xglobal.ApiV1.POST("/admin_create_user", Auth("系统管理", "后台账号", "查", "创建管理员"), admin_create_user)
+	xglobal.ApiV1.POST("/admin_update_user", Auth("系统管理", "后台账号", "查", "更新管理员"), admin_update_user)
+	xglobal.ApiV1.POST("/admin_delete_user", Auth("系统管理", "后台账号", "查", "删除管理员"), admin_delete_user)
 	xglobal.ApiV1.POST("/admin_get_login_log", Auth("系统管理", "登录日志", "查", ""), admin_get_login_log)
 	xglobal.ApiV1.POST("/admin_get_opt_log", Auth("系统管理", "操作日志", "查", ""), admin_get_opt_log)
 	if !xglobal.IsEnvPrd() {
@@ -142,73 +144,6 @@ func EmbedFolder(fsEmbed embed.FS, targetPath string) ServeFileSystem {
 	}
 }
 
-type XAdminLoginLog struct {
-	Id              uint64 `gorm:"column:id;primaryKey;autoIncrement;comment:'自增Id'" json:"id"`                           // 自增Id
-	SellerId        int    `gorm:"column:seller_id;comment:'运营商'" json:"seller_id"`                                       // 运营商
-	Account         string `gorm:"column:account;type:varchar(32);comment:'账号'" json:"account"`                           // 账号
-	Token           string `gorm:"column:token;type:varchar(64);comment:'登录的token'" json:"-"`                             // 登录的token
-	LoginIp         string `gorm:"column:login_ip;type:varchar(32);comment:'最近一次登录Ip'" json:"login_ip"`                   // 登录Ip
-	LoginIpLocation string `gorm:"column:login_ip_location;type:varchar(64);comment:'登录Ip地理位置'" json:"login_ip_location"` // 登录Ip地理位置
-	Memo            string `gorm:"column:memo;type:varchar(256);comment:'备注'" json:"memo"`                                // 备注
-	CreateTime      string `gorm:"column:create_time" json:"create_time"`                                                 // 创建时间
-}
-
-func (XAdminLoginLog) TableName() string {
-	return "x_admin_login_log"
-}
-
-type XAdminOptLog struct {
-	Id            uint64 `gorm:"column:id;primaryKey;autoIncrement;comment:'自增Id'" json:"id"`                                       // 自增Id
-	SellerId      int    `gorm:"column:seller_id;comment:'运营商'" json:"seller_id"`                                                   // 运营商
-	Account       string `gorm:"column:account;type:varchar(32);charset:utf8mb4;comment:'账号'" json:"account"`                       // 账号
-	ReqPath       string `gorm:"column:req_path;type:varchar(256);charset:utf8mb4;comment:'请求路径'" json:"req_path"`                  // 请求路径
-	OptName       string `gorm:"column:opt_name;type:varchar(64);charset:utf8mb4;comment:'操作名称'" json:"opt_name"`                   // 请求路径
-	ReqData       string `gorm:"column:req_data;type:varchar(256);charset:utf8mb4;comment:'请求参数'" json:"req_data"`                  // 请求参数
-	ReqIp         string `gorm:"column:req_ip;type:varchar(32);charset:utf8mb4;comment:'请求的Ip'" json:"req_ip"`                      // 请求的Ip
-	ReqIpLocation string `gorm:"column:req_ip_location;type:varchar(64);charset:utf8mb4;comment:'请求Ip地理位置'" json:"req_ip_location"` // 请求Ip地理位置
-	CreateTime    string `gorm:"column:create_time" json:"create_time"`                                                             // 创建时间
-}
-
-func (XAdminOptLog) TableName() string {
-	return "x_admin_opt_log"
-}
-
-type XAdminUser struct {
-	Id          uint64 `gorm:"column:id;primary_key;AUTO_INCREMENT;comment:'自增Id'" json:"id"`                     // 自增Id
-	SellerId    int    `gorm:"column:seller_id;comment:'运营商'" json:"seller_id"`                                   // 运营商
-	Account     string `gorm:"column:account;type:varchar(32);charset:utf8mb4;comment:'账号'" json:"account"`       // 账号
-	Password    string `gorm:"column:password;type:varchar(64);charset:utf8mb4;comment:'登录密码'" json:"-"`          // 登录密码
-	RoleName    string `gorm:"column:role_name;type:varchar(32);charset:utf8mb4;comment:'角色'" json:"role_name"`   // 角色
-	LoginGoogle string `gorm:"column:login_google;type:varchar(32);charset:utf8mb4;comment:'登录验证码'" json:"-"`     // 登录验证码
-	OptGoogle   string `gorm:"column:opt_google;type:varchar(32);charset:utf8mb4;comment:'渠道商'" json:"-"`         // 渠道商
-	State       int    `gorm:"column:state;comment:'状态 1开启,2关闭'" json:"state"`                                    // 状态 1开启,2关闭
-	Token       string `gorm:"column:token;type:varchar(255);charset:utf8mb4;comment:'最后登录的token'" json:"-"`      // 最后登录的token
-	LoginCount  int    `gorm:"column:login_count;comment:'登录次数'" json:"login_count"`                              // 登录次数
-	LoginTime   string `gorm:"column:login_time;default:CURRENT_TIMESTAMP;comment:'最后登录时间'" json:"login_time"`    // 最后登录时间
-	LoginIp     string `gorm:"column:login_ip;type:varchar(32);charset:utf8mb4;comment:'最后登录Ip'" json:"login_ip"` // 最后登录Ip
-	Memo        string `gorm:"column:memo;type:varchar(256);charset:utf8mb4;comment:'备注'" json:"memo"`            // 备注
-	CreateTime  string `gorm:"column:create_time" json:"create_time"`                                             // 创建时间
-}
-
-func (XAdminUser) TableName() string {
-	return "x_admin_user"
-}
-
-type XAdminRole struct {
-	Id         uint64 `gorm:"column:id;primaryKey;autoIncrement;comment:'自增Id'" json:"id"`      // 自增Id
-	SellerId   int    `gorm:"column:seller_id;comment:'运营商'" json:"seller_id"`                  // 运营商
-	RoleName   string `gorm:"column:role_name;type:varchar(32);comment:'角色名'" json:"role_name"` // 角色名
-	Parent     string `gorm:"column:parent;type:varchar(32);comment:'上级角色'" json:"parent"`      // 上级角色
-	RoleData   string `gorm:"column:role_data;type:text;comment:'权限数据'" json:"role_data"`       // 权限数据
-	State      int    `gorm:"column:state;comment:'状态 1开启,2关闭'" json:"state"`                   // 状态 1开启,2关闭
-	Memo       string `gorm:"column:memo;type:varchar(256);comment:'备注'" json:"memo"`           // 备注
-	CreateTime string `gorm:"column:create_time" json:"create_time"`                            // 创建时间
-}
-
-func (XAdminRole) TableName() string {
-	return "x_admin_role"
-}
-
 type bodyLogWriter struct {
 	gin.ResponseWriter
 	body *bytes.Buffer
@@ -225,9 +160,9 @@ func (w bodyLogWriter) WriteString(s string) (int, error) {
 }
 
 type TokenData struct {
-	SellerId     int
+	SellerId     int32
 	Account      string
-	UserId       int
+	UserId       int32
 	AuthData     string
 	GoogleSecret string
 }
@@ -272,7 +207,7 @@ func GetToken(c *gin.Context) *TokenData {
 		return nil
 	}
 	rediskey := fmt.Sprintf("%v:token:%s", xglobal.Project, tokenstr)
-	value, err := xapp.Redis().Client().Get(context.Background(), rediskey).Result()
+	value, err := xapp.Redis().Client().Get(c, rediskey).Result()
 	if err != nil {
 		if !errors.Is(err, redis.Nil) {
 			logs.Error("GetToken error:", err.Error())
@@ -372,16 +307,17 @@ func Auth(mainmenu string, submenu string, opt string, optname string) gin.Handl
 		if optname == "" {
 			return
 		}
-
-		optlog := new(XAdminOptLog)
-		optlog.SellerId = tokendata.SellerId
+		optlog := new(model.XAdminOptLog)
+		optlog.SellerID = tokendata.SellerId
 		optlog.Account = tokendata.Account
 		optlog.ReqData = req
 		optlog.ReqPath = c.Request.URL.Path
 		optlog.OptName = optname
-		optlog.ReqIp = c.ClientIP()
-		optlog.ReqIpLocation = GetLocation(optlog.ReqIp)
-		err := xapp.Db().Omit(xdb.CreateTime).Create(&optlog).Error
+		optlog.ReqIP = c.ClientIP()
+		optlog.ReqIPLocation = GetLocation(optlog.ReqIP)
+		tb := xapp.DbQuery().XAdminOptLog
+		itb := tb.WithContext(c)
+		err := itb.Omit(tb.CreateTime).Create(optlog)
 		if err != nil {
 			logs.Error("optlog error:", err.Error())
 		}
@@ -397,10 +333,10 @@ type admin_user_login_req struct {
 }
 
 type admin_user_login_res struct {
-	SellerId   int    `json:"seller_id"`   // 运营商
+	SellerId   int32  `json:"seller_id"`   // 运营商
 	Account    string `json:"account"`     // 账号
 	Token      string `json:"token"`       // token
-	LoginCount int    `json:"login_count"` // 登录次数
+	LoginCount int32  `json:"login_count"` // 登录次数
 	AuthData   string `json:"auth_data"`   // 权限数据
 	UtcOffset  int    `json:"utc_offset"`  // 当地时区与utc的偏移量
 	LoginIp    string `json:"login_ip"`    // 登录Ip
@@ -437,10 +373,10 @@ func admin_user_login(ctx *gin.Context) {
 		return
 	}
 
-	var adminuser XAdminUser
-	db := xapp.Db()
-	db = db.Where(xdb.Account+xdb.EQ, reqdata.Account)
-	err := db.First(&adminuser).Error
+	tb := xapp.DbQuery().XAdminUser
+	itb := tb.WithContext(ctx)
+	itb = itb.Where(tb.Account.Eq(reqdata.Account))
+	adminuser, err := itb.First()
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			ctx.JSON(http.StatusBadRequest, xenum.UserNotFound)
@@ -461,16 +397,15 @@ func admin_user_login(ctx *gin.Context) {
 		return
 	}
 
-	if adminuser.State != xdb.StateYes {
+	if adminuser.State != 1 {
 		ctx.JSON(http.StatusBadRequest, xenum.UserBanded)
 		return
 	}
 
-	roledata := new(XAdminRole)
-	db = xapp.Db()
-	db = db.Where(xdb.SellerId+xdb.EQ, adminuser.SellerId)
-	db = db.Where(xdb.RoleName+xdb.EQ, adminuser.RoleName)
-	err = db.First(&roledata).Error
+	trole := xapp.DbQuery().XAdminRole
+	itrole := trole.WithContext(ctx)
+	itrole = itrole.Where(trole.SellerID.Eq(adminuser.SellerID), trole.RoleName.Eq(adminuser.RoleName))
+	roledata, err := itrole.First()
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			ctx.JSON(http.StatusBadRequest, xenum.RoleNotFound)
@@ -479,14 +414,14 @@ func admin_user_login(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
 	}
-	if roledata.State != xdb.StateYes {
+	if roledata.State != 1 {
 		ctx.JSON(http.StatusBadRequest, xenum.RoleBaned)
 		return
 	}
 	DelToken(adminuser.Token)
 	tokendata := new(TokenData)
-	tokendata.SellerId = adminuser.SellerId
-	tokendata.UserId = int(adminuser.Id)
+	tokendata.SellerId = adminuser.SellerID
+	tokendata.UserId = int32(adminuser.ID)
 	tokendata.Account = reqdata.Account
 	tokendata.AuthData = roledata.RoleData
 	tokendata.GoogleSecret = adminuser.OptGoogle
@@ -499,31 +434,32 @@ func admin_user_login(ctx *gin.Context) {
 	response.UtcOffset = xutils.UtcOffset()
 	response.LoginCount = adminuser.LoginCount + 1
 	response.LoginIp = ctx.ClientIP()
-	response.LoginTime = adminuser.LoginTime
+	response.LoginTime = adminuser.LoginTime.Format("2006-01-02 15:04:05")
 	response.Env = xglobal.Env
 
-	db = xapp.Db().Model(new(XAdminUser))
-	db = db.Where(xdb.Id+xdb.EQ, adminuser.Id)
-	err = db.Updates(map[string]interface{}{
-		xdb.Token:      token,
-		xdb.LoginIp:    ctx.ClientIP(),
-		xdb.LoginTime:  xutils.Now(),
-		xdb.LoginCount: gorm.Expr(xdb.LoginCount+xdb.PLUS, 1),
-	}).Error
+	tb = xapp.DbQuery().XAdminUser
+	itb = tb.WithContext(ctx)
+	itb = itb.Where(tb.ID.Eq(adminuser.ID))
+
+	_, err = itb.Updates(map[string]interface{}{
+		tb.Token.ColumnName().String():      token,
+		tb.LoginIP.ColumnName().String():    ctx.ClientIP(),
+		tb.LoginTime.ColumnName().String():  carbon.Now().ToDateTimeString(),
+		tb.LoginCount.ColumnName().String(): gorm.Expr(tb.LoginCount.ColumnName().String() + "+1"),
+	})
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
 	}
-	loginlog := new(XAdminLoginLog)
-	loginlog.SellerId = tokendata.SellerId
+	loginlog := new(model.XAdminLoginLog)
+	loginlog.SellerID = tokendata.SellerId
 	loginlog.Account = tokendata.Account
 	loginlog.Token = token
-	loginlog.LoginIp = ctx.ClientIP()
-	loginlog.CreateTime = xutils.Now()
-	loginlog.LoginIpLocation = GetLocation(loginlog.LoginIp)
-	db = xapp.Db().Create(&loginlog)
-	if db.Error != nil {
-		logs.Error("loginlog error:", db.Error.Error())
+	loginlog.LoginIP = ctx.ClientIP()
+	loginlog.LoginIPLocation = GetLocation(loginlog.LoginIP)
+	err = xapp.DbQuery().XAdminLoginLog.Omit(xapp.DbQuery().XAdminLoginLog.CreateTime).Create(loginlog)
+	if err != nil {
+		logs.Error("loginlog error:", err.Error())
 	}
 	ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
 }
@@ -548,8 +484,8 @@ type admin_get_role_req struct {
 }
 
 type admin_get_role_res struct {
-	Total int64        `json:"total"` // 总数
-	Data  []XAdminRole `json:"data"`  // 数据
+	Total int64               `json:"total"` // 总数
+	Data  []*model.XAdminRole `json:"data"`  // 数据
 }
 
 // @Router /admin_get_role [post]
@@ -577,14 +513,18 @@ func admin_get_role(ctx *gin.Context) {
 	}
 	token := GetToken(ctx)
 	response := new(admin_get_role_res)
-	db := xapp.Db().Model(new(XAdminRole))
-	db = db.Where(xdb.SellerId+xdb.EQ, token.SellerId)
+	tb := xapp.DbQuery().XAdminRole
+	itb := tb.WithContext(ctx)
+	itb = itb.Where(tb.SellerID.Eq(token.SellerId))
 	if reqdata.RoleName != "" {
-		db = db.Where(xdb.RoleName+xdb.EQ, reqdata.RoleName)
+		itb = itb.Where(tb.RoleName.Eq(reqdata.RoleName))
 	}
-	db.Count(&response.Total)
-	db = db.Limit(reqdata.PageSize).Offset((reqdata.Page - 1) * reqdata.PageSize)
-	db.Find(&response.Data)
+	var err error
+	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
+	if err != nil {
+		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
 	ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
 }
 
@@ -593,7 +533,7 @@ type admin_create_role_req struct {
 	RoleName string `validate:"required" json:"role_name"` // 角色
 	Parent   string `validate:"required" json:"parent"`    // 上级角色
 	RoleData string `validate:"required" json:"role_data"` // 权限数据
-	State    int    `validate:"required" json:"state"`     // 状态 1开启,2关闭
+	State    int32  `validate:"required" json:"state"`     // 状态 1开启,2关闭
 	Memo     string `json:"memo"`                          // 备注
 }
 
@@ -615,17 +555,18 @@ func admin_create_role(ctx *gin.Context) {
 		return
 	}
 	token := GetToken(ctx)
-	role := new(XAdminRole)
-	role.SellerId = token.SellerId
+	tb := xapp.DbQuery().XAdminRole
+	itb := tb.WithContext(ctx)
+	role := new(model.XAdminRole)
+	role.SellerID = token.SellerId
 	role.RoleName = reqdata.RoleName
 	role.Parent = reqdata.Parent
 	role.RoleData = reqdata.RoleData
 	role.State = reqdata.State
 	role.Memo = reqdata.Memo
-	role.CreateTime = xutils.Now()
-	db := xapp.Db().Create(&role)
-	if db.Error != nil {
-		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, db.Error.Error()))
+	err := itb.Omit(tb.CreateTime).Create(role)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
 	}
 	ctx.JSON(http.StatusOK, xenum.Success)
@@ -658,23 +599,23 @@ func admin_update_role(ctx *gin.Context) {
 		return
 	}
 	token := GetToken(ctx)
+	tb := xapp.DbQuery().XAdminRole
+	itb := tb.WithContext(ctx)
 	updatedata := make(map[string]interface{})
 	if reqdata.Parent != "" {
-		updatedata[xdb.Parent] = reqdata.Parent
+		updatedata[tb.Parent.ColumnName().String()] = reqdata.Parent
 	}
 	if reqdata.RoleData != "" {
-		updatedata[xdb.RoleData] = reqdata.RoleData
+		updatedata[tb.RoleData.ColumnName().String()] = reqdata.RoleData
 	}
 	if reqdata.State == 1 || reqdata.State == 2 {
-		updatedata[xdb.State] = reqdata.State
+		updatedata[tb.State.ColumnName().String()] = reqdata.State
 	}
-	updatedata[xdb.Memo] = reqdata.Memo
-	db := xapp.Db().Model(new(XAdminRole))
-	db = db.Where(xdb.SellerId+xdb.EQ, token.SellerId)
-	db = db.Where(xdb.RoleName+xdb.EQ, reqdata.RoleName)
-	db = db.Updates(updatedata)
-	if db.Error != nil {
-		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, db.Error.Error()))
+	updatedata[tb.Memo.ColumnName().String()] = reqdata.Memo
+	itb = itb.Where(tb.SellerID.Eq(token.SellerId), tb.RoleName.Eq(reqdata.RoleName))
+	_, err := itb.Updates(updatedata)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
 	}
 	ctx.JSON(http.StatusOK, xenum.Success)
@@ -682,7 +623,7 @@ func admin_update_role(ctx *gin.Context) {
 
 // 删除角色
 type admin_delete_role_req struct {
-	Id int `validate:"required" json:"id"` // 角色Id
+	Id int64 `validate:"required" json:"id"` // 角色Id
 }
 
 // @Router /admin_delete_role [post]
@@ -703,12 +644,11 @@ func admin_delete_role(ctx *gin.Context) {
 		return
 	}
 	token := GetToken(ctx)
-	db := xapp.Db().Model(new(XAdminRole))
-	db = db.Where(xdb.SellerId+xdb.EQ, token.SellerId)
-	db = db.Where(xdb.Id+xdb.EQ, reqdata.Id)
-	db = db.Delete(&XAdminRole{})
-	if db.Error != nil {
-		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, db.Error.Error()))
+	tb := xapp.DbQuery().XAdminRole
+	itb := tb.WithContext(ctx)
+	_, err := itb.Where(tb.SellerID.Eq(token.SellerId), tb.ID.Eq(reqdata.Id)).Delete()
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
 	}
 	ctx.JSON(http.StatusOK, xenum.Success)
@@ -723,8 +663,8 @@ type admin_get_user_req struct {
 }
 
 type admin_get_user_res struct {
-	Total int64        `json:"total"` // 总数
-	Data  []XAdminUser `json:"data"`  // 数据
+	Total int64               `json:"total"` // 总数
+	Data  []*model.XAdminUser `json:"data"`  // 数据
 }
 
 // @Router /admin_get_user [post]
@@ -752,17 +692,21 @@ func admin_get_user(ctx *gin.Context) {
 	}
 	token := GetToken(ctx)
 	response := new(admin_get_user_res)
-	db := xapp.Db().Model(new(XAdminUser))
-	db = db.Where(xdb.SellerId+xdb.EQ, token.SellerId)
+	tb := xapp.DbQuery().XAdminUser
+	itb := tb.WithContext(ctx)
+	itb = itb.Where(tb.SellerID.Eq(token.SellerId))
 	if reqdata.Account != "" {
-		db = db.Where(xdb.Account+xdb.EQ, reqdata.Account)
+		itb = itb.Where(tb.Account.Eq(reqdata.Account))
 	}
 	if reqdata.RoleName != "" {
-		db = db.Where(xdb.RoleName+xdb.EQ, reqdata.RoleName)
+		itb = itb.Where(tb.RoleName.Eq(reqdata.RoleName))
 	}
-	db.Count(&response.Total)
-	db = db.Limit(reqdata.PageSize).Offset((reqdata.Page - 1) * reqdata.PageSize)
-	db.Find(&response.Data)
+	var err error
+	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
+	if err != nil {
+		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
 	ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
 }
 
@@ -771,7 +715,7 @@ type admin_create_user_req struct {
 	Account  string `validate:"required" json:"account"`   // 账号
 	Password string `validate:"required" json:"password"`  // 密码
 	RoleName string `validate:"required" json:"role_name"` // 角色
-	State    int    `validate:"required" json:"state"`     // 状态 1开启,2关闭
+	State    int32  `validate:"required" json:"state"`     // 状态 1开启,2关闭
 	Memo     string `json:"memo"`                          // 备注
 }
 
@@ -793,17 +737,18 @@ func admin_create_user(ctx *gin.Context) {
 		return
 	}
 	token := GetToken(ctx)
-	user := new(XAdminUser)
-	user.SellerId = token.SellerId
+	tb := xapp.DbQuery().XAdminUser
+	itb := tb.WithContext(ctx)
+	user := new(model.XAdminUser)
+	user.SellerID = token.SellerId
 	user.Account = reqdata.Account
 	user.Password = xutils.Md5(reqdata.Password)
 	user.RoleName = reqdata.RoleName
 	user.State = reqdata.State
 	user.Memo = reqdata.Memo
-	user.CreateTime = xutils.Now()
-	db := xapp.Db().Omit(xdb.LoginTime).Create(&user)
-	if db.Error != nil {
-		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, db.Error.Error()))
+	err := itb.Omit(tb.LoginTime).Create(user)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
 	}
 	ctx.JSON(http.StatusOK, xenum.Success)
@@ -811,7 +756,7 @@ func admin_create_user(ctx *gin.Context) {
 
 // 更新管理员
 type admin_update_user_req struct {
-	Id       int    `validate:"required" json:"id"` // 管理员Id
+	Id       int64  `validate:"required" json:"id"` // 管理员Id
 	Password string `json:"password"`               // 密码
 	RoleName string `json:"role_name"`              // 角色
 	State    int    `json:"state"`                  // 状态 1开启,2关闭
@@ -836,23 +781,23 @@ func admin_update_user(ctx *gin.Context) {
 		return
 	}
 	token := GetToken(ctx)
+	tb := xapp.DbQuery().XAdminUser
+	itb := tb.WithContext(ctx)
 	updatedata := make(map[string]interface{})
 	if reqdata.Password != "" {
-		updatedata[xdb.Password] = xutils.Md5(reqdata.Password)
+		updatedata[tb.Password.ColumnName().String()] = xutils.Md5(reqdata.Password)
 	}
 	if reqdata.RoleName != "" {
-		updatedata[xdb.RoleName] = reqdata.RoleName
+		updatedata[tb.RoleName.CondError().Error()] = reqdata.RoleName
 	}
 	if reqdata.State == 1 || reqdata.State == 2 {
-		updatedata[xdb.State] = reqdata.State
+		updatedata[tb.State.ColumnName().String()] = reqdata.State
 	}
-	updatedata[xdb.Memo] = reqdata.Memo
-	db := xapp.Db().Model(new(XAdminUser))
-	db = db.Where(xdb.SellerId+xdb.EQ, token.SellerId)
-	db = db.Where(xdb.Id+xdb.EQ, reqdata.Id)
-	db = db.Updates(updatedata)
-	if db.Error != nil {
-		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, db.Error.Error()))
+	updatedata[tb.Memo.ColumnName().String()] = reqdata.Memo
+	itb = itb.Where(tb.SellerID.Eq(token.SellerId), tb.ID.Eq(reqdata.Id))
+	_, err := itb.Updates(updatedata)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
 	}
 	ctx.JSON(http.StatusOK, xenum.Success)
@@ -860,7 +805,7 @@ func admin_update_user(ctx *gin.Context) {
 
 // 删除管理员
 type admin_delete_user_req struct {
-	Id int `validate:"required" json:"id"` // 管理员Id
+	Id int64 `validate:"required" json:"id"` // 管理员Id
 }
 
 // @Router /admin_delete_user [post]
@@ -881,12 +826,12 @@ func admin_delete_user(ctx *gin.Context) {
 		return
 	}
 	token := GetToken(ctx)
-	db := xapp.Db().Model(new(XAdminUser))
-	db = db.Where(xdb.SellerId+xdb.EQ, token.SellerId)
-	db = db.Where(xdb.Id+xdb.EQ, reqdata.Id)
-	db = db.Delete(&XAdminUser{})
-	if db.Error != nil {
-		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, db.Error.Error()))
+	tb := xapp.DbQuery().XAdminUser
+	itb := tb.WithContext(ctx)
+	itb = itb.Where(tb.SellerID.Eq(token.SellerId), tb.ID.Eq(reqdata.Id))
+	_, err := itb.Delete()
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
 	}
 	ctx.JSON(http.StatusOK, xenum.Success)
@@ -903,8 +848,8 @@ type admin_get_login_log_req struct {
 }
 
 type admin_get_login_log_res struct {
-	Total int64            `json:"total"` // 总数
-	Data  []XAdminLoginLog `json:"data"`  // 数据
+	Total int64                   `json:"total"` // 总数
+	Data  []*model.XAdminLoginLog `json:"data"`  // 数据
 }
 
 // @Router /admin_get_login_log [post]
@@ -927,23 +872,30 @@ func admin_get_login_log(ctx *gin.Context) {
 	}
 	token := GetToken(ctx)
 	response := new(admin_get_login_log_res)
-	db := xapp.Db().Model(new(XAdminLoginLog))
-	db = db.Where(xdb.SellerId+xdb.EQ, token.SellerId)
+	tb := xapp.DbQuery().XAdminLoginLog
+	itb := tb.WithContext(ctx)
+	itb = itb.Where(tb.SellerID.Eq(token.SellerId))
 	if reqdata.Account != "" {
-		db = db.Where(xdb.Account+xdb.EQ, reqdata.Account)
+		itb = itb.Where(tb.Account.Eq(reqdata.Account))
 	}
 	if reqdata.LoginIp != "" {
-		db = db.Where(xdb.LoginIp+xdb.EQ, reqdata.LoginIp)
+		itb = itb.Where(tb.LoginIP.Eq(reqdata.LoginIp))
 	}
 	if reqdata.StartTime != "" {
-		db = db.Where(xdb.CreateTime+xdb.GTE, reqdata.StartTime)
+		t, _ := time.Parse("2006-01-02 15:04:05", reqdata.StartTime)
+		itb = itb.Where(tb.CreateTime.Gte(t))
 	}
 	if reqdata.EndTime != "" {
-		db = db.Where(xdb.CreateTime+xdb.LTE, reqdata.EndTime)
+		t, _ := time.Parse("2006-01-02 15:04:05", reqdata.EndTime)
+		itb = itb.Where(tb.CreateTime.Lt(t))
 	}
-	db.Count(&response.Total)
-	db = db.Limit(reqdata.PageSize).Offset((reqdata.Page - 1) * reqdata.PageSize).Order(xdb.Id + xdb.DESC)
-	db.Find(&response.Data)
+	itb = itb.Order(tb.ID.Desc())
+	var err error
+	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
+	if err != nil {
+		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
 	ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
 }
 
@@ -958,8 +910,8 @@ type admin_get_opt_log_req struct {
 }
 
 type admin_get_opt_log_res struct {
-	Total int64          `json:"total"` // 总数
-	Data  []XAdminOptLog `json:"data"`  // 数据
+	Total int64                 `json:"total"` // 总数
+	Data  []*model.XAdminOptLog `json:"data"`  // 数据
 }
 
 // @Router /admin_get_opt_log [post]
@@ -982,23 +934,27 @@ func admin_get_opt_log(ctx *gin.Context) {
 	}
 	token := GetToken(ctx)
 	response := new(admin_get_opt_log_res)
-	db := xapp.Db().Model(new(XAdminOptLog))
-	db = db.Where(xdb.SellerId+xdb.EQ, token.SellerId)
+	tb := xapp.DbQuery().XAdminOptLog
+	itb := tb.WithContext(ctx)
+	itb = itb.Where(tb.SellerID.Eq(token.SellerId))
 	if reqdata.Account != "" {
-		db = db.Where(xdb.Account+xdb.EQ, reqdata.Account)
+		itb = itb.Where(tb.Account.Eq(reqdata.Account))
 	}
 	if reqdata.OptName != "" {
-		db = db.Where(xdb.OptName+xdb.EQ, reqdata.OptName)
+		itb = itb.Where(tb.OptName.Eq(reqdata.OptName))
 	}
 	if reqdata.StartTime != "" {
-		db = db.Where(xdb.CreateTime+xdb.GTE, reqdata.StartTime)
+		itb = itb.Where(tb.CreateTime.Gte(carbon.Parse(reqdata.StartTime).StdTime()))
 	}
 	if reqdata.EndTime != "" {
-		db = db.Where(xdb.CreateTime+xdb.LTE, reqdata.EndTime)
+		itb = itb.Where(tb.CreateTime.Lt(carbon.Parse(reqdata.EndTime).StdTime()))
 	}
-	db.Count(&response.Total)
-	db = db.Limit(reqdata.PageSize).Offset((reqdata.Page - 1) * reqdata.PageSize).Order(xdb.Id + xdb.DESC)
-	db.Find(&response.Data)
+	var err error
+	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
+	if err != nil {
+		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
 	ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
 }
 

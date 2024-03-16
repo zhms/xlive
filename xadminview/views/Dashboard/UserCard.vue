@@ -28,7 +28,7 @@
 						<span style="margin-left: 52px">{{ `上次登录时间 ： ${userinfo.LoginTime}` }}</span>
 					</div>
 					<div style="margin-top: 20px">
-						<el-button type="danger" size="small" style="width: 200px; margin-left: 85px" @click="logout">退出登录</el-button>
+						<el-button type="danger" style="width: 200px; margin-left: 85px" @click="logout">退出登录</el-button>
 					</div>
 				</div>
 			</div>

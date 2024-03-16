@@ -15,6 +15,7 @@ import (
 	"syscall"
 	"time"
 	"xapp/xdb"
+	"xapp/xdb/query"
 	"xapp/xglobal"
 	"xapp/xredis"
 
@@ -30,6 +31,8 @@ import (
 var db *xdb.XDb = new(xdb.XDb)
 
 var redis *xredis.XRedis = new(xredis.XRedis)
+
+var db_query *query.Query
 
 type bodyLogWriter struct {
 	gin.ResponseWriter
@@ -177,6 +180,7 @@ func Init() {
 	}
 	if viper.GetString("db.user") != "" {
 		db.Init("db")
+		db_query = query.Use(db.Gorm())
 	}
 	if viper.GetString("redis.host") != "" {
 		redis.Init("redis")
@@ -235,6 +239,10 @@ func Run(callback func()) {
 
 func Db() *gorm.DB {
 	return db.Gorm()
+}
+
+func DbQuery() *query.Query {
+	return db_query
 }
 
 func Redis() *xredis.XRedis {

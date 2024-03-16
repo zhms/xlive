@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"xadminapi/api/admin"
 	"xapp/xapp"
-	"xapp/xdb"
+	"xapp/xdb/model"
 	"xapp/xenum"
 	excel "xapp/xexcel"
 	"xapp/xglobal"
@@ -32,8 +32,8 @@ type get_user_req struct {
 }
 
 type get_user_res struct {
-	Total int64       `json:"total"` // 总数
-	Data  []xdb.XUser `json:"data"`  // 数据
+	Total int64          `json:"total"` // 总数
+	Data  []*model.XUser `json:"data"`  // 数据
 }
 
 // @Router /get_user [post]
@@ -64,26 +64,20 @@ func get_user(ctx *gin.Context) {
 		reqdata.PageSize = 100000
 	}
 	response := new(get_user_res)
-	db := xapp.Db().Omit(xdb.Password).Model(&xdb.XUser{})
-	db = db.Where(xdb.SellerId+xdb.EQ, token.SellerId)
+	tb := xapp.DbQuery().XUser
+	itb := tb.WithContext(ctx)
+	itb = itb.Where(tb.SellerID.Eq(int32(token.SellerId)))
 	if reqdata.Account != "" {
-		db = db.Where(xdb.Account+xdb.EQ, reqdata.Account)
+		itb = itb.Where(tb.Account.Eq(reqdata.Account))
 	}
 	if reqdata.Agent != "" {
-		db = db.Where(xdb.Agent+xdb.EQ, reqdata.Agent)
+		itb = itb.Where(tb.Agent.Eq(reqdata.Agent))
 	}
 	if reqdata.LoginIp != "" {
-		db = db.Where(xdb.LoginIp+xdb.EQ, reqdata.LoginIp)
+		itb = itb.Where(tb.LoginIP.Eq(reqdata.LoginIp))
 	}
-	err := db.Count(&response.Total).Error
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
-		return
-	}
-	db = db.Offset((reqdata.Page - 1) * reqdata.PageSize)
-	db = db.Limit(reqdata.PageSize)
-	db = db.Order(xdb.Id + xdb.DESC)
-	err = db.Find(&response.Data).Error
+	var err error
+	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
 		return
@@ -91,35 +85,35 @@ func get_user(ctx *gin.Context) {
 	if reqdata.Export == 1 {
 		e := excel.NewExcelBuilder("会员列表_" + fmt.Sprint(xutils.Now()))
 		defer e.Close()
-		e.SetTitle(xdb.Id, "Id")
-		e.SetTitle(xdb.Account, "账号")
-		e.SetTitle(xdb.State, "状态")
-		e.SetTitle(xdb.ChatState, "聊天状态")
-		e.SetTitle(xdb.Agent, "业务员")
-		e.SetTitle(xdb.LoginIp, "登录Ip")
-		e.SetTitle(xdb.LoginLocation, "登录地点")
-		e.SetTitle(xdb.LoginCount, "登录时间")
-		e.SetTitle(xdb.LoginTime, "登录时间")
-		e.SetTitle(xdb.CreateTime, "注册时间")
+		e.SetTitle(tb.ID.ColumnName().String(), "Id")
+		e.SetTitle(tb.Account.ColumnName().String(), "账号")
+		e.SetTitle(tb.State.ColumnName().String(), "状态")
+		e.SetTitle(tb.ChatState.ColumnName().String(), "聊天状态")
+		e.SetTitle(tb.Agent.ColumnName().String(), "业务员")
+		e.SetTitle(tb.LoginIP.ColumnName().String(), "登录Ip")
+		e.SetTitle(tb.LoginIPLocation.ColumnName().String(), "登录地点")
+		e.SetTitle(tb.LoginCount.ColumnName().String(), "登录时间")
+		e.SetTitle(tb.LoginTime.CondError().Error(), "登录时间")
+		e.SetTitle(tb.CreateTime.CondError().Error(), "注册时间")
 		for i, v := range response.Data {
-			e.SetValue(xdb.Id, v.Id, int64(i+2))
-			e.SetValue(xdb.Account, v.Account, int64(i+2))
+			e.SetValue(tb.ID.ColumnName().String(), v.ID, int64(i+2))
+			e.SetValue(tb.Account.ColumnName().String(), v.Account, int64(i+2))
 			if v.State == 1 {
-				e.SetValue(xdb.State, "正常", int64(i+2))
+				e.SetValue(tb.State.ColumnName().String(), "正常", int64(i+2))
 			} else {
-				e.SetValue(xdb.State, "禁用", int64(i+2))
+				e.SetValue(tb.State.ColumnName().String(), "禁用", int64(i+2))
 			}
 			if v.ChatState == 1 {
-				e.SetValue(xdb.ChatState, "正常", int64(i+2))
+				e.SetValue(tb.ChatState.ColumnName().String(), "正常", int64(i+2))
 			} else {
-				e.SetValue(xdb.ChatState, "禁言", int64(i+2))
+				e.SetValue(tb.ChatState.ColumnName().String(), "禁言", int64(i+2))
 			}
-			e.SetValue(xdb.Agent, v.Agent, int64(i+2))
-			e.SetValue(xdb.LoginIp, v.LoginIp, int64(i+2))
-			e.SetValue(xdb.LoginLocation, v.LoginIpLocation, int64(i+2))
-			e.SetValue(xdb.LoginCount, v.LoginCount, int64(i+2))
-			e.SetValue(xdb.LoginTime, v.LoginTime, int64(i+2))
-			e.SetValue(xdb.CreateTime, v.CreateTime, int64(i+2))
+			e.SetValue(tb.Agent.ColumnName().String(), v.Agent, int64(i+2))
+			e.SetValue(tb.LoginIP.ColumnName().String(), v.LoginIP, int64(i+2))
+			e.SetValue(tb.LoginIPLocation.ColumnName().String(), v.LoginIPLocation, int64(i+2))
+			e.SetValue(tb.LoginCount.ColumnName().String(), v.LoginCount, int64(i+2))
+			e.SetValue(tb.LoginTime.ColumnName().String(), v.LoginTime, int64(i+2))
+			e.SetValue(tb.CreateTime.ColumnName().String(), v.CreateTime, int64(i+2))
 		}
 		e.Write(ctx)
 		return
@@ -128,6 +122,8 @@ func get_user(ctx *gin.Context) {
 }
 
 type create_user_req struct {
+	Account  string `json:"account" validate:"required"`  // 账号
+	Password string `json:"password" validate:"required"` // 密码
 }
 
 // @Router /create_user [post]
@@ -147,12 +143,19 @@ func create_user(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
 		return
 	}
-	//response := new(create_user_res)
-	//ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
-	//ctx.JSON(http.StatusOK, xenum.Success)
+	token := admin.GetToken(ctx)
+	reqdata.Password = xutils.Md5(reqdata.Password)
+	tb := xapp.DbQuery().XUser
+	itb := tb.WithContext(ctx)
+	itb.Create(&model.XUser{SellerID: int32(token.SellerId), Account: reqdata.Account, Password: reqdata.Password})
+	ctx.JSON(http.StatusOK, xenum.Success)
 }
 
 type update_user_req struct {
+	Id        int    `json:"id" validate:"required"` // Id
+	Password  string `json:"password" `              // 密码
+	State     int    `json:"state" `                 // 状态
+	ChatState int    `json:"chat_state" `            // 聊天状态
 }
 
 // @Router /update_user [post]
@@ -172,7 +175,19 @@ func update_user(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
 		return
 	}
-	//response := new(update_user_res)
-	//ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
-	//ctx.JSON(http.StatusOK, xenum.Success)
+	token := admin.GetToken(ctx)
+	tb := xapp.DbQuery().XUser
+	itb := tb.WithContext(ctx)
+	updatedata := make(map[string]interface{})
+	if reqdata.Password != "" {
+		updatedata[tb.Password.ColumnName().String()] = reqdata.Password
+	}
+	if reqdata.State == 1 || reqdata.State == 2 {
+		updatedata[tb.State.ColumnName().String()] = reqdata.State
+	}
+	if reqdata.ChatState != 0 {
+		updatedata[tb.ChatState.ColumnName().String()] = reqdata.ChatState
+	}
+	itb.Where(tb.SellerID.Eq(int32(token.SellerId)), tb.ID.Eq(int32(reqdata.Id))).Updates(updatedata)
+	ctx.JSON(http.StatusOK, xenum.Success)
 }

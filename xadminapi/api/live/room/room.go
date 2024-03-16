@@ -1,7 +1,6 @@
 package live_room
 
 import (
-	"context"
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
@@ -9,7 +8,7 @@ import (
 	"time"
 	"xadminapi/api/admin"
 	"xapp/xapp"
-	"xapp/xdb"
+	"xapp/xdb/model"
 	"xapp/xenum"
 	"xapp/xglobal"
 
@@ -62,8 +61,8 @@ type get_live_room_req struct {
 }
 
 type get_live_room_res struct {
-	Total int64           `json:"total"` // 总数
-	Data  []xdb.XLiveRoom `json:"data"`  // 数据
+	Total int64              `json:"total"` // 总数
+	Data  []*model.XLiveRoom `json:"data"`  // 数据
 }
 
 // @Router /get_live_room [post]
@@ -84,15 +83,12 @@ func get_live_room(ctx *gin.Context) {
 		return
 	}
 	token := admin.GetToken(ctx)
-
 	response := new(get_live_room_res)
-	db := xapp.Db().Model(&xdb.XLiveRoom{})
-	db = db.Where(xdb.SellerId+xdb.EQ, token.SellerId)
-	db = db.Count(&response.Total)
-	db = db.Offset((reqdata.Page - 1) * reqdata.PageSize)
-	db = db.Limit(reqdata.PageSize)
-	db = db.Order(xdb.Id + xdb.DESC)
-	err := db.Find(&response.Data).Error
+	tb := xapp.DbQuery().XLiveRoom
+	itb := tb.WithContext(ctx)
+	itb.Where(tb.SellerID.Eq(int32(token.SellerId)))
+	var err error
+	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
 	if err != nil {
 		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
@@ -103,7 +99,7 @@ func get_live_room(ctx *gin.Context) {
 type create_live_room_req struct {
 	Name    string `json:"name"`    // 直播间名称
 	Account string `json:"account"` // 直播间账号
-	State   int    `json:"state"`   // 直播间状态
+	State   int32  `json:"state"`   // 直播间状态
 	Title   string `json:"title"`   // 直播间标题
 }
 
@@ -125,15 +121,16 @@ func create_live_room(ctx *gin.Context) {
 		return
 	}
 	token := admin.GetToken(ctx)
-
-	createdata := xdb.XLiveRoom{
-		SellerId: token.SellerId,
+	tb := xapp.DbQuery().XLiveRoom
+	itb := tb.WithContext(ctx)
+	createdata := model.XLiveRoom{
+		SellerID: token.SellerId,
 		Name:     reqdata.Name,
 		Account:  reqdata.Account,
 		State:    reqdata.State,
 		Title:    reqdata.Title,
 	}
-	err := xapp.Db().Model(&xdb.XLiveRoom{}).Omit(xdb.CreateTime).Create(&createdata).Error
+	err := itb.Omit(tb.CreateTime).Create(&createdata)
 	if err != nil {
 		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
@@ -142,10 +139,10 @@ func create_live_room(ctx *gin.Context) {
 }
 
 type update_live_room_req struct {
-	Id      int    `json:"id"`      // 直播间Id
+	Id      int32  `json:"id"`      // 直播间Id
 	Name    string `json:"name"`    // 直播间名称
 	Account string `json:"account"` // 直播间账号
-	State   int    `json:"state"`   // 直播间状态
+	State   int32  `json:"state"`   // 直播间状态
 	Title   string `json:"title"`   // 直播间标题
 }
 
@@ -167,11 +164,11 @@ func update_live_room(ctx *gin.Context) {
 		return
 	}
 	token := admin.GetToken(ctx)
-
-	roomdata := &xdb.XLiveRoom{}
-	db := xapp.Db().Model(roomdata).Where(xdb.SellerId+xdb.EQ, token.SellerId).Where(xdb.Id+xdb.EQ, reqdata.Id).First(roomdata)
-	if db.Error != nil {
-		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, db.Error.Error()))
+	tb := xapp.DbQuery().XLiveRoom
+	itb := tb.WithContext(ctx)
+	roomdata, err := itb.Where(tb.SellerID.Eq(int32(token.SellerId))).Where(tb.ID.Eq(reqdata.Id)).First()
+	if err != nil {
+		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
 	}
 	updatedata := map[string]interface{}{}
@@ -184,42 +181,48 @@ func update_live_room(ctx *gin.Context) {
 	if reqdata.Title != "" {
 		updatedata["title"] = reqdata.Title
 	}
-	if reqdata.State == xdb.StateYes || reqdata.State == xdb.StateNo && roomdata.State != reqdata.State {
+	if reqdata.State == 1 || reqdata.State == 2 && roomdata.State != reqdata.State {
 		updatedata["state"] = reqdata.State
 		if reqdata.State == 1 {
 			streamurl := ""
 			clienturl := ""
 			appname := ""
-			xapp.Db().Table(xdb.TableXKv).Select(xdb.V).Where(xdb.K+xdb.EQ, "client_url").Row().Scan(&clienturl)
-			xapp.Db().Table(xdb.TableXKv).Select(xdb.V).Where(xdb.K+xdb.EQ, "app_name").Row().Scan(&appname)
-			xapp.Db().Table(xdb.TableXKv).Select(xdb.V).Where(xdb.K+xdb.EQ, "stream_url").Row().Scan(&streamurl)
+			tkv := xapp.DbQuery().XKv
+			itkv := tb.WithContext(ctx)
+			itkv.Select(tkv.V).Where(tkv.K.Eq("client_url")).Scan(&clienturl)
+			itkv.Select(tkv.V).Where(tkv.K.Eq("app_name")).Scan(&appname)
+			itkv.Select(tkv.V).Where(tkv.K.Eq("stream_url")).Scan(&streamurl)
 			pushurl, pullurl := get_stream_url(appname, "r"+fmt.Sprint(reqdata.Id), streamurl)
 			updatedata["push_url"] = pushurl
 			updatedata["pull_url"] = pullurl
 			updatedata["live_url"] = clienturl + "?r=" + fmt.Sprint(reqdata.Id)
 		}
 	}
-	db = xapp.Db().Model(roomdata).Where(xdb.SellerId+xdb.EQ, token.SellerId).Where(xdb.Id+xdb.EQ, reqdata.Id).Updates(updatedata)
-	if db.Error != nil {
-		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, db.Error.Error()))
+	tb = xapp.DbQuery().XLiveRoom
+	itb = tb.WithContext(ctx)
+	_, err = itb.Where(tb.SellerID.Eq(int32(token.SellerId)), tb.ID.Eq(reqdata.Id)).Updates(updatedata)
+	if err != nil {
+		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
 	}
 	if reqdata.State == 1 {
-		db = xapp.Db().Model(roomdata).Where(xdb.Id+xdb.EQ, reqdata.Id).First(roomdata)
-		if db.Error != nil {
-			ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, db.Error.Error()))
+		tb = xapp.DbQuery().XLiveRoom
+		itb = tb.WithContext(ctx)
+		roomdata, err := itb.Where(tb.SellerID.Eq(int32(token.SellerId)), tb.ID.Eq(reqdata.Id)).First()
+		if err != nil {
+			ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
 			return
 		}
 		bytes, _ := json.Marshal(roomdata)
-		_, err := xapp.Redis().Client().HSet(context.Background(), "living", fmt.Sprintf("%v_%v", token.SellerId, reqdata.Id), bytes).Result()
+		_, err = xapp.Redis().Client().HSet(ctx, "living", fmt.Sprintf("%v_%v", token.SellerId, reqdata.Id), bytes).Result()
 		if err != nil {
-			ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, db.Error.Error()))
+			ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
 			return
 		}
 	} else {
-		_, err := xapp.Redis().Client().HDel(context.Background(), "living", fmt.Sprintf("%v_%v", token.SellerId, reqdata.Id)).Result()
+		_, err := xapp.Redis().Client().HDel(ctx, "living", fmt.Sprintf("%v_%v", token.SellerId, reqdata.Id)).Result()
 		if err != nil {
-			ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, db.Error.Error()))
+			ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
 			return
 		}
 	}
@@ -227,7 +230,7 @@ func update_live_room(ctx *gin.Context) {
 }
 
 type delete_live_room_req struct {
-	Id int `json:"id" validate:"required"` // 直播间Id
+	Id int32 `json:"id" validate:"required"` // 直播间Id
 }
 
 // @Router /delete_live_room [post]
@@ -248,11 +251,11 @@ func delete_live_room(ctx *gin.Context) {
 		return
 	}
 	token := admin.GetToken(ctx)
-
-	roomdata := &xdb.XLiveRoom{}
-	db := xapp.Db().Model(roomdata).Where(xdb.SellerId+xdb.EQ, token.SellerId).Where(xdb.Id+xdb.EQ, reqdata.Id).Delete(roomdata)
-	if db.Error != nil {
-		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, db.Error.Error()))
+	tb := xapp.DbQuery().XLiveRoom
+	itb := tb.WithContext(ctx)
+	_, err := itb.Where(tb.SellerID.Eq(int32(token.SellerId))).Where(tb.ID.Eq(reqdata.Id)).Delete()
+	if err != nil {
+		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
 	}
 	ctx.JSON(http.StatusOK, xenum.Success)
@@ -284,6 +287,13 @@ func get_room_id(ctx *gin.Context) {
 	}
 	response := new(get_room_id_res)
 	token := admin.GetToken(ctx)
-	xapp.Db().Model(&xdb.XLiveRoom{}).Where(xdb.SellerId+xdb.EQ, token.SellerId).Pluck(xdb.Id, &response.Ids)
+	tb := xapp.DbQuery().XLiveRoom
+	itb := tb.WithContext(ctx)
+	itb = itb.Where(tb.SellerID.Eq(int32(token.SellerId)))
+	err := itb.Pluck(tb.ID, &response.Ids)
+	if err != nil {
+		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
 	ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
 }

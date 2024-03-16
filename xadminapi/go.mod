@@ -5,6 +5,7 @@ go 1.21.4
 require (
 	github.com/beego/beego v1.12.12
 	github.com/gin-gonic/gin v1.9.1
+	github.com/golang-module/carbon/v2 v2.3.10
 	github.com/redis/go-redis/v9 v9.3.0
 	github.com/yinheli/qqwry v0.0.0-20160229183603-f50680010f4a
 	gorm.io/gorm v1.25.7-0.20240204074919-46816ad31dde

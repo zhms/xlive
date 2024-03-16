@@ -56,8 +56,13 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
+	golang.org/x/mod v0.14.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
+	gorm.io/datatypes v1.1.1-0.20230130040222-c43177d3cf8c // indirect
 	gorm.io/driver/mysql v1.5.4 // indirect
+	gorm.io/gen v0.3.25 // indirect
+	gorm.io/hints v1.1.0 // indirect
+	gorm.io/plugin/dbresolver v1.5.0 // indirect
 )
 
 require (

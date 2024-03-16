@@ -118,7 +118,7 @@ let routers = [
 			{
 				path: 'account',
 				component: () => import('../../views/System/User/index'),
-				meta: { title: '账号管理', icon: 'el-icon-office-building' },
+				meta: { title: '后台账号', icon: 'el-icon-office-building' },
 			},
 			{
 				path: 'login',

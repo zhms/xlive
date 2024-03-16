@@ -1,11 +1,10 @@
 package live_ban
 
 import (
-	"context"
 	"net/http"
 	"xadminapi/api/admin"
 	"xapp/xapp"
-	"xapp/xdb"
+	"xapp/xdb/model"
 	"xapp/xenum"
 	"xapp/xglobal"
 
@@ -24,8 +23,8 @@ type get_ip_ban_req struct {
 }
 
 type get_ip_ban_res struct {
-	Total int64            `json:"total"`
-	Data  []xdb.XChatBanIp `json:"data"`
+	Total int64          `json:"total"`
+	Data  []*model.XChat `json:"data"`
 }
 
 // @Router /get_ip_ban [post]
@@ -54,13 +53,11 @@ func get_ip_ban(ctx *gin.Context) {
 		reqdata.PageSize = 15
 	}
 	response := new(get_ip_ban_res)
-	db := xapp.Db().Model(&xdb.XChatBanIp{})
-	db = db.Where(xdb.SellerId+xdb.EQ, token.SellerId)
-	db = db.Count(&response.Total)
-	db = db.Offset((reqdata.Page - 1) * reqdata.PageSize)
-	db = db.Limit(reqdata.PageSize)
-	db = db.Order(xdb.Id + xdb.DESC)
-	err := db.Find(&response.Data).Error
+	tb := xapp.DbQuery().XChat
+	itb := tb.WithContext(ctx)
+	itb.Where(tb.SellerID.Eq(int32(token.SellerId)))
+	var err error
+	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
 	if err != nil {
 		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
@@ -69,7 +66,7 @@ func get_ip_ban(ctx *gin.Context) {
 }
 
 type delete_ip_ban_req struct {
-	Id int `json:"id"`
+	Id int32 `json:"id"`
 }
 
 // @Router /delete_ip_ban [post]
@@ -90,23 +87,19 @@ func delete_ip_ban(ctx *gin.Context) {
 		return
 	}
 	token := admin.GetToken(ctx)
-
-	banip := &xdb.XChatBanIp{}
-	db := xapp.Db().Model(&xdb.XChatBanIp{})
-	db = db.Where(xdb.SellerId+xdb.EQ, token.SellerId)
-	err := xapp.Db().Where(xdb.Id+xdb.EQ, reqdata.Id).First(banip).Error
+	tb := xapp.DbQuery().XChatBanIP
+	itb := tb.WithContext(ctx)
+	itb.Where(tb.SellerID.Eq(int32(token.SellerId)))
+	banip, err := itb.First()
 	if err != nil {
 		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
 	}
-	db = xapp.Db().Model(&xdb.XChatBanIp{})
-	db = db.Where(xdb.SellerId+xdb.EQ, token.SellerId)
-	db = db.Where(xdb.Id+xdb.EQ, reqdata.Id)
-	err = db.Delete(&xdb.XChatBanIp{}).Error
+	_, err = itb.Delete(&model.XChatBanIP{ID: reqdata.Id})
 	if err != nil {
 		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
 	}
-	xapp.Redis().Client().SRem(context.Background(), "ip_ban", banip.Ip)
+	xapp.Redis().Client().SRem(ctx, "ip_ban", banip.IP)
 	ctx.JSON(http.StatusOK, xenum.Success)
 }

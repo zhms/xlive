@@ -2,19 +2,19 @@
 	<div class="container">
 		<div style="width: 700px">
 			<el-form label-width="120px">
-				<el-form-item label="数据库表名:">
-					<el-button type="primary" size="small" @click="copy_db_table">生成</el-button>
+				<!-- <el-form-item label="数据库表名:">
+					<el-button type="primary" @click="copy_db_table">生成</el-button>
 				</el-form-item>
 				<el-form-item label="数据库字段名:">
-					<el-button type="primary" size="small" @click="copy_db_field">生成</el-button>
-				</el-form-item>
-				<el-form-item label="生成响应函数:">
-					<el-input v-model="funname" size="small" style="width: 200px; padding-right: 10px"></el-input>
-					<el-button type="primary" size="small" @click="copy_method(0)">原始</el-button>
-					<el-button type="primary" size="small" @click="copy_method(1)">获取</el-button>
-					<el-button type="primary" size="small" @click="copy_method(2)">创建</el-button>
-					<el-button type="primary" size="small" @click="copy_method(3)">更新</el-button>
-					<el-button type="primary" size="small" @click="copy_method(4)">删除</el-button>
+					<el-button type="primary" @click="copy_db_field">生成</el-button>
+				</el-form-item> -->
+				<el-form-item label="响应函数:">
+					<el-input v-model="funname" style="width: 200px; padding-right: 10px"></el-input>
+					<el-button type="primary" @click="copy_method(0)">原始</el-button>
+					<el-button type="primary" @click="copy_method(1)">获取</el-button>
+					<el-button type="primary" @click="copy_method(2)">创建</el-button>
+					<el-button type="primary" @click="copy_method(3)">更新</el-button>
+					<el-button type="primary" @click="copy_method(4)">删除</el-button>
 				</el-form-item>
 			</el-form>
 		</div>
@@ -38,7 +38,7 @@ export default {
 	},
 	methods: {
 		copy_method(idx) {
-			if (funname == '') return this.$message.error({ message: '请输入函数名', center: true })
+			if (this.funname == '') return this.$message.error({ message: '请输入函数名', center: true })
 			let res = ''
 			let resex = ''
 			let funname = this.funname

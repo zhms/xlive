@@ -32,7 +32,7 @@ router.beforeEach(async (to, from, next) => {
 })
 router.afterEach(() => {})
 Vue.use(Element, {
-	size: Cookies.get('size') || 'medium',
+	size: 'small',
 })
 Object.keys(filters).forEach((key) => {
 	Vue.filter(key, filters[key])

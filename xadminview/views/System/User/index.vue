@@ -2,14 +2,14 @@
 	<div class="container">
 		<el-form :inline="true" :model="filters">
 			<el-form-item label="">
-				<el-input v-model="filters.account" placeholder="账号" size="small" style="width: 150px" :clearable="true"></el-input>
+				<el-input v-model="filters.account" placeholder="账号" style="width: 150px" :clearable="true"></el-input>
 			</el-form-item>
 			<el-form-item>
-				<el-button type="primary" icon="el-icon-refresh" size="small" v-on:click="handleQuery">查询</el-button>
-				<el-button type="primary" icon="el-icon-plus" size="small" class="mr10" @click="handleAdd(0)">添加</el-button>
+				<el-button type="primary" icon="el-icon-refresh" v-on:click="handleQuery">查询</el-button>
+				<el-button type="primary" icon="el-icon-plus" class="mr10" @click="handleAdd(0)">添加</el-button>
 			</el-form-item>
 		</el-form>
-		<el-table :data="table_data" style="margin-top: -15px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
+		<el-table :data="table_data" style="margin-top: -13px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
 			<el-table-column align="center" prop="id" label="id" width="80"></el-table-column>
 			<el-table-column align="center" prop="account" label="账号" width="100">
 				<template slot-scope="scope">
@@ -19,17 +19,21 @@
 			<el-table-column align="center" prop="role_name" label="角色" width="150"></el-table-column>
 			<el-table-column align="center" label="状态" width="100">
 				<template slot-scope="scope">
-					<span :class="scope.row.state == 1 ? '' : 'red'">{{ scope.row.state == 1 ? '启用' : '禁用' }}</span>
+					<span :class="scope.row.state != 1 ? 'red' : ''">{{ scope.row.state | 启用禁用 }}</span>
 				</template>
 			</el-table-column>
-			<el-table-column align="center" prop="login_time" label="登录时间" width="160"></el-table-column>
+			<el-table-column align="center" prop="login_time" label="登录时间" width="160">
+				<template slot-scope="scope">
+					<span>{{ scope.row.login_time | 北京时间 }}</span>
+				</template>
+			</el-table-column>
 			<el-table-column align="center" prop="login_ip" label="登录ip" width="120"></el-table-column>
 			<el-table-column align="center" prop="login_count" label="登录次数" width="100"></el-table-column>
 			<el-table-column align="center" prop="memo" label="备注" width="200"></el-table-column>
 			<el-table-column label="操作" align="left" width="300">
 				<template slot-scope="scope">
-					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 0)">编辑</el-button>
-					<el-button type="text" size="small" icon="el-icon-delete" class="red" @click="handleDelete(scope.row)">删除</el-button>
+					<el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row, 0)">编辑</el-button>
+					<el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>

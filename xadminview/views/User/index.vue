@@ -2,20 +2,20 @@
 	<div class="container">
 		<el-form :inline="true" :model="filters">
 			<el-form-item label="">
-				<el-input v-model="filters.account" placeholder="账号" size="small" style="width: 150px" :clearable="true"></el-input>
+				<el-input v-model="filters.account" placeholder="账号" style="width: 150px" :clearable="true"></el-input>
 			</el-form-item>
 			<el-form-item label="">
-				<el-input v-model="filters.agent" placeholder="业务员" size="small" style="width: 150px" :clearable="true"></el-input>
+				<el-input v-model="filters.agent" placeholder="业务员" style="width: 150px" :clearable="true"></el-input>
 			</el-form-item>
 			<el-form-item label="">
-				<el-input v-model="filters.login_ip" placeholder="登录Ip" size="small" style="width: 150px" :clearable="true"></el-input>
+				<el-input v-model="filters.login_ip" placeholder="登录Ip" style="width: 150px" :clearable="true"></el-input>
 			</el-form-item>
 			<el-form-item>
-				<el-button type="primary" icon="el-icon-refresh" size="small" v-on:click="handleQuery">查询</el-button>
-				<el-button type="primary" icon="el-icon-plus" size="small" class="mr10" @click="handleAdd(0)">添加</el-button>
-				<el-button type="primary" icon="el-icon-upload2" size="small" class="mr10" @click="handleAdd(1)">批量导入</el-button>
-				<el-button type="primary" icon="el-icon-bottom" size="small" class="mr10" @click="ExportUser()">导出</el-button>
-				<el-button type="primary" icon="el-icon-download" size="small" class="mr10" @click="DownLoadExcelTemplate()">下载导入模板</el-button>
+				<el-button type="primary" icon="el-icon-refresh" v-on:click="handleQuery">查询</el-button>
+				<el-button type="primary" icon="el-icon-plus" class="mr10" @click="handleAdd(0)">添加</el-button>
+				<el-button type="primary" icon="el-icon-upload2" class="mr10" @click="handleAdd(1)">批量导入</el-button>
+				<el-button type="primary" icon="el-icon-bottom" class="mr10" @click="ExportUser()">导出</el-button>
+				<el-button type="primary" icon="el-icon-download" class="mr10" @click="DownLoadExcelTemplate()">下载导入模板</el-button>
 			</el-form-item>
 		</el-form>
 		<el-table :data="table_data" style="margin-top: -15px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
@@ -38,11 +38,11 @@
 
 			<el-table-column label="操作" align="left" width="300">
 				<template slot-scope="scope">
-					<el-button type="text" size="small" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 3)" v-if="scope.row.state == 1">封号</el-button>
-					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 4)" v-if="scope.row.state != 1">解封</el-button>
+					<el-button type="text" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 3)" v-if="scope.row.state == 1">封号</el-button>
+					<el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row, 4)" v-if="scope.row.state != 1">解封</el-button>
 
-					<el-button type="text" size="small" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 2)" v-if="scope.row.chat_state == 1">禁言</el-button>
-					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 1)" v-if="scope.row.chat_state != 1">解除禁言</el-button>
+					<el-button type="text" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 2)" v-if="scope.row.chat_state == 1">禁言</el-button>
+					<el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row, 1)" v-if="scope.row.chat_state != 1">解除禁言</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -86,7 +86,7 @@ export default {
 		ModifyItem(index, next, item) {
 			if (index == 0) return next('编辑会员')
 			let reqdata = {
-				user_id: item.user_id,
+				id: item.id,
 			}
 			if (index == 1) {
 				reqdata.chat_state = 1
@@ -97,7 +97,7 @@ export default {
 			} else if (index == 4) {
 				reqdata.state = 1
 			}
-			this.$post('/v1/user_list/update_user', reqdata, { google: true }).then(() => {
+			this.$post('/v1/update_user', reqdata, { google: true }).then(() => {
 				this.$message.success('修改成功')
 				this.getTableData()
 			})

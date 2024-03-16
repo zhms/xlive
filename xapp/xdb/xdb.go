@@ -69,8 +69,8 @@ func (this *XDb) Init(cfgname string) {
 	if connmaxopen > 0 {
 		this.connmaxopen = connmaxopen
 	}
-
-	conurl := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", this.user, this.password, this.host, this.port, this.database)
+	conurl := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=true&loc=Local", this.user, this.password, this.host, this.port, this.database)
+	fmt.Println(conurl)
 	f, _ := os.OpenFile(fmt.Sprintf("_log/gorm_%s.log", cfgname), os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	gormcfg := &gorm.Config{
 		Logger: logger.New(log.New(f, "", log.LstdFlags), logger.Config{

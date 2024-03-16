@@ -21,8 +21,8 @@ var (
 	XAdminOptLog   *xAdminOptLog
 	XAdminRole     *xAdminRole
 	XAdminUser     *xAdminUser
+	XChat          *xChat
 	XChatBanIP     *xChatBanIP
-	XChatDatum     *xChatDatum
 	XHongbao       *xHongbao
 	XHostSeller    *xHostSeller
 	XKv            *xKv
@@ -38,8 +38,8 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	XAdminOptLog = &Q.XAdminOptLog
 	XAdminRole = &Q.XAdminRole
 	XAdminUser = &Q.XAdminUser
+	XChat = &Q.XChat
 	XChatBanIP = &Q.XChatBanIP
-	XChatDatum = &Q.XChatDatum
 	XHongbao = &Q.XHongbao
 	XHostSeller = &Q.XHostSeller
 	XKv = &Q.XKv
@@ -56,8 +56,8 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		XAdminOptLog:   newXAdminOptLog(db, opts...),
 		XAdminRole:     newXAdminRole(db, opts...),
 		XAdminUser:     newXAdminUser(db, opts...),
+		XChat:          newXChat(db, opts...),
 		XChatBanIP:     newXChatBanIP(db, opts...),
-		XChatDatum:     newXChatDatum(db, opts...),
 		XHongbao:       newXHongbao(db, opts...),
 		XHostSeller:    newXHostSeller(db, opts...),
 		XKv:            newXKv(db, opts...),
@@ -75,8 +75,8 @@ type Query struct {
 	XAdminOptLog   xAdminOptLog
 	XAdminRole     xAdminRole
 	XAdminUser     xAdminUser
+	XChat          xChat
 	XChatBanIP     xChatBanIP
-	XChatDatum     xChatDatum
 	XHongbao       xHongbao
 	XHostSeller    xHostSeller
 	XKv            xKv
@@ -95,8 +95,8 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		XAdminOptLog:   q.XAdminOptLog.clone(db),
 		XAdminRole:     q.XAdminRole.clone(db),
 		XAdminUser:     q.XAdminUser.clone(db),
+		XChat:          q.XChat.clone(db),
 		XChatBanIP:     q.XChatBanIP.clone(db),
-		XChatDatum:     q.XChatDatum.clone(db),
 		XHongbao:       q.XHongbao.clone(db),
 		XHostSeller:    q.XHostSeller.clone(db),
 		XKv:            q.XKv.clone(db),
@@ -122,8 +122,8 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		XAdminOptLog:   q.XAdminOptLog.replaceDB(db),
 		XAdminRole:     q.XAdminRole.replaceDB(db),
 		XAdminUser:     q.XAdminUser.replaceDB(db),
+		XChat:          q.XChat.replaceDB(db),
 		XChatBanIP:     q.XChatBanIP.replaceDB(db),
-		XChatDatum:     q.XChatDatum.replaceDB(db),
 		XHongbao:       q.XHongbao.replaceDB(db),
 		XHostSeller:    q.XHostSeller.replaceDB(db),
 		XKv:            q.XKv.replaceDB(db),
@@ -139,8 +139,8 @@ type queryCtx struct {
 	XAdminOptLog   IXAdminOptLogDo
 	XAdminRole     IXAdminRoleDo
 	XAdminUser     IXAdminUserDo
+	XChat          IXChatDo
 	XChatBanIP     IXChatBanIPDo
-	XChatDatum     IXChatDatumDo
 	XHongbao       IXHongbaoDo
 	XHostSeller    IXHostSellerDo
 	XKv            IXKvDo
@@ -156,8 +156,8 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		XAdminOptLog:   q.XAdminOptLog.WithContext(ctx),
 		XAdminRole:     q.XAdminRole.WithContext(ctx),
 		XAdminUser:     q.XAdminUser.WithContext(ctx),
+		XChat:          q.XChat.WithContext(ctx),
 		XChatBanIP:     q.XChatBanIP.WithContext(ctx),
-		XChatDatum:     q.XChatDatum.WithContext(ctx),
 		XHongbao:       q.XHongbao.WithContext(ctx),
 		XHostSeller:    q.XHostSeller.WithContext(ctx),
 		XKv:            q.XKv.WithContext(ctx),

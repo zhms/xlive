@@ -5,7 +5,7 @@
 				<el-input v-model.number="filters.room_id" placeholder="房间Id" style="width: 150px" :clearable="true"></el-input>
 			</el-form-item> -->
 			<el-form-item>
-				<el-button type="primary" icon="el-icon-refresh" size="small" v-on:click="handleQuery">查询</el-button>
+				<el-button type="primary" icon="el-icon-refresh" v-on:click="handleQuery">查询</el-button>
 			</el-form-item>
 		</el-form>
 		<el-table :data="table_data" style="margin-top: -15px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
@@ -15,7 +15,7 @@
 			<el-table-column align="center" prop="create_time" label="封禁时间" width="200"></el-table-column>
 			<el-table-column label="操作" align="left" width="300">
 				<template slot-scope="scope">
-					<el-button type="text" size="small" icon="el-icon-edit" @click="handleDelete(scope.row)">解封</el-button>
+					<el-button type="text" icon="el-icon-edit" @click="handleDelete(scope.row)">解封</el-button>
 				</template>
 			</el-table-column>
 		</el-table>

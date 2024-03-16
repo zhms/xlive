@@ -2,18 +2,18 @@
 	<div class="container">
 		<el-form :inline="true" :model="filters">
 			<el-form-item>
-				<el-button type="primary" icon="el-icon-plus" size="small" class="mr10" @click="handleAdd(0)">添加</el-button>
+				<el-button type="primary" icon="el-icon-plus" class="mr10" @click="handleAdd(0)">添加</el-button>
 			</el-form-item>
 		</el-form>
-		<el-table :data="table_data" border class="table" max-height="670px" style="margin-top: -15px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
+		<el-table :data="table_data" style="margin-top: -13px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
 			<el-table-column align="center" type="index" label="序号" width="100"></el-table-column>
 			<el-table-column align="center" prop="role_name" label="角色名" width="200"></el-table-column>
 			<el-table-column align="center" prop="parent" label="上级角色" width="200"></el-table-column>
 			<el-table-column align="center" prop="memo" label="备注" width="300"></el-table-column>
 			<el-table-column label="操作">
 				<template slot-scope="scope">
-					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 0)">编辑</el-button>
-					<el-button type="text" size="small" icon="el-icon-delete" class="red" @click="handleDelete(scope.row, 0)">删除</el-button>
+					<el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row, 0)">编辑</el-button>
+					<el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.row, 0)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>

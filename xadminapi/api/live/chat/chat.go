@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"xadminapi/api/admin"
 	"xapp/xapp"
-	"xapp/xdb"
+	"xapp/xdb/model"
 	"xapp/xenum"
 	"xapp/xglobal"
 
@@ -26,8 +26,8 @@ type get_chat_data_req struct {
 }
 
 type get_chat_data_res struct {
-	Total int64           `json:"total"` // 总数
-	Data  []xdb.XChatData `json:"data"`  // 数据
+	Total int64          `json:"total"` // 总数
+	Data  []*model.XChat `json:"data"`  // 数据
 }
 
 // @Router /get_chat_data [post]
@@ -56,16 +56,15 @@ func get_chat_data(ctx *gin.Context) {
 	token := admin.GetToken(ctx)
 
 	response := new(get_chat_data_res)
-	db := xapp.Db().Model(&xdb.XChatData{})
-	db = db.Where(xdb.SellerId+xdb.EQ, token.SellerId)
+	tb := xapp.DbQuery().XChat
+	itb := tb.WithContext(ctx)
+
+	itb = itb.Where(tb.SellerID.Eq(int32(token.SellerId)))
 	if reqdata.RoomId > 0 {
-		db = db.Where(xdb.RoomId+xdb.EQ, reqdata.RoomId)
+		itb = itb.Where(tb.RoomID.Eq(int32(reqdata.RoomId)))
 	}
-	db = db.Count(&response.Total)
-	db = db.Offset((reqdata.Page - 1) * reqdata.PageSize)
-	db = db.Limit(reqdata.PageSize)
-	db = db.Order(xdb.Id + xdb.DESC)
-	err := db.Find(&response.Data).Error
+	var err error
+	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
 	if err != nil {
 		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
@@ -96,10 +95,11 @@ func update_chat_data(ctx *gin.Context) {
 		return
 	}
 	token := admin.GetToken(ctx)
-	chatdata := xdb.XChatData{}
-	db := xapp.Db().Model(&xdb.XChatData{}).Where(xdb.SellerId+xdb.EQ, token.SellerId).Where(xdb.Id+xdb.EQ, reqdata.Id).First(&chatdata)
-	if db.Error != nil {
-		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, db.Error.Error()))
+	tb := xapp.DbQuery().XChat
+	itb := tb.WithContext(ctx).Where(tb.SellerID.Eq(int32(token.SellerId)), tb.ID.Eq(int32(reqdata.Id)))
+	chatdata, err := itb.First()
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
 	}
 	if chatdata.State != 1 {
@@ -107,13 +107,17 @@ func update_chat_data(ctx *gin.Context) {
 		return
 	}
 	if reqdata.State == 2 || reqdata.State == 3 {
-		db = xapp.Db().Model(&xdb.XChatData{}).Where(xdb.SellerId+xdb.EQ, token.SellerId).
-			Where(xdb.Id+xdb.EQ, reqdata.Id).Where(xdb.State+xdb.EQ, 1).Update(xdb.State, reqdata.State)
-		if db.Error != nil {
-			ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, db.Error.Error()))
+		tb = xapp.DbQuery().XChat
+		itb = tb.WithContext(ctx)
+		itb = itb.Where(tb.SellerID.Eq(int32(token.SellerId)))
+		itb = itb.Where(tb.ID.Eq(int32(reqdata.Id)))
+		itb = itb.Where(tb.State.Eq(1))
+		update_result, err := itb.Update(tb.State, int32(reqdata.State))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
 			return
 		}
-		if reqdata.State == 2 && db.RowsAffected > 0 {
+		if reqdata.State == 2 && update_result.RowsAffected > 0 {
 			bytes, _ := json.Marshal(chatdata)
 			_, err := xapp.Redis().Client().RPush(ctx, "chat_audit", string(bytes)).Result()
 			if err != nil {
@@ -123,18 +127,23 @@ func update_chat_data(ctx *gin.Context) {
 		}
 	}
 	if reqdata.State == 4 || reqdata.State == 5 {
-		db = xapp.Db().Model(&xdb.XChatData{}).Where(xdb.SellerId+xdb.EQ, token.SellerId).Where(xdb.Id+xdb.EQ, reqdata.Id).Where(xdb.State+xdb.EQ, 1).Update(xdb.State, 3)
-		if db.Error != nil {
-			ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, db.Error.Error()))
+		tb = xapp.DbQuery().XChat
+		itb = tb.WithContext(ctx)
+		itb = itb.Where(tb.SellerID.Eq(int32(token.SellerId)), tb.ID.Eq(int32(reqdata.Id)), tb.State.Eq(1))
+		update_result, err := itb.Update(tb.State, 3)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
 			return
 		}
-		if reqdata.State == 4 && db.RowsAffected > 0 {
-			xapp.Db().Model(&xdb.XChatBanIp{}).Create(map[string]interface{}{
-				xdb.SellerId:     token.SellerId,
-				xdb.Ip:           chatdata.Ip,
-				xdb.AdminAccount: token.Account,
+		if reqdata.State == 4 && update_result.RowsAffected > 0 {
+			tb := xapp.DbQuery().XChatBanIP
+			itb := tb.WithContext(ctx)
+			itb.Create(&model.XChatBanIP{
+				SellerID:     int32(token.SellerId),
+				IP:           chatdata.IP,
+				AdminAccount: token.Account,
 			})
-			_, err := xapp.Redis().Client().SAdd(ctx, "ip_ban", chatdata.Ip).Result()
+			_, err := xapp.Redis().Client().SAdd(ctx, "ip_ban", chatdata.IP).Result()
 			if err != nil {
 				ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
 				return

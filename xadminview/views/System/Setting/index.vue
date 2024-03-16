@@ -12,7 +12,7 @@
 				<el-button type="primary" icon="el-icon-plus" v-on:click="handleAdd(0)">添加</el-button>
 			</el-form-item>
 		</el-form>
-		<el-table :data="table_data" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
+		<el-table :data="table_data" style="margin-top: -13px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
 			<el-table-column align="center" prop="Id" label="序号" width="50" v-if="column['序号']"> </el-table-column>
 			<el-table-column align="center" label="前端" width="200" v-if="column['前端']">
 				<template slot-scope="scope">
@@ -24,7 +24,7 @@
 			<el-table-column align="center" prop="Memo" label="说明" width="400" v-if="column['说明']"></el-table-column>
 			<el-table-column label="操作" v-if="column['操作']">
 				<template slot-scope="scope">
-					<el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row, 0)">编辑</el-button>
+					<el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row, 0)">编辑</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
