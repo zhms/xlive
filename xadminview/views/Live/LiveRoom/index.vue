@@ -24,7 +24,7 @@
 					<span style="cursor: pointer" class="blue" @click="copy_push_url(scope.row)">{{ '复制' }}</span>
 				</template>
 			</el-table-column>
-			<el-table-column align="center" prop="live_url" label="直播间域名" width="100">
+			<el-table-column align="center" prop="live_url" label="直播间链接" width="100">
 				<template slot-scope="scope">
 					<span style="cursor: pointer" class="blue" @click="copy_live_url(scope.row)">{{ '复制' }}</span>
 				</template>
@@ -94,16 +94,12 @@ export default {
 			})
 		},
 		copy_live_url(data) {
-			if (data.state != 1) {
-				this.$message.error('复制失败,直播间尚未开启')
-				return
-			}
-			let url = data.live_url + '&s=' + JSON.parse(sessionStorage.getItem('userinfo') ?? '{}').account
+			let url = data.live_url //+ '&s=' + JSON.parse(sessionStorage.getItem('userinfo') ?? '{}').account
 			this.copy(url)
 		},
 		copy_push_url(data) {
 			if (data.state != 1) {
-				this.$message.error('复制失败,直播间尚未开启')
+				this.$message.error({ message: '直播未开启', center: true })
 				return
 			}
 			this.copy(data.push_url)

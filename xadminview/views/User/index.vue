@@ -2,9 +2,6 @@
 	<div class="container">
 		<el-form :inline="true" :model="filters">
 			<el-form-item label="">
-				<el-input v-model="filters.user_id" placeholder="会员Id" size="small" style="width: 150px" :clearable="true"></el-input>
-			</el-form-item>
-			<el-form-item label="">
 				<el-input v-model="filters.account" placeholder="账号" size="small" style="width: 150px" :clearable="true"></el-input>
 			</el-form-item>
 			<el-form-item label="">
@@ -23,7 +20,6 @@
 		</el-form>
 		<el-table :data="table_data" style="margin-top: -15px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
 			<el-table-column align="center" prop="id" label="id" width="100"></el-table-column>
-			<el-table-column align="center" prop="user_id" label="会员Id" width="100"></el-table-column>
 			<el-table-column align="center" prop="account" label="账号" width="200">
 				<template slot-scope="scope">
 					<span style="cursor: pointer" class="blue" @click="handleEdit(scope.row, 0)">{{ scope.row.account }}</span>
@@ -37,7 +33,7 @@
 			</el-table-column>
 			<el-table-column align="center" prop="login_count" label="登录次数" width="100"></el-table-column>
 			<el-table-column align="center" prop="login_ip" label="登录Ip" width="150"></el-table-column>
-			<el-table-column align="center" prop="login_location" label="登录地区" width="200"></el-table-column>
+			<el-table-column align="center" prop="login_ip_location" label="登录地区" width="200"></el-table-column>
 			<el-table-column align="center" prop="create_time" label="注册时间" width="160"></el-table-column>
 
 			<el-table-column label="操作" align="left" width="300">
@@ -76,14 +72,14 @@ export default {
 	methods: {
 		getTableData() {
 			let data = this.getQueryData()
-			this.$post('/v1/user_list/get_user', data).then((result) => {
-				this.table_data = this.dealData(result.data)
+			this.$post('/v1/get_user', data).then((result) => {
+				this.table_data = result.data
 				this.total = result.total
 			})
 		},
 		ExportUser() {
 			let data = this.getQueryData()
-			this.$download('/v1/user_list/get_user', data).then((result) => {
+			this.$download('/v1/get_user', data).then((result) => {
 				this.$message.success('导出成功')
 			})
 		},

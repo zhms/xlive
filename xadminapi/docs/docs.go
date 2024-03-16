@@ -413,7 +413,38 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_live_room.create_live_room_req"
+                            "$ref": "#/definitions/live_room.create_live_room_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "响应数据"
+                    }
+                }
+            }
+        },
+        "/create_user": {
+            "post": {
+                "tags": [
+                    "a"
+                ],
+                "summary": "b",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.create_user_req"
                         }
                     }
                 ],
@@ -475,7 +506,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_live_room.delete_live_room_req"
+                            "$ref": "#/definitions/live_room.delete_live_room_req"
                         }
                     }
                 ],
@@ -486,7 +517,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/get_chat": {
+        "/get_chat_data": {
             "post": {
                 "tags": [
                     "直播间 - 互动列表"
@@ -506,7 +537,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_live_chat.get_chat_req"
+                            "$ref": "#/definitions/live_chat.get_chat_data_req"
                         }
                     }
                 ],
@@ -514,7 +545,7 @@ const docTemplate = `{
                     "200": {
                         "description": "响应数据",
                         "schema": {
-                            "$ref": "#/definitions/api_live_chat.get_chat_res"
+                            "$ref": "#/definitions/live_chat.get_chat_data_res"
                         }
                     }
                 }
@@ -574,7 +605,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_live_room.get_live_room_req"
+                            "$ref": "#/definitions/live_room.get_live_room_req"
                         }
                     }
                 ],
@@ -582,13 +613,81 @@ const docTemplate = `{
                     "200": {
                         "description": "响应数据",
                         "schema": {
-                            "$ref": "#/definitions/api_live_room.get_live_room_res"
+                            "$ref": "#/definitions/live_room.get_live_room_res"
                         }
                     }
                 }
             }
         },
-        "/update_chat": {
+        "/get_room_id": {
+            "post": {
+                "tags": [
+                    "直播间 - 直播间"
+                ],
+                "summary": "获取直播间Id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/live_room.get_room_id_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "响应数据",
+                        "schema": {
+                            "$ref": "#/definitions/live_room.get_room_id_res"
+                        }
+                    }
+                }
+            }
+        },
+        "/get_user": {
+            "post": {
+                "tags": [
+                    "a"
+                ],
+                "summary": "b",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.get_user_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "响应数据",
+                        "schema": {
+                            "$ref": "#/definitions/user.get_user_res"
+                        }
+                    }
+                }
+            }
+        },
+        "/update_chat_data": {
             "post": {
                 "tags": [
                     "直播间 - 互动列表"
@@ -608,7 +707,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_live_chat.update_chat_req"
+                            "$ref": "#/definitions/live_chat.update_chat_data_req"
                         }
                     }
                 ],
@@ -639,7 +738,38 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_live_room.update_live_room_req"
+                            "$ref": "#/definitions/live_room.update_live_room_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "响应数据"
+                    }
+                }
+            }
+        },
+        "/update_user": {
+            "post": {
+                "tags": [
+                    "a"
+                ],
+                "summary": "b",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.update_user_req"
                         }
                     }
                 ],
@@ -1118,7 +1248,7 @@ const docTemplate = `{
                 "data": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/xdb.XChatBanIP"
+                        "$ref": "#/definitions/xdb.XChatBanIp"
                     }
                 },
                 "total": {
@@ -1126,29 +1256,53 @@ const docTemplate = `{
                 }
             }
         },
-        "api_live_chat.get_chat_req": {
-            "type": "object"
-        },
-        "api_live_chat.get_chat_res": {
-            "type": "object"
-        },
-        "api_live_chat.update_chat_req": {
+        "live_chat.get_chat_data_req": {
             "type": "object",
-            "required": [
-                "id",
-                "state"
-            ],
             "properties": {
-                "id": {
+                "page": {
+                    "description": "页码",
                     "type": "integer"
                 },
-                "state": {
-                    "description": "1:未审核 2:通过 3:拒绝 4:封Ip",
+                "page_size": {
+                    "description": "每页数量",
+                    "type": "integer"
+                },
+                "room_id": {
+                    "description": "房间Id",
                     "type": "integer"
                 }
             }
         },
-        "api_live_room.create_live_room_req": {
+        "live_chat.get_chat_data_res": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "数据",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/xdb.XChatData"
+                    }
+                },
+                "total": {
+                    "description": "总数",
+                    "type": "integer"
+                }
+            }
+        },
+        "live_chat.update_chat_data_req": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "id",
+                    "type": "integer"
+                },
+                "state": {
+                    "description": "状态 2通过,3拒绝,4封ip",
+                    "type": "integer"
+                }
+            }
+        },
+        "live_room.create_live_room_req": {
             "type": "object",
             "properties": {
                 "account": {
@@ -1169,7 +1323,7 @@ const docTemplate = `{
                 }
             }
         },
-        "api_live_room.delete_live_room_req": {
+        "live_room.delete_live_room_req": {
             "type": "object",
             "required": [
                 "id"
@@ -1181,7 +1335,7 @@ const docTemplate = `{
                 }
             }
         },
-        "api_live_room.get_live_room_req": {
+        "live_room.get_live_room_req": {
             "type": "object",
             "properties": {
                 "page": {
@@ -1194,7 +1348,7 @@ const docTemplate = `{
                 }
             }
         },
-        "api_live_room.get_live_room_res": {
+        "live_room.get_live_room_res": {
             "type": "object",
             "properties": {
                 "data": {
@@ -1210,7 +1364,22 @@ const docTemplate = `{
                 }
             }
         },
-        "api_live_room.update_live_room_req": {
+        "live_room.get_room_id_req": {
+            "type": "object"
+        },
+        "live_room.get_room_id_res": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "description": "直播间Id",
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "live_room.update_live_room_req": {
             "type": "object",
             "properties": {
                 "account": {
@@ -1235,7 +1404,58 @@ const docTemplate = `{
                 }
             }
         },
-        "xdb.XChatBanIP": {
+        "user.create_user_req": {
+            "type": "object"
+        },
+        "user.get_user_req": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "账号",
+                    "type": "string"
+                },
+                "agent": {
+                    "description": "代理",
+                    "type": "string"
+                },
+                "export": {
+                    "description": "导出",
+                    "type": "integer"
+                },
+                "login_ip": {
+                    "description": "登录Ip",
+                    "type": "string"
+                },
+                "page": {
+                    "description": "页码",
+                    "type": "integer"
+                },
+                "page_size": {
+                    "description": "每页数量",
+                    "type": "integer"
+                }
+            }
+        },
+        "user.get_user_res": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "数据",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/xdb.XUser"
+                    }
+                },
+                "total": {
+                    "description": "总数",
+                    "type": "integer"
+                }
+            }
+        },
+        "user.update_user_req": {
+            "type": "object"
+        },
+        "xdb.XChatBanIp": {
             "type": "object",
             "properties": {
                 "admin_account": {
@@ -1249,6 +1469,38 @@ const docTemplate = `{
                 },
                 "ip": {
                     "type": "string"
+                }
+            }
+        },
+        "xdb.XChatData": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "create_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "ip_location": {
+                    "type": "string"
+                },
+                "room_id": {
+                    "type": "integer"
+                },
+                "seller_id": {
+                    "type": "integer"
+                },
+                "state": {
+                    "type": "integer"
                 }
             }
         },
@@ -1293,6 +1545,53 @@ const docTemplate = `{
                 },
                 "title": {
                     "description": "直播间标题",
+                    "type": "string"
+                }
+            }
+        },
+        "xdb.XUser": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "type": "string"
+                },
+                "agent": {
+                    "type": "string"
+                },
+                "chat_state": {
+                    "type": "integer"
+                },
+                "create_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_visitor": {
+                    "type": "integer"
+                },
+                "login_count": {
+                    "type": "integer"
+                },
+                "login_ip": {
+                    "type": "string"
+                },
+                "login_ip_location": {
+                    "type": "string"
+                },
+                "login_time": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "seller_id": {
+                    "type": "integer"
+                },
+                "state": {
+                    "type": "integer"
+                },
+                "token": {
                     "type": "string"
                 }
             }

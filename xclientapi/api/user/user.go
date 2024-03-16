@@ -183,13 +183,18 @@ func user_login(ctx *gin.Context) {
 	tokendata.Ip = ctx.ClientIP()
 	SetToken(tokendata.Token, &tokendata)
 
-	xapp.Db().Model(&xdb.XUser{}).Where(xdb.Id+xdb.EQ, userdata.Id).Updates(map[string]interface{}{
-		xdb.LoginIp:                  tokendata.Ip,
-		xdb.LoginTime:                xutils.Now(),
-		xdb.Token:                    userdata.Token,
-		xdb.LoginCount:               gorm.Expr(xdb.LoginCount+xdb.PLUS, 1),
-		xdb.LoginIpLocation + xdb.EQ: GetLocation(tokendata.Ip),
-	})
+	err := xapp.Db().Model(&xdb.XUser{}).Where(xdb.Id+xdb.EQ, userdata.Id).Updates(map[string]interface{}{
+		xdb.LoginIp:         tokendata.Ip,
+		xdb.LoginTime:       xutils.Now(),
+		xdb.Token:           userdata.Token,
+		xdb.LoginCount:      gorm.Expr(xdb.LoginCount+xdb.PLUS, 1),
+		xdb.LoginIpLocation: GetLocation(tokendata.Ip),
+	}).Error
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
 
 	response.Account = userdata.Account
 	response.Token = userdata.Token

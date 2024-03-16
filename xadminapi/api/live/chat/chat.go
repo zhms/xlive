@@ -14,8 +14,8 @@ import (
 )
 
 func Init() {
-	xglobal.ApiV1.POST("/get_chat_data", get_chat_data)
-	xglobal.ApiV1.POST("/update_chat_data", update_chat_data)
+	xglobal.ApiV1.POST("/get_chat_data", admin.Auth("直播间", "互动列表", "查", ""), get_chat_data)
+	xglobal.ApiV1.POST("/update_chat_data", admin.Auth("直播间", "互动列表", "改", "聊天审核"), update_chat_data)
 }
 
 type get_chat_data_req struct {
@@ -54,9 +54,7 @@ func get_chat_data(ctx *gin.Context) {
 		reqdata.PageSize = 15
 	}
 	token := admin.GetToken(ctx)
-	if token == nil {
-		return
-	}
+
 	response := new(get_chat_data_res)
 	db := xapp.Db().Model(&xdb.XChatData{})
 	db = db.Where(xdb.SellerId+xdb.EQ, token.SellerId)

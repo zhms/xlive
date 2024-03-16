@@ -1,1231 +1,1599 @@
 {
-	"swagger": "2.0",
-	"info": {
-		"title": "adminapi",
-		"contact": {},
-		"version": "1.0"
-	},
-	"basePath": "/api/v1",
-	"paths": {
-		"/admin_create_role": {
-			"post": {
-				"tags": ["系统管理 - 角色管理"],
-				"summary": "创建角色",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/admin.admin_create_role_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "成功"
-					}
-				}
-			}
-		},
-		"/admin_create_user": {
-			"post": {
-				"tags": ["系统管理 - 账号管理"],
-				"summary": "创建账号",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/admin.admin_create_user_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "成功"
-					}
-				}
-			}
-		},
-		"/admin_delete_role": {
-			"post": {
-				"tags": ["系统管理 - 角色管理"],
-				"summary": "删除角色",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/admin.admin_delete_role_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "成功"
-					}
-				}
-			}
-		},
-		"/admin_delete_user": {
-			"post": {
-				"tags": ["系统管理 - 账号管理"],
-				"summary": "删除账号",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/admin.admin_delete_user_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "成功"
-					}
-				}
-			}
-		},
-		"/admin_get_login_log": {
-			"post": {
-				"tags": ["系统管理 - 登录日志"],
-				"summary": "获取登录日志",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/admin.admin_get_opt_log_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "成功",
-						"schema": {
-							"$ref": "#/definitions/admin.admin_get_opt_log_res"
-						}
-					}
-				}
-			}
-		},
-		"/admin_get_opt_log": {
-			"post": {
-				"tags": ["系统管理 - 操作日志"],
-				"summary": "获取操作日志",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/admin.admin_get_opt_log_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "成功",
-						"schema": {
-							"$ref": "#/definitions/admin.admin_get_opt_log_res"
-						}
-					}
-				}
-			}
-		},
-		"/admin_get_role": {
-			"post": {
-				"tags": ["系统管理 - 角色管理"],
-				"summary": "获取角色",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/admin.admin_get_role_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "成功",
-						"schema": {
-							"$ref": "#/definitions/admin.admin_get_role_res"
-						}
-					}
-				}
-			}
-		},
-		"/admin_get_user": {
-			"post": {
-				"tags": ["系统管理 - 账号管理"],
-				"summary": "获取账号",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/admin.admin_get_user_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "成功",
-						"schema": {
-							"$ref": "#/definitions/admin.admin_get_user_res"
-						}
-					}
-				}
-			}
-		},
-		"/admin_update_role": {
-			"post": {
-				"tags": ["系统管理 - 角色管理"],
-				"summary": "更新角色",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/admin.admin_update_role_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "成功"
-					}
-				}
-			}
-		},
-		"/admin_update_user": {
-			"post": {
-				"tags": ["系统管理 - 账号管理"],
-				"summary": "更新账号",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/admin.admin_update_user_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "成功"
-					}
-				}
-			}
-		},
-		"/admin_user_login": {
-			"post": {
-				"tags": ["管理员"],
-				"summary": "登录",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "验证码",
-						"name": "VerifyCode",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/admin.admin_user_login_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "成功",
-						"schema": {
-							"$ref": "#/definitions/admin.admin_user_login_res"
-						}
-					}
-				}
-			}
-		},
-		"/admin_user_logout": {
-			"post": {
-				"tags": ["管理员"],
-				"summary": "退出",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "成功"
-					}
-				}
-			}
-		},
-		"/create_live_room": {
-			"post": {
-				"tags": ["直播间 - 直播间"],
-				"summary": "创建直播间",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/api_live_room.create_live_room_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "响应数据"
-					}
-				}
-			}
-		},
-		"/delete_ip_ban": {
-			"post": {
-				"tags": ["直播间 - Ip封禁"],
-				"summary": "解封Ip",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/live_ban.delete_ip_ban_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "响应数据"
-					}
-				}
-			}
-		},
-		"/delete_live_room": {
-			"post": {
-				"tags": ["直播间 - 直播间"],
-				"summary": "删除直播间",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/api_live_room.delete_live_room_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "响应数据"
-					}
-				}
-			}
-		},
-		"/get_chat": {
-			"post": {
-				"tags": ["直播间 - 互动列表"],
-				"summary": "获取互动列表",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/api_live_chat.get_chat_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "响应数据",
-						"schema": {
-							"$ref": "#/definitions/api_live_chat.get_chat_res"
-						}
-					}
-				}
-			}
-		},
-		"/get_ip_ban": {
-			"post": {
-				"tags": ["直播间 - Ip封禁"],
-				"summary": "获取封禁Ip",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/live_ban.get_ip_ban_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "响应数据",
-						"schema": {
-							"$ref": "#/definitions/live_ban.get_ip_ban_res"
-						}
-					}
-				}
-			}
-		},
-		"/get_live_room": {
-			"post": {
-				"tags": ["直播间 - 直播间"],
-				"summary": "获取直播间",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/api_live_room.get_live_room_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "响应数据",
-						"schema": {
-							"$ref": "#/definitions/api_live_room.get_live_room_res"
-						}
-					}
-				}
-			}
-		},
-		"/update_chat": {
-			"post": {
-				"tags": ["直播间 - 互动列表"],
-				"summary": "审核互动列表",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/api_live_chat.update_chat_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "响应数据"
-					}
-				}
-			}
-		},
-		"/update_live_room": {
-			"post": {
-				"tags": ["直播间 - 直播间"],
-				"summary": "更新直播间",
-				"parameters": [
-					{
-						"type": "string",
-						"description": "token",
-						"name": "x-token",
-						"in": "header",
-						"required": true
-					},
-					{
-						"description": "请求参数",
-						"name": "body",
-						"in": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/api_live_room.update_live_room_req"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "响应数据"
-					}
-				}
-			}
-		}
-	},
-	"definitions": {
-		"admin.XAdminOptLog": {
-			"type": "object",
-			"properties": {
-				"account": {
-					"description": "账号",
-					"type": "string"
-				},
-				"create_time": {
-					"description": "创建时间",
-					"type": "string"
-				},
-				"id": {
-					"description": "自增Id",
-					"type": "integer"
-				},
-				"opt_name": {
-					"description": "请求路径",
-					"type": "string"
-				},
-				"req_data": {
-					"description": "请求参数",
-					"type": "string"
-				},
-				"req_ip": {
-					"description": "请求的Ip",
-					"type": "string"
-				},
-				"req_ip_location": {
-					"description": "请求Ip地理位置",
-					"type": "string"
-				},
-				"req_path": {
-					"description": "请求路径",
-					"type": "string"
-				},
-				"seller_id": {
-					"description": "运营商",
-					"type": "integer"
-				}
-			}
-		},
-		"admin.XAdminRole": {
-			"type": "object",
-			"properties": {
-				"create_time": {
-					"description": "创建时间",
-					"type": "string"
-				},
-				"id": {
-					"description": "自增Id",
-					"type": "integer"
-				},
-				"memo": {
-					"description": "备注",
-					"type": "string"
-				},
-				"parent": {
-					"description": "上级角色",
-					"type": "string"
-				},
-				"role_data": {
-					"description": "权限数据",
-					"type": "string"
-				},
-				"role_name": {
-					"description": "角色名",
-					"type": "string"
-				},
-				"seller_id": {
-					"description": "运营商",
-					"type": "integer"
-				},
-				"state": {
-					"description": "状态 1开启,2关闭",
-					"type": "integer"
-				}
-			}
-		},
-		"admin.XAdminUser": {
-			"type": "object",
-			"properties": {
-				"account": {
-					"description": "账号",
-					"type": "string"
-				},
-				"create_time": {
-					"description": "创建时间",
-					"type": "string"
-				},
-				"id": {
-					"description": "自增Id",
-					"type": "integer"
-				},
-				"login_count": {
-					"description": "登录次数",
-					"type": "integer"
-				},
-				"login_ip": {
-					"description": "最后登录Ip",
-					"type": "string"
-				},
-				"login_time": {
-					"description": "最后登录时间",
-					"type": "string"
-				},
-				"memo": {
-					"description": "备注",
-					"type": "string"
-				},
-				"role_name": {
-					"description": "角色",
-					"type": "string"
-				},
-				"seller_id": {
-					"description": "运营商",
-					"type": "integer"
-				},
-				"state": {
-					"description": "状态 1开启,2关闭",
-					"type": "integer"
-				}
-			}
-		},
-		"admin.admin_create_role_req": {
-			"type": "object",
-			"required": ["parent", "role_data", "role_name", "state"],
-			"properties": {
-				"memo": {
-					"description": "备注",
-					"type": "string"
-				},
-				"parent": {
-					"description": "上级角色",
-					"type": "string"
-				},
-				"role_data": {
-					"description": "权限数据",
-					"type": "string"
-				},
-				"role_name": {
-					"description": "角色",
-					"type": "string"
-				},
-				"state": {
-					"description": "状态 1开启,2关闭",
-					"type": "integer"
-				}
-			}
-		},
-		"admin.admin_create_user_req": {
-			"type": "object",
-			"required": ["account", "password", "role_name", "state"],
-			"properties": {
-				"account": {
-					"description": "账号",
-					"type": "string"
-				},
-				"memo": {
-					"description": "备注",
-					"type": "string"
-				},
-				"password": {
-					"description": "密码",
-					"type": "string"
-				},
-				"role_name": {
-					"description": "角色",
-					"type": "string"
-				},
-				"state": {
-					"description": "状态 1开启,2关闭",
-					"type": "integer"
-				}
-			}
-		},
-		"admin.admin_delete_role_req": {
-			"type": "object",
-			"required": ["id"],
-			"properties": {
-				"id": {
-					"description": "角色Id",
-					"type": "integer"
-				}
-			}
-		},
-		"admin.admin_delete_user_req": {
-			"type": "object",
-			"required": ["id"],
-			"properties": {
-				"id": {
-					"description": "管理员Id",
-					"type": "integer"
-				}
-			}
-		},
-		"admin.admin_get_opt_log_req": {
-			"type": "object",
-			"properties": {
-				"account": {
-					"description": "操作人",
-					"type": "string"
-				},
-				"end_time": {
-					"description": "结束时间",
-					"type": "string"
-				},
-				"opt_name": {
-					"description": "操作名",
-					"type": "string"
-				},
-				"page": {
-					"description": "页码",
-					"type": "integer"
-				},
-				"page_size": {
-					"description": "每页数量",
-					"type": "integer"
-				},
-				"start_time": {
-					"description": "开始时间",
-					"type": "string"
-				}
-			}
-		},
-		"admin.admin_get_opt_log_res": {
-			"type": "object",
-			"properties": {
-				"data": {
-					"description": "数据",
-					"type": "array",
-					"items": {
-						"$ref": "#/definitions/admin.XAdminOptLog"
-					}
-				},
-				"total": {
-					"description": "总数",
-					"type": "integer"
-				}
-			}
-		},
-		"admin.admin_get_role_req": {
-			"type": "object",
-			"properties": {
-				"page": {
-					"description": "页码",
-					"type": "integer"
-				},
-				"page_size": {
-					"description": "每页数量",
-					"type": "integer"
-				},
-				"role_name": {
-					"description": "角色名",
-					"type": "string"
-				}
-			}
-		},
-		"admin.admin_get_role_res": {
-			"type": "object",
-			"properties": {
-				"data": {
-					"description": "数据",
-					"type": "array",
-					"items": {
-						"$ref": "#/definitions/admin.XAdminRole"
-					}
-				},
-				"total": {
-					"description": "总数",
-					"type": "integer"
-				}
-			}
-		},
-		"admin.admin_get_user_req": {
-			"type": "object",
-			"properties": {
-				"account": {
-					"description": "账号",
-					"type": "string"
-				},
-				"page": {
-					"description": "页码",
-					"type": "integer"
-				},
-				"page_size": {
-					"description": "每页数量",
-					"type": "integer"
-				},
-				"role_name": {
-					"description": "角色名",
-					"type": "string"
-				}
-			}
-		},
-		"admin.admin_get_user_res": {
-			"type": "object",
-			"properties": {
-				"data": {
-					"description": "数据",
-					"type": "array",
-					"items": {
-						"$ref": "#/definitions/admin.XAdminUser"
-					}
-				},
-				"total": {
-					"description": "总数",
-					"type": "integer"
-				}
-			}
-		},
-		"admin.admin_update_role_req": {
-			"type": "object",
-			"required": ["parent", "role_data", "role_name", "state"],
-			"properties": {
-				"memo": {
-					"description": "备注",
-					"type": "string"
-				},
-				"parent": {
-					"description": "上级角色",
-					"type": "string"
-				},
-				"role_data": {
-					"description": "权限数据",
-					"type": "string"
-				},
-				"role_name": {
-					"description": "角色",
-					"type": "string"
-				},
-				"state": {
-					"description": "状态 1开启,2关闭",
-					"type": "integer"
-				}
-			}
-		},
-		"admin.admin_update_user_req": {
-			"type": "object",
-			"required": ["id"],
-			"properties": {
-				"id": {
-					"description": "管理员Id",
-					"type": "integer"
-				},
-				"memo": {
-					"description": "备注",
-					"type": "string"
-				},
-				"password": {
-					"description": "密码",
-					"type": "string"
-				},
-				"role_name": {
-					"description": "角色",
-					"type": "string"
-				},
-				"state": {
-					"description": "状态 1开启,2关闭",
-					"type": "integer"
-				}
-			}
-		},
-		"admin.admin_user_login_req": {
-			"type": "object",
-			"required": ["account", "password"],
-			"properties": {
-				"account": {
-					"description": "账号",
-					"type": "string"
-				},
-				"password": {
-					"description": "密码",
-					"type": "string"
-				}
-			}
-		},
-		"admin.admin_user_login_res": {
-			"type": "object",
-			"properties": {
-				"account": {
-					"description": "账号",
-					"type": "string"
-				},
-				"auth_data": {
-					"description": "权限数据",
-					"type": "string"
-				},
-				"env": {
-					"description": "环境",
-					"type": "string"
-				},
-				"login_count": {
-					"description": "登录次数",
-					"type": "integer"
-				},
-				"login_ip": {
-					"description": "登录Ip",
-					"type": "string"
-				},
-				"login_time": {
-					"description": "登录时间",
-					"type": "string"
-				},
-				"seller_id": {
-					"description": "运营商",
-					"type": "integer"
-				},
-				"token": {
-					"description": "token",
-					"type": "string"
-				},
-				"utc_offset": {
-					"description": "当地时区与utc的偏移量",
-					"type": "integer"
-				}
-			}
-		},
-		"live_ban.delete_ip_ban_req": {
-			"type": "object",
-			"properties": {
-				"id": {
-					"type": "integer"
-				}
-			}
-		},
-		"live_ban.get_ip_ban_req": {
-			"type": "object",
-			"properties": {
-				"page": {
-					"type": "integer"
-				},
-				"size": {
-					"type": "integer"
-				}
-			}
-		},
-		"live_ban.get_ip_ban_res": {
-			"type": "object",
-			"properties": {
-				"data": {
-					"type": "array",
-					"items": {
-						"$ref": "#/definitions/xdb.XChatBanIP"
-					}
-				},
-				"total": {
-					"type": "integer"
-				}
-			}
-		},
-		"api_live_chat.get_chat_req": {
-			"type": "object"
-		},
-		"api_live_chat.get_chat_res": {
-			"type": "object"
-		},
-		"api_live_chat.update_chat_req": {
-			"type": "object",
-			"required": ["id", "state"],
-			"properties": {
-				"id": {
-					"type": "integer"
-				},
-				"state": {
-					"description": "1:未审核 2:通过 3:拒绝 4:封Ip",
-					"type": "integer"
-				}
-			}
-		},
-		"api_live_room.create_live_room_req": {
-			"type": "object",
-			"properties": {
-				"account": {
-					"description": "直播间账号",
-					"type": "string"
-				},
-				"name": {
-					"description": "直播间名称",
-					"type": "string"
-				},
-				"state": {
-					"description": "直播间状态",
-					"type": "integer"
-				},
-				"title": {
-					"description": "直播间标题",
-					"type": "string"
-				}
-			}
-		},
-		"api_live_room.delete_live_room_req": {
-			"type": "object",
-			"required": ["id"],
-			"properties": {
-				"id": {
-					"description": "直播间Id",
-					"type": "integer"
-				}
-			}
-		},
-		"api_live_room.get_live_room_req": {
-			"type": "object",
-			"properties": {
-				"page": {
-					"description": "页码",
-					"type": "integer"
-				},
-				"page_size": {
-					"description": "每页数量",
-					"type": "integer"
-				}
-			}
-		},
-		"api_live_room.get_live_room_res": {
-			"type": "object",
-			"properties": {
-				"data": {
-					"description": "数据",
-					"type": "array",
-					"items": {
-						"$ref": "#/definitions/xdb.XLiveRoom"
-					}
-				},
-				"total": {
-					"description": "总数",
-					"type": "integer"
-				}
-			}
-		},
-		"api_live_room.update_live_room_req": {
-			"type": "object",
-			"properties": {
-				"account": {
-					"description": "直播间账号",
-					"type": "string"
-				},
-				"id": {
-					"description": "直播间Id",
-					"type": "integer"
-				},
-				"name": {
-					"description": "直播间名称",
-					"type": "string"
-				},
-				"state": {
-					"description": "直播间状态",
-					"type": "integer"
-				},
-				"title": {
-					"description": "直播间标题",
-					"type": "string"
-				}
-			}
-		},
-		"xdb.XChatBanIP": {
-			"type": "object",
-			"properties": {
-				"admin_account": {
-					"type": "string"
-				},
-				"create_time": {
-					"type": "string"
-				},
-				"id": {
-					"type": "integer"
-				},
-				"ip": {
-					"type": "string"
-				}
-			}
-		},
-		"xdb.XLiveRoom": {
-			"type": "object",
-			"properties": {
-				"account": {
-					"description": "主播账号",
-					"type": "string"
-				},
-				"create_time": {
-					"description": "创建时间",
-					"type": "string"
-				},
-				"id": {
-					"description": "id",
-					"type": "integer"
-				},
-				"live_url": {
-					"description": "前端地址",
-					"type": "string"
-				},
-				"name": {
-					"description": "直播间名称",
-					"type": "string"
-				},
-				"pull_url": {
-					"description": "拉流地址",
-					"type": "string"
-				},
-				"push_url": {
-					"description": "推流地址",
-					"type": "string"
-				},
-				"seller_id": {
-					"description": "运营商",
-					"type": "integer"
-				},
-				"state": {
-					"description": "状态 1正在直播,2未直播",
-					"type": "integer"
-				},
-				"title": {
-					"description": "直播间标题",
-					"type": "string"
-				}
-			}
-		}
-	},
-	"securityDefinitions": {
-		"": {
-			"type": "apiKey",
-			"name": "x-token",
-			"in": "header"
-		}
-	}
+    "swagger": "2.0",
+    "info": {
+        "title": "adminapi",
+        "contact": {},
+        "version": "1.0"
+    },
+    "basePath": "/api/v1",
+    "paths": {
+        "/admin_create_role": {
+            "post": {
+                "tags": [
+                    "系统管理 - 角色管理"
+                ],
+                "summary": "创建角色",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.admin_create_role_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功"
+                    }
+                }
+            }
+        },
+        "/admin_create_user": {
+            "post": {
+                "tags": [
+                    "系统管理 - 账号管理"
+                ],
+                "summary": "创建账号",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.admin_create_user_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功"
+                    }
+                }
+            }
+        },
+        "/admin_delete_role": {
+            "post": {
+                "tags": [
+                    "系统管理 - 角色管理"
+                ],
+                "summary": "删除角色",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.admin_delete_role_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功"
+                    }
+                }
+            }
+        },
+        "/admin_delete_user": {
+            "post": {
+                "tags": [
+                    "系统管理 - 账号管理"
+                ],
+                "summary": "删除账号",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.admin_delete_user_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功"
+                    }
+                }
+            }
+        },
+        "/admin_get_login_log": {
+            "post": {
+                "tags": [
+                    "系统管理 - 登录日志"
+                ],
+                "summary": "获取登录日志",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.admin_get_opt_log_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/admin.admin_get_opt_log_res"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin_get_opt_log": {
+            "post": {
+                "tags": [
+                    "系统管理 - 操作日志"
+                ],
+                "summary": "获取操作日志",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.admin_get_opt_log_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/admin.admin_get_opt_log_res"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin_get_role": {
+            "post": {
+                "tags": [
+                    "系统管理 - 角色管理"
+                ],
+                "summary": "获取角色",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.admin_get_role_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/admin.admin_get_role_res"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin_get_user": {
+            "post": {
+                "tags": [
+                    "系统管理 - 账号管理"
+                ],
+                "summary": "获取账号",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.admin_get_user_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/admin.admin_get_user_res"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin_update_role": {
+            "post": {
+                "tags": [
+                    "系统管理 - 角色管理"
+                ],
+                "summary": "更新角色",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.admin_update_role_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功"
+                    }
+                }
+            }
+        },
+        "/admin_update_user": {
+            "post": {
+                "tags": [
+                    "系统管理 - 账号管理"
+                ],
+                "summary": "更新账号",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.admin_update_user_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功"
+                    }
+                }
+            }
+        },
+        "/admin_user_login": {
+            "post": {
+                "tags": [
+                    "管理员"
+                ],
+                "summary": "登录",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "验证码",
+                        "name": "VerifyCode",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.admin_user_login_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/admin.admin_user_login_res"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin_user_logout": {
+            "post": {
+                "tags": [
+                    "管理员"
+                ],
+                "summary": "退出",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功"
+                    }
+                }
+            }
+        },
+        "/create_live_room": {
+            "post": {
+                "tags": [
+                    "直播间 - 直播间"
+                ],
+                "summary": "创建直播间",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/live_room.create_live_room_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "响应数据"
+                    }
+                }
+            }
+        },
+        "/create_user": {
+            "post": {
+                "tags": [
+                    "a"
+                ],
+                "summary": "b",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.create_user_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "响应数据"
+                    }
+                }
+            }
+        },
+        "/delete_ip_ban": {
+            "post": {
+                "tags": [
+                    "直播间 - Ip封禁"
+                ],
+                "summary": "解封Ip",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/live_ban.delete_ip_ban_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "响应数据"
+                    }
+                }
+            }
+        },
+        "/delete_live_room": {
+            "post": {
+                "tags": [
+                    "直播间 - 直播间"
+                ],
+                "summary": "删除直播间",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/live_room.delete_live_room_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "响应数据"
+                    }
+                }
+            }
+        },
+        "/get_chat_data": {
+            "post": {
+                "tags": [
+                    "直播间 - 互动列表"
+                ],
+                "summary": "获取互动列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/live_chat.get_chat_data_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "响应数据",
+                        "schema": {
+                            "$ref": "#/definitions/live_chat.get_chat_data_res"
+                        }
+                    }
+                }
+            }
+        },
+        "/get_ip_ban": {
+            "post": {
+                "tags": [
+                    "直播间 - Ip封禁"
+                ],
+                "summary": "获取封禁Ip",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/live_ban.get_ip_ban_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "响应数据",
+                        "schema": {
+                            "$ref": "#/definitions/live_ban.get_ip_ban_res"
+                        }
+                    }
+                }
+            }
+        },
+        "/get_live_room": {
+            "post": {
+                "tags": [
+                    "直播间 - 直播间"
+                ],
+                "summary": "获取直播间",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/live_room.get_live_room_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "响应数据",
+                        "schema": {
+                            "$ref": "#/definitions/live_room.get_live_room_res"
+                        }
+                    }
+                }
+            }
+        },
+        "/get_room_id": {
+            "post": {
+                "tags": [
+                    "直播间 - 直播间"
+                ],
+                "summary": "获取直播间Id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/live_room.get_room_id_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "响应数据",
+                        "schema": {
+                            "$ref": "#/definitions/live_room.get_room_id_res"
+                        }
+                    }
+                }
+            }
+        },
+        "/get_user": {
+            "post": {
+                "tags": [
+                    "a"
+                ],
+                "summary": "b",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.get_user_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "响应数据",
+                        "schema": {
+                            "$ref": "#/definitions/user.get_user_res"
+                        }
+                    }
+                }
+            }
+        },
+        "/update_chat_data": {
+            "post": {
+                "tags": [
+                    "直播间 - 互动列表"
+                ],
+                "summary": "审核互动列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/live_chat.update_chat_data_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "响应数据"
+                    }
+                }
+            }
+        },
+        "/update_live_room": {
+            "post": {
+                "tags": [
+                    "直播间 - 直播间"
+                ],
+                "summary": "更新直播间",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/live_room.update_live_room_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "响应数据"
+                    }
+                }
+            }
+        },
+        "/update_user": {
+            "post": {
+                "tags": [
+                    "a"
+                ],
+                "summary": "b",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.update_user_req"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "响应数据"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "admin.XAdminOptLog": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "账号",
+                    "type": "string"
+                },
+                "create_time": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "自增Id",
+                    "type": "integer"
+                },
+                "opt_name": {
+                    "description": "请求路径",
+                    "type": "string"
+                },
+                "req_data": {
+                    "description": "请求参数",
+                    "type": "string"
+                },
+                "req_ip": {
+                    "description": "请求的Ip",
+                    "type": "string"
+                },
+                "req_ip_location": {
+                    "description": "请求Ip地理位置",
+                    "type": "string"
+                },
+                "req_path": {
+                    "description": "请求路径",
+                    "type": "string"
+                },
+                "seller_id": {
+                    "description": "运营商",
+                    "type": "integer"
+                }
+            }
+        },
+        "admin.XAdminRole": {
+            "type": "object",
+            "properties": {
+                "create_time": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "自增Id",
+                    "type": "integer"
+                },
+                "memo": {
+                    "description": "备注",
+                    "type": "string"
+                },
+                "parent": {
+                    "description": "上级角色",
+                    "type": "string"
+                },
+                "role_data": {
+                    "description": "权限数据",
+                    "type": "string"
+                },
+                "role_name": {
+                    "description": "角色名",
+                    "type": "string"
+                },
+                "seller_id": {
+                    "description": "运营商",
+                    "type": "integer"
+                },
+                "state": {
+                    "description": "状态 1开启,2关闭",
+                    "type": "integer"
+                }
+            }
+        },
+        "admin.XAdminUser": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "账号",
+                    "type": "string"
+                },
+                "create_time": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "自增Id",
+                    "type": "integer"
+                },
+                "login_count": {
+                    "description": "登录次数",
+                    "type": "integer"
+                },
+                "login_ip": {
+                    "description": "最后登录Ip",
+                    "type": "string"
+                },
+                "login_time": {
+                    "description": "最后登录时间",
+                    "type": "string"
+                },
+                "memo": {
+                    "description": "备注",
+                    "type": "string"
+                },
+                "role_name": {
+                    "description": "角色",
+                    "type": "string"
+                },
+                "seller_id": {
+                    "description": "运营商",
+                    "type": "integer"
+                },
+                "state": {
+                    "description": "状态 1开启,2关闭",
+                    "type": "integer"
+                }
+            }
+        },
+        "admin.admin_create_role_req": {
+            "type": "object",
+            "required": [
+                "parent",
+                "role_data",
+                "role_name",
+                "state"
+            ],
+            "properties": {
+                "memo": {
+                    "description": "备注",
+                    "type": "string"
+                },
+                "parent": {
+                    "description": "上级角色",
+                    "type": "string"
+                },
+                "role_data": {
+                    "description": "权限数据",
+                    "type": "string"
+                },
+                "role_name": {
+                    "description": "角色",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "状态 1开启,2关闭",
+                    "type": "integer"
+                }
+            }
+        },
+        "admin.admin_create_user_req": {
+            "type": "object",
+            "required": [
+                "account",
+                "password",
+                "role_name",
+                "state"
+            ],
+            "properties": {
+                "account": {
+                    "description": "账号",
+                    "type": "string"
+                },
+                "memo": {
+                    "description": "备注",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "密码",
+                    "type": "string"
+                },
+                "role_name": {
+                    "description": "角色",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "状态 1开启,2关闭",
+                    "type": "integer"
+                }
+            }
+        },
+        "admin.admin_delete_role_req": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "description": "角色Id",
+                    "type": "integer"
+                }
+            }
+        },
+        "admin.admin_delete_user_req": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "description": "管理员Id",
+                    "type": "integer"
+                }
+            }
+        },
+        "admin.admin_get_opt_log_req": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "操作人",
+                    "type": "string"
+                },
+                "end_time": {
+                    "description": "结束时间",
+                    "type": "string"
+                },
+                "opt_name": {
+                    "description": "操作名",
+                    "type": "string"
+                },
+                "page": {
+                    "description": "页码",
+                    "type": "integer"
+                },
+                "page_size": {
+                    "description": "每页数量",
+                    "type": "integer"
+                },
+                "start_time": {
+                    "description": "开始时间",
+                    "type": "string"
+                }
+            }
+        },
+        "admin.admin_get_opt_log_res": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "数据",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/admin.XAdminOptLog"
+                    }
+                },
+                "total": {
+                    "description": "总数",
+                    "type": "integer"
+                }
+            }
+        },
+        "admin.admin_get_role_req": {
+            "type": "object",
+            "properties": {
+                "page": {
+                    "description": "页码",
+                    "type": "integer"
+                },
+                "page_size": {
+                    "description": "每页数量",
+                    "type": "integer"
+                },
+                "role_name": {
+                    "description": "角色名",
+                    "type": "string"
+                }
+            }
+        },
+        "admin.admin_get_role_res": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "数据",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/admin.XAdminRole"
+                    }
+                },
+                "total": {
+                    "description": "总数",
+                    "type": "integer"
+                }
+            }
+        },
+        "admin.admin_get_user_req": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "账号",
+                    "type": "string"
+                },
+                "page": {
+                    "description": "页码",
+                    "type": "integer"
+                },
+                "page_size": {
+                    "description": "每页数量",
+                    "type": "integer"
+                },
+                "role_name": {
+                    "description": "角色名",
+                    "type": "string"
+                }
+            }
+        },
+        "admin.admin_get_user_res": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "数据",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/admin.XAdminUser"
+                    }
+                },
+                "total": {
+                    "description": "总数",
+                    "type": "integer"
+                }
+            }
+        },
+        "admin.admin_update_role_req": {
+            "type": "object",
+            "required": [
+                "parent",
+                "role_data",
+                "role_name",
+                "state"
+            ],
+            "properties": {
+                "memo": {
+                    "description": "备注",
+                    "type": "string"
+                },
+                "parent": {
+                    "description": "上级角色",
+                    "type": "string"
+                },
+                "role_data": {
+                    "description": "权限数据",
+                    "type": "string"
+                },
+                "role_name": {
+                    "description": "角色",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "状态 1开启,2关闭",
+                    "type": "integer"
+                }
+            }
+        },
+        "admin.admin_update_user_req": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "description": "管理员Id",
+                    "type": "integer"
+                },
+                "memo": {
+                    "description": "备注",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "密码",
+                    "type": "string"
+                },
+                "role_name": {
+                    "description": "角色",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "状态 1开启,2关闭",
+                    "type": "integer"
+                }
+            }
+        },
+        "admin.admin_user_login_req": {
+            "type": "object",
+            "required": [
+                "account",
+                "password"
+            ],
+            "properties": {
+                "account": {
+                    "description": "账号",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "密码",
+                    "type": "string"
+                }
+            }
+        },
+        "admin.admin_user_login_res": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "账号",
+                    "type": "string"
+                },
+                "auth_data": {
+                    "description": "权限数据",
+                    "type": "string"
+                },
+                "env": {
+                    "description": "环境",
+                    "type": "string"
+                },
+                "login_count": {
+                    "description": "登录次数",
+                    "type": "integer"
+                },
+                "login_ip": {
+                    "description": "登录Ip",
+                    "type": "string"
+                },
+                "login_time": {
+                    "description": "登录时间",
+                    "type": "string"
+                },
+                "seller_id": {
+                    "description": "运营商",
+                    "type": "integer"
+                },
+                "token": {
+                    "description": "token",
+                    "type": "string"
+                },
+                "utc_offset": {
+                    "description": "当地时区与utc的偏移量",
+                    "type": "integer"
+                }
+            }
+        },
+        "live_ban.delete_ip_ban_req": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "live_ban.get_ip_ban_req": {
+            "type": "object",
+            "properties": {
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                }
+            }
+        },
+        "live_ban.get_ip_ban_res": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/xdb.XChatBanIp"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "live_chat.get_chat_data_req": {
+            "type": "object",
+            "properties": {
+                "page": {
+                    "description": "页码",
+                    "type": "integer"
+                },
+                "page_size": {
+                    "description": "每页数量",
+                    "type": "integer"
+                },
+                "room_id": {
+                    "description": "房间Id",
+                    "type": "integer"
+                }
+            }
+        },
+        "live_chat.get_chat_data_res": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "数据",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/xdb.XChatData"
+                    }
+                },
+                "total": {
+                    "description": "总数",
+                    "type": "integer"
+                }
+            }
+        },
+        "live_chat.update_chat_data_req": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "id",
+                    "type": "integer"
+                },
+                "state": {
+                    "description": "状态 2通过,3拒绝,4封ip",
+                    "type": "integer"
+                }
+            }
+        },
+        "live_room.create_live_room_req": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "直播间账号",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "直播间名称",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "直播间状态",
+                    "type": "integer"
+                },
+                "title": {
+                    "description": "直播间标题",
+                    "type": "string"
+                }
+            }
+        },
+        "live_room.delete_live_room_req": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "description": "直播间Id",
+                    "type": "integer"
+                }
+            }
+        },
+        "live_room.get_live_room_req": {
+            "type": "object",
+            "properties": {
+                "page": {
+                    "description": "页码",
+                    "type": "integer"
+                },
+                "page_size": {
+                    "description": "每页数量",
+                    "type": "integer"
+                }
+            }
+        },
+        "live_room.get_live_room_res": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "数据",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/xdb.XLiveRoom"
+                    }
+                },
+                "total": {
+                    "description": "总数",
+                    "type": "integer"
+                }
+            }
+        },
+        "live_room.get_room_id_req": {
+            "type": "object"
+        },
+        "live_room.get_room_id_res": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "description": "直播间Id",
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "live_room.update_live_room_req": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "直播间账号",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "直播间Id",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "直播间名称",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "直播间状态",
+                    "type": "integer"
+                },
+                "title": {
+                    "description": "直播间标题",
+                    "type": "string"
+                }
+            }
+        },
+        "user.create_user_req": {
+            "type": "object"
+        },
+        "user.get_user_req": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "账号",
+                    "type": "string"
+                },
+                "agent": {
+                    "description": "代理",
+                    "type": "string"
+                },
+                "export": {
+                    "description": "导出",
+                    "type": "integer"
+                },
+                "login_ip": {
+                    "description": "登录Ip",
+                    "type": "string"
+                },
+                "page": {
+                    "description": "页码",
+                    "type": "integer"
+                },
+                "page_size": {
+                    "description": "每页数量",
+                    "type": "integer"
+                }
+            }
+        },
+        "user.get_user_res": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "数据",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/xdb.XUser"
+                    }
+                },
+                "total": {
+                    "description": "总数",
+                    "type": "integer"
+                }
+            }
+        },
+        "user.update_user_req": {
+            "type": "object"
+        },
+        "xdb.XChatBanIp": {
+            "type": "object",
+            "properties": {
+                "admin_account": {
+                    "type": "string"
+                },
+                "create_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "ip": {
+                    "type": "string"
+                }
+            }
+        },
+        "xdb.XChatData": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "create_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "ip_location": {
+                    "type": "string"
+                },
+                "room_id": {
+                    "type": "integer"
+                },
+                "seller_id": {
+                    "type": "integer"
+                },
+                "state": {
+                    "type": "integer"
+                }
+            }
+        },
+        "xdb.XLiveRoom": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "主播账号",
+                    "type": "string"
+                },
+                "create_time": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "id",
+                    "type": "integer"
+                },
+                "live_url": {
+                    "description": "前端地址",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "直播间名称",
+                    "type": "string"
+                },
+                "pull_url": {
+                    "description": "拉流地址",
+                    "type": "string"
+                },
+                "push_url": {
+                    "description": "推流地址",
+                    "type": "string"
+                },
+                "seller_id": {
+                    "description": "运营商",
+                    "type": "integer"
+                },
+                "state": {
+                    "description": "状态 1正在直播,2未直播",
+                    "type": "integer"
+                },
+                "title": {
+                    "description": "直播间标题",
+                    "type": "string"
+                }
+            }
+        },
+        "xdb.XUser": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "type": "string"
+                },
+                "agent": {
+                    "type": "string"
+                },
+                "chat_state": {
+                    "type": "integer"
+                },
+                "create_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_visitor": {
+                    "type": "integer"
+                },
+                "login_count": {
+                    "type": "integer"
+                },
+                "login_ip": {
+                    "type": "string"
+                },
+                "login_ip_location": {
+                    "type": "string"
+                },
+                "login_time": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "seller_id": {
+                    "type": "integer"
+                },
+                "state": {
+                    "type": "integer"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "": {
+            "type": "apiKey",
+            "name": "x-token",
+            "in": "header"
+        }
+    }
 }

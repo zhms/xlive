@@ -84,9 +84,7 @@ func get_live_room(ctx *gin.Context) {
 		return
 	}
 	token := admin.GetToken(ctx)
-	if token == nil {
-		return
-	}
+
 	response := new(get_live_room_res)
 	db := xapp.Db().Model(&xdb.XLiveRoom{})
 	db = db.Where(xdb.SellerId+xdb.EQ, token.SellerId)
@@ -127,9 +125,7 @@ func create_live_room(ctx *gin.Context) {
 		return
 	}
 	token := admin.GetToken(ctx)
-	if token == nil {
-		return
-	}
+
 	createdata := xdb.XLiveRoom{
 		SellerId: token.SellerId,
 		Name:     reqdata.Name,
@@ -171,9 +167,7 @@ func update_live_room(ctx *gin.Context) {
 		return
 	}
 	token := admin.GetToken(ctx)
-	if token == nil {
-		return
-	}
+
 	roomdata := &xdb.XLiveRoom{}
 	db := xapp.Db().Model(roomdata).Where(xdb.SellerId+xdb.EQ, token.SellerId).Where(xdb.Id+xdb.EQ, reqdata.Id).First(roomdata)
 	if db.Error != nil {
@@ -254,9 +248,7 @@ func delete_live_room(ctx *gin.Context) {
 		return
 	}
 	token := admin.GetToken(ctx)
-	if token == nil {
-		return
-	}
+
 	roomdata := &xdb.XLiveRoom{}
 	db := xapp.Db().Model(roomdata).Where(xdb.SellerId+xdb.EQ, token.SellerId).Where(xdb.Id+xdb.EQ, reqdata.Id).Delete(roomdata)
 	if db.Error != nil {
@@ -264,4 +256,34 @@ func delete_live_room(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, xenum.Success)
+}
+
+type get_room_id_req struct {
+}
+
+type get_room_id_res struct {
+	Ids []int `json:"ids"` // 直播间Id
+}
+
+// @Router /get_room_id [post]
+// @Tags 直播间 - 直播间
+// @Summary 获取直播间Id
+// @Param x-token header string true "token"
+// @Param body body get_room_id_req true "请求参数"
+// @Success 200  {object} get_room_id_res "响应数据"
+func get_room_id(ctx *gin.Context) {
+	var reqdata get_room_id_req
+	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
+		return
+	}
+	validator := val.New()
+	if err := validator.Struct(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
+		return
+	}
+	response := new(get_room_id_res)
+	token := admin.GetToken(ctx)
+	xapp.Db().Model(&xdb.XLiveRoom{}).Where(xdb.SellerId+xdb.EQ, token.SellerId).Pluck(xdb.Id, &response.Ids)
+	ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
 }

@@ -14,8 +14,8 @@ import (
 )
 
 func Init() {
-	xglobal.ApiV1.POST("/get_ip_ban", get_ip_ban)
-	xglobal.ApiV1.POST("/delete_ip_ban", delete_ip_ban)
+	xglobal.ApiV1.POST("/get_ip_ban", admin.Auth("直播间", "Ip封禁", "查", ""), get_ip_ban)
+	xglobal.ApiV1.POST("/delete_ip_ban", admin.Auth("直播间", "Ip封禁", "改", "解封Ip"), delete_ip_ban)
 }
 
 type get_ip_ban_req struct {
@@ -46,9 +46,7 @@ func get_ip_ban(ctx *gin.Context) {
 		return
 	}
 	token := admin.GetToken(ctx)
-	if token == nil {
-		return
-	}
+
 	if reqdata.Page <= 0 {
 		reqdata.Page = 1
 	}
@@ -92,9 +90,7 @@ func delete_ip_ban(ctx *gin.Context) {
 		return
 	}
 	token := admin.GetToken(ctx)
-	if token == nil {
-		return
-	}
+
 	banip := &xdb.XChatBanIp{}
 	db := xapp.Db().Model(&xdb.XChatBanIp{})
 	db = db.Where(xdb.SellerId+xdb.EQ, token.SellerId)

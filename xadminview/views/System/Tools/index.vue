@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<div style="width: 600px">
+		<div style="width: 700px">
 			<el-form label-width="120px">
 				<el-form-item label="数据库表名:">
 					<el-button type="primary" size="small" @click="copy_db_table">生成</el-button>
@@ -10,6 +10,7 @@
 				</el-form-item>
 				<el-form-item label="生成响应函数:">
 					<el-input v-model="funname" size="small" style="width: 200px; padding-right: 10px"></el-input>
+					<el-button type="primary" size="small" @click="copy_method(0)">原始</el-button>
 					<el-button type="primary" size="small" @click="copy_method(1)">获取</el-button>
 					<el-button type="primary" size="small" @click="copy_method(2)">创建</el-button>
 					<el-button type="primary" size="small" @click="copy_method(3)">更新</el-button>
@@ -56,6 +57,13 @@ type ${funname}_res struct {
 			}
 			if (idx == 4) {
 				funname = 'delete_' + funname
+			}
+			if (idx == 0) {
+				funname = this.funname
+				funname = funname
+				res = `
+type ${funname}_res struct {
+}`
 			}
 			let methodstr = `type ${funname}_req struct {
 }
