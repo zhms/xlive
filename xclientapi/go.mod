@@ -5,6 +5,7 @@ go 1.21.4
 require (
 	github.com/beego/beego v1.12.12
 	github.com/gin-gonic/gin v1.9.1
+	github.com/golang-module/carbon/v2 v2.3.10
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/websocket v1.5.1
 	github.com/redis/go-redis/v9 v9.3.0
@@ -22,7 +23,6 @@ require (
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-sql-driver/mysql v1.8.0 // indirect
-	github.com/golang-module/carbon/v2 v2.3.10 // indirect
 	github.com/hashicorp/consul/api v1.28.2 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect

@@ -54,16 +54,15 @@ func get_chat_data(ctx *gin.Context) {
 		reqdata.PageSize = 15
 	}
 	token := admin.GetToken(ctx)
-
 	response := new(get_chat_data_res)
 	tb := xapp.DbQuery().XChat
 	itb := tb.WithContext(ctx)
-
 	itb = itb.Where(tb.SellerID.Eq(int32(token.SellerId)))
 	if reqdata.RoomId > 0 {
 		itb = itb.Where(tb.RoomID.Eq(int32(reqdata.RoomId)))
 	}
 	var err error
+	itb.Order(tb.ID.Desc())
 	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
 	if err != nil {
 		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))

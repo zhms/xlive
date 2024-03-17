@@ -107,8 +107,8 @@ let routers = [
 		children: [
 			{
 				path: 'robot_list',
-				component: () => import('../../views/User/index'),
-				meta: { title: '机器人列表', icon: 'el-icon-service' },
+				component: () => import('../../views/Robot/index'),
+				meta: { title: '机器人管理', icon: 'el-icon-service' },
 			},
 		],
 	},

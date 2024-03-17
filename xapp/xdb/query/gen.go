@@ -28,6 +28,7 @@ var (
 	XKv            *xKv
 	XLiveProvider  *xLiveProvider
 	XLiveRoom      *xLiveRoom
+	XRobot         *xRobot
 	XSeller        *xSeller
 	XUser          *xUser
 )
@@ -45,6 +46,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	XKv = &Q.XKv
 	XLiveProvider = &Q.XLiveProvider
 	XLiveRoom = &Q.XLiveRoom
+	XRobot = &Q.XRobot
 	XSeller = &Q.XSeller
 	XUser = &Q.XUser
 }
@@ -63,6 +65,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		XKv:            newXKv(db, opts...),
 		XLiveProvider:  newXLiveProvider(db, opts...),
 		XLiveRoom:      newXLiveRoom(db, opts...),
+		XRobot:         newXRobot(db, opts...),
 		XSeller:        newXSeller(db, opts...),
 		XUser:          newXUser(db, opts...),
 	}
@@ -82,6 +85,7 @@ type Query struct {
 	XKv            xKv
 	XLiveProvider  xLiveProvider
 	XLiveRoom      xLiveRoom
+	XRobot         xRobot
 	XSeller        xSeller
 	XUser          xUser
 }
@@ -102,6 +106,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		XKv:            q.XKv.clone(db),
 		XLiveProvider:  q.XLiveProvider.clone(db),
 		XLiveRoom:      q.XLiveRoom.clone(db),
+		XRobot:         q.XRobot.clone(db),
 		XSeller:        q.XSeller.clone(db),
 		XUser:          q.XUser.clone(db),
 	}
@@ -129,6 +134,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		XKv:            q.XKv.replaceDB(db),
 		XLiveProvider:  q.XLiveProvider.replaceDB(db),
 		XLiveRoom:      q.XLiveRoom.replaceDB(db),
+		XRobot:         q.XRobot.replaceDB(db),
 		XSeller:        q.XSeller.replaceDB(db),
 		XUser:          q.XUser.replaceDB(db),
 	}
@@ -146,6 +152,7 @@ type queryCtx struct {
 	XKv            IXKvDo
 	XLiveProvider  IXLiveProviderDo
 	XLiveRoom      IXLiveRoomDo
+	XRobot         IXRobotDo
 	XSeller        IXSellerDo
 	XUser          IXUserDo
 }
@@ -163,6 +170,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		XKv:            q.XKv.WithContext(ctx),
 		XLiveProvider:  q.XLiveProvider.WithContext(ctx),
 		XLiveRoom:      q.XLiveRoom.WithContext(ctx),
+		XRobot:         q.XRobot.WithContext(ctx),
 		XSeller:        q.XSeller.WithContext(ctx),
 		XUser:          q.XUser.WithContext(ctx),
 	}

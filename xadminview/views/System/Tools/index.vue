@@ -27,7 +27,7 @@ export default {
 	extends: base,
 	data() {
 		return {
-			funname: '',
+			funname: 'robot',
 		}
 	},
 	created() {
@@ -39,43 +39,26 @@ export default {
 	methods: {
 		copy_method(idx) {
 			if (this.funname == '') return this.$message.error({ message: '请输入函数名', center: true })
-			let res = ''
-			let resex = ''
-			let funname = this.funname
 			if (idx == 1) {
-				funname = 'get_' + funname
-				res = `
-type ${funname}_res struct {
-}`
-				resex = ` {object} ${funname}_res `
-			}
-			if (idx == 2) {
-				funname = 'create_' + funname
-			}
-			if (idx == 3) {
-				funname = 'update_' + funname
-			}
-			if (idx == 4) {
-				funname = 'delete_' + funname
-			}
-			if (idx == 0) {
-				funname = this.funname
-				funname = funname
-				res = `
-type ${funname}_res struct {
-}`
-			}
-			let methodstr = `type ${funname}_req struct {
+				//get
+				this.copy(`type get_${this.funname}_req struct {
+	Page     int \`json:"page"\`      // 页码
+	PageSize int \`json:"page_size"\` // 每页数量
 }
-${res}
-// @Router /${funname} [post]
+
+type get_${this.funname}_res struct {
+	Total int64           \`json:"total"\` // 总数
+	Data  []*model. \`json:"data"\`  // 数据
+}
+
+// @Router /get_${this.funname} [post]
 // @Tags a
 // @Summary b
 // @Param x-token header string true "token"
-// @Param body body ${funname}_req true "请求参数"
-// @Success 200 ${resex}"响应数据"
-func ${funname}(ctx *gin.Context) {
-    var reqdata ${funname}_req
+// @Param body body get_${this.funname}_req true "请求参数"
+// @Success 200  {object} get_${this.funname}_res "响应数据"
+func get_${this.funname}(ctx *gin.Context) {
+	var reqdata get_${this.funname}_req
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
 		return
@@ -85,13 +68,43 @@ func ${funname}(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
 		return
 	}
-    //response := new(${funname}_res)
-	//ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
-    //ctx.JSON(http.StatusOK, xenum.Success)
-}`
-			this.copy(methodstr)
+    if reqdata.Page == 0 {
+		reqdata.Page = 1
+	}
+	if reqdata.PageSize == 0 {
+		reqdata.PageSize = 15
+	}
+	response := new(get_robot_res)
+	token := admin.GetToken(ctx)
+	tb := xapp.DbQuery().
+	itb := tb.WithContext(ctx).Order(tb.ID.Desc())
+	itb = itb.Where(tb.SellerID.Eq(token.SellerId))
+	//add where conditions
+	var err error
+	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
+	ctx.JSON(http.StatusOK, xenum.Success)
+}`)
+			}
+			if (idx == 2) {
+				//create
+				funname = 'create_' + funname
+			}
+			if (idx == 3) {
+				//update
+				funname = 'update_' + funname
+			}
+			if (idx == 4) {
+				//delete
+				funname = 'delete_' + funname
+			}
+			if (idx == 0) {
+			}
 		},
-
 		copy_db_table() {
 			this.$post('/v1/admin_tools', { query_type: 'db_table' }).then((result) => {
 				this.copy(result.data)
