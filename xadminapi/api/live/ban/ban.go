@@ -23,8 +23,8 @@ type get_ip_ban_req struct {
 }
 
 type get_ip_ban_res struct {
-	Total int64          `json:"total"`
-	Data  []*model.XChat `json:"data"`
+	Total int64               `json:"total"`
+	Data  []*model.XChatBanIP `json:"data"`
 }
 
 // @Router /get_ip_ban [post]
@@ -53,7 +53,7 @@ func get_ip_ban(ctx *gin.Context) {
 		reqdata.PageSize = 15
 	}
 	response := new(get_ip_ban_res)
-	tb := xapp.DbQuery().XChat
+	tb := xapp.DbQuery().XChatBanIP
 	itb := tb.WithContext(ctx)
 	itb.Where(tb.SellerID.Eq(int32(token.SellerId)))
 	var err error

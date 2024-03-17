@@ -6,7 +6,7 @@
 				<el-button type="primary" icon="el-icon-plus" v-on:click="handleAdd(0)">发红包</el-button>
 			</el-form-item>
 		</el-form>
-		<el-table :data="table_data" style="margin-top: -15px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
+		<el-table :data="table_data" style="margin-top: -13px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
 			<el-table-column align="center" prop="id" label="id" width="100"></el-table-column>
 			<el-table-column align="center" prop="room_id" label="房间Id" width="100"></el-table-column>
 			<el-table-column align="center" prop="total_amount" label="红包金额" width="150"></el-table-column>
@@ -15,7 +15,11 @@
 			<el-table-column align="center" prop="used_count" label="已领个数" width="150"> </el-table-column>
 			<el-table-column align="center" prop="sender" label="发布人" width="150"> </el-table-column>
 			<el-table-column align="center" prop="memo" label="备注" width="200"> </el-table-column>
-			<el-table-column align="center" prop="create_time" label="发送时间" width="150"> </el-table-column>
+			<el-table-column align="center" prop="create_time" label="发送时间" width="150">
+				<template slot-scope="scope">
+					<span>{{ scope.row.create_time | 北京时间 }}</span>
+				</template>
+			</el-table-column>
 			<el-table-column label="操作">
 				<template slot-scope="scope">
 					<el-button type="text" icon="el-icon-search" @click="handleEdit(scope.row, 0)">详情</el-button>
@@ -45,8 +49,8 @@ export default {
 	},
 	methods: {
 		getTableData() {
-			this.$post('/v1/hongbao/get_hongbao_list', {}).then((result) => {
-				this.table_data = this.dealData(result.data)
+			this.$post('/v1/get_hongbao', {}).then((result) => {
+				this.table_data = result.data
 				this.total = result.total
 			})
 		},

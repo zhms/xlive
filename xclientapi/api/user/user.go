@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 	"xapp/xapp"
-	"xapp/xdb"
+	"xapp/xdb/model"
 	"xapp/xenum"
 	"xapp/xglobal"
 	"xapp/xutils"
@@ -17,6 +17,7 @@ import (
 	"github.com/beego/beego/logs"
 	"github.com/gin-gonic/gin"
 	val "github.com/go-playground/validator/v10"
+	"github.com/golang-module/carbon/v2"
 	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"
 	"github.com/yinheli/qqwry"
@@ -28,9 +29,9 @@ func Init() {
 }
 
 type TokenData struct {
-	SellerId  int
+	SellerId  int32
 	Account   string
-	IsVisitor int
+	IsVisitor int32
 	Token     string
 	Ip        string
 }
@@ -94,7 +95,7 @@ type user_login_req struct {
 type user_login_res struct {
 	Account   string `json:"account"`
 	Token     string `json:"token"`
-	IsVisitor int    `json:"is_visitor"`
+	IsVisitor int32  `json:"is_visitor"`
 	LiveData  string `json:"live_data"`
 }
 
@@ -132,40 +133,44 @@ func user_login(ctx *gin.Context) {
 	host = strings.Replace(host, "www.", "", -1)
 	host = strings.Split(host, ":")[0]
 	roomid := ctx.GetHeader("roomid")
-	SellerId := 1
+	SellerId := int32(1)
 	livingdata := xapp.Redis().Client().HGet(context.Background(), "living", fmt.Sprintf("%v_%v", SellerId, roomid)).Val()
 	if len(livingdata) == 0 {
 		ctx.JSON(http.StatusBadRequest, xenum.LiveNotAvailable)
 		return
 	}
-	if reqdata.IsVisitor == xdb.StateYes {
+	if reqdata.IsVisitor == 1 {
 		reqdata.Password = xutils.Md5(reqdata.Account)
 	} else {
 		reqdata.Password = xutils.Md5(reqdata.Password)
 	}
-	userdata := xdb.XUser{}
+	var userdata *model.XUser
 	for {
-		err := xapp.Db().Where(xdb.SellerId+xdb.EQ, SellerId).Where(xdb.Account+xdb.EQ, reqdata.Account).First(&userdata).Error
+		tb := xapp.DbQuery().XUser
+		itb := tb.WithContext(ctx)
+		itb = itb.Where(tb.SellerID.Eq(SellerId), tb.Account.Eq(reqdata.Account))
+		ud, err := itb.First()
 		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
 			return
 		}
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			if reqdata.IsVisitor == xdb.StateNo {
+			if reqdata.IsVisitor != 1 {
 				ctx.JSON(http.StatusBadRequest, xenum.UserNotFound)
 				return
 			}
-			xapp.Db().Model(&xdb.XUser{}).Create(map[string]interface{}{
-				xdb.SellerId:   SellerId,
-				xdb.Account:    reqdata.Account,
-				xdb.Password:   reqdata.Password,
-				xdb.IsVisitor:  reqdata.IsVisitor,
-				xdb.State:      xdb.StateYes,
-				xdb.LoginTime:  xutils.Now(),
-				xdb.CreateTime: xutils.Now(),
+			itb.Create(&model.XUser{
+				SellerID:   SellerId,
+				Account:    reqdata.Account,
+				Password:   reqdata.Password,
+				IsVisitor:  1,
+				State:      1,
+				LoginTime:  carbon.Now().StdTime(),
+				CreateTime: carbon.Now().StdTime(),
 			})
 			continue
 		}
+		userdata = ud
 		break
 	}
 	if userdata.Password != reqdata.Password {
@@ -183,19 +188,27 @@ func user_login(ctx *gin.Context) {
 	tokendata.Ip = ctx.ClientIP()
 	SetToken(tokendata.Token, &tokendata)
 
-	err := xapp.Db().Model(&xdb.XUser{}).Where(xdb.Id+xdb.EQ, userdata.Id).Updates(map[string]interface{}{
-		xdb.LoginIp:         tokendata.Ip,
-		xdb.LoginTime:       xutils.Now(),
-		xdb.Token:           userdata.Token,
-		xdb.LoginCount:      gorm.Expr(xdb.LoginCount+xdb.PLUS, 1),
-		xdb.LoginIpLocation: GetLocation(tokendata.Ip),
-	}).Error
+	// err := xapp.Db().Model(&xdb.XUser{}).Where(xdb.Id+xdb.EQ, userdata.Id).Updates(map[string]interface{}{
+	// 	xdb.LoginIp:         tokendata.Ip,
+	// 	xdb.LoginTime:       xutils.Now(),
+	// 	xdb.Token:           userdata.Token,
+	// 	xdb.LoginCount:      gorm.Expr(xdb.LoginCount+xdb.PLUS, 1),
+	// 	xdb.LoginIpLocation: GetLocation(tokendata.Ip),
+	// }).Error
 
+	tb := xapp.DbQuery().XUser
+	itb := tb.WithContext(ctx)
+	_, err := itb.Where(tb.ID.Eq(userdata.ID)).Updates(map[string]interface{}{
+		tb.LoginIP.ColumnName().String():         tokendata.Ip,
+		tb.LoginTime.ColumnName().String():       carbon.Now().StdTime(),
+		tb.Token.ColumnName().String():           userdata.Token,
+		tb.LoginCount.ColumnName().String():      gorm.Expr(tb.LoginCount.ColumnName().String() + "+1"),
+		tb.LoginIPLocation.ColumnName().String(): GetLocation(tokendata.Ip),
+	})
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
 	}
-
 	response.Account = userdata.Account
 	response.Token = userdata.Token
 	response.IsVisitor = userdata.IsVisitor

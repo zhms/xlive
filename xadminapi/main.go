@@ -3,9 +3,11 @@ package main
 import (
 	"embed"
 	"xadminapi/api/admin"
+	"xadminapi/api/hongbao"
 	live_ban "xadminapi/api/live/ban"
 	live_chat "xadminapi/api/live/chat"
 	live_room "xadminapi/api/live/room"
+	"xadminapi/api/sales"
 
 	"xadminapi/api/user"
 	_ "xadminapi/docs"
@@ -35,5 +37,7 @@ func main() {
 		live_room.Init()
 		live_ban.Init()
 		live_chat.Init()
+		sales.Init()
+		hongbao.Init()
 	})
 }

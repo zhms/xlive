@@ -8,7 +8,7 @@
 				<el-button type="primary" icon="el-icon-refresh" v-on:click="handleQuery">查询</el-button>
 			</el-form-item>
 		</el-form>
-		<el-table :data="table_data" style="margin-top: -15px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
+		<el-table :data="table_data" style="margin-top: -13px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
 			<el-table-column align="center" prop="id" label="id" width="100"></el-table-column>
 			<el-table-column align="center" prop="room_id" label="房间Id" width="100"></el-table-column>
 			<el-table-column align="center" prop="account" label="账号" width="200"> </el-table-column>

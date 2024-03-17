@@ -26,3 +26,7 @@ var ApiV9 *gin.RouterGroup
 func IsEnvPrd() bool {
 	return strings.Index(Env, "prd") >= 0
 }
+
+func IsEnvDev() bool {
+	return strings.Index(Env, "dev") >= 0
+}

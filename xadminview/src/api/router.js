@@ -89,6 +89,18 @@ let routers = [
 		],
 	},
 	{
+		path: '/sales',
+		component: Layout,
+		meta: { title: '业务员管理', icon: 'el-icon-mobile' },
+		children: [
+			{
+				path: 'sales_list',
+				component: () => import('../../views/Sales/index'),
+				meta: { title: '业务员管理', icon: 'el-icon-mobile' },
+			},
+		],
+	},
+	{
 		path: '/robot',
 		component: Layout,
 		meta: { title: '机器人管理', icon: 'el-icon-service' },
@@ -118,7 +130,7 @@ let routers = [
 			{
 				path: 'account',
 				component: () => import('../../views/System/User/index'),
-				meta: { title: '后台账号', icon: 'el-icon-office-building' },
+				meta: { title: '管理员账号', icon: 'el-icon-office-building' },
 			},
 			{
 				path: 'login',

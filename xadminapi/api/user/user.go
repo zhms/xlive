@@ -77,6 +77,7 @@ func get_user(ctx *gin.Context) {
 		itb = itb.Where(tb.LoginIP.Eq(reqdata.LoginIp))
 	}
 	var err error
+	itb = itb.Order(tb.ID.Desc())
 	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))

@@ -8,11 +8,15 @@
 				<el-button type="primary" icon="el-icon-refresh" v-on:click="handleQuery">查询</el-button>
 			</el-form-item>
 		</el-form>
-		<el-table :data="table_data" style="margin-top: -15px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
+		<el-table :data="table_data" style="margin-top: -13px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
 			<el-table-column align="center" prop="id" label="id" width="100"></el-table-column>
 			<el-table-column align="center" prop="ip" label="Ip" width="100"></el-table-column>
 			<el-table-column align="center" prop="admin_account" label="封禁人" width="200"> </el-table-column>
-			<el-table-column align="center" prop="create_time" label="封禁时间" width="200"></el-table-column>
+			<el-table-column align="center" prop="create_time" label="封禁时间" width="200">
+				<template slot-scope="scope">
+					<span>{{ scope.row.create_time | 北京时间 }}</span>
+				</template>
+			</el-table-column>
 			<el-table-column label="操作" align="left" width="300">
 				<template slot-scope="scope">
 					<el-button type="text" icon="el-icon-edit" @click="handleDelete(scope.row)">解封</el-button>

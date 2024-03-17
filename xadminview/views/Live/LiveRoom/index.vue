@@ -5,7 +5,7 @@
 				<el-button type="primary" icon="el-icon-plus" class="mr10" @click="handleAdd(0)">添加</el-button>
 			</el-form-item>
 		</el-form>
-		<el-table :data="table_data" style="margin-top: -15px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
+		<el-table :data="table_data" style="margin-top: -13px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
 			<el-table-column align="center" prop="id" label="房间Id" width="150"></el-table-column>
 			<el-table-column align="center" prop="name" label="房间名称" width="150">
 				<template slot-scope="scope">
@@ -29,8 +29,11 @@
 					<span style="cursor: pointer" class="blue" @click="copy_live_url(scope.row)">{{ '复制' }}</span>
 				</template>
 			</el-table-column>
-			<el-table-column align="center" prop="create_time" label="创建时间" width="200"> </el-table-column>
-
+			<el-table-column align="center" prop="create_time" label="创建时间" width="200">
+				<template slot-scope="scope">
+					<span>{{ scope.row.create_time | 北京时间 }}</span>
+				</template>
+			</el-table-column>
 			<el-table-column label="操作" align="left" width="300">
 				<template slot-scope="scope">
 					<el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row, 0)">编辑</el-button>

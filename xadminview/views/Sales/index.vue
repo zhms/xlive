@@ -16,8 +16,10 @@
 					<span style="cursor: pointer" class="blue" @click="handleEdit(scope.row, 0)">{{ scope.row.account }}</span>
 				</template>
 			</el-table-column>
+			<el-table-column align="center" prop="agent" label="上级账号" width="150"></el-table-column>
+			<el-table-column align="center" prop="room_id" label="房间Id" width="100"></el-table-column>
 			<!-- <el-table-column align="center" prop="role_name" label="角色" width="150"></el-table-column> -->
-			<el-table-column align="center" label="状态" width="100">
+			<!-- <el-table-column align="center" label="状态" width="100">
 				<template slot-scope="scope">
 					<span :class="scope.row.state != 1 ? 'red' : ''">{{ scope.row.state | 启用禁用 }}</span>
 				</template>
@@ -28,7 +30,12 @@
 				</template>
 			</el-table-column>
 			<el-table-column align="center" prop="login_ip" label="登录ip" width="120"></el-table-column>
-			<el-table-column align="center" prop="login_count" label="登录次数" width="100"></el-table-column>
+			<el-table-column align="center" prop="login_count" label="登录次数" width="100"></el-table-column> -->
+			<el-table-column align="center" label="分享链接" width="100">
+				<template slot-scope="scope">
+					<el-button type="text" @click="copy_live_url(scope.row)">复制</el-button>
+				</template>
+			</el-table-column>
 			<el-table-column align="center" prop="memo" label="备注" width="200"></el-table-column>
 			<el-table-column label="操作" align="left" width="300">
 				<template slot-scope="scope">
@@ -65,7 +72,7 @@ export default {
 	methods: {
 		getTableData() {
 			let data = this.getQueryData()
-			this.$post('/v1/admin_get_user', data).then((result) => {
+			this.$post('/v1/get_sales', data).then((result) => {
 				this.table_data = result.data
 				this.total = result.total
 			})
@@ -83,10 +90,14 @@ export default {
 		},
 		DeleteItem(item) {
 			if (item.account.indexOf('admin') == 0) return this.$message.error('该账号不可删除')
-			this.$post('/v1/admin_delete_user', item, { google: true }).then(() => {
+			this.$post('/v1/delete_sales', item, { google: true }).then(() => {
 				this.$message.success('删除成功')
 				this.getTableData()
 			})
+		},
+		copy_live_url(data) {
+			let url = JSON.parse(sessionStorage.getItem('userinfo') ?? '{}').live_url + `?r=${data.room_id}&s=` + data.account
+			this.copy(url)
 		},
 	},
 }

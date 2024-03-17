@@ -28,13 +28,17 @@
 			<el-table-column align="center" prop="agent" label="业务员" width="120"></el-table-column>
 			<el-table-column align="center" label="状态" width="100">
 				<template slot-scope="scope">
-					<span :class="scope.row.state == 1 ? '' : 'red'">{{ scope.row.state == 1 ? '正常' : '禁用' }}</span>
+					<span :class="scope.row.state != 1 ? 'red' : ''">{{ scope.row.state | 启用禁用 }}</span>
 				</template>
 			</el-table-column>
 			<el-table-column align="center" prop="login_count" label="登录次数" width="100"></el-table-column>
 			<el-table-column align="center" prop="login_ip" label="登录Ip" width="150"></el-table-column>
 			<el-table-column align="center" prop="login_ip_location" label="登录地区" width="200"></el-table-column>
-			<el-table-column align="center" prop="create_time" label="注册时间" width="160"></el-table-column>
+			<el-table-column align="center" prop="create_time" label="注册时间" width="160">
+				<template slot-scope="scope">
+					<span>{{ scope.row.create_time | 北京时间 }}</span>
+				</template>
+			</el-table-column>
 
 			<el-table-column label="操作" align="left" width="300">
 				<template slot-scope="scope">

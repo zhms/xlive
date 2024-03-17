@@ -11,12 +11,14 @@ import (
 	"time"
 	"xapp/xapp"
 	"xapp/xdb"
+	"xapp/xdb/model"
 	"xapp/xglobal"
 	"xapp/xutils"
 	api_user "xclientapi/api/user"
 
 	"github.com/beego/beego/logs"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-module/carbon/v2"
 	"github.com/redis/go-redis/v9"
 	"github.com/yinheli/qqwry"
 
@@ -209,29 +211,28 @@ func chat_msg(roomid string, tokendata *api_user.TokenData, msgdata string) {
 		}
 		return
 	}
-
 	iplocation := ""
 	ipdata := qqwry.NewQQwry("./config/ipdata.dat")
 	if ipdata != nil && strings.Index(tokendata.Ip, ".") > 0 {
 		ipdata.Find(tokendata.Ip)
 		iplocation = fmt.Sprintf("%s %s", ipdata.Country, ipdata.City)
 	}
-
-	db := xapp.Db().Model(&xdb.XChatData{}).Create(map[string]interface{}{
-		xdb.SellerId:   tokendata.SellerId,
-		xdb.Ip:         tokendata.Ip,
-		xdb.IpLocation: iplocation,
-		xdb.RoomId:     roomid,
-		xdb.Account:    tokendata.Account,
-		xdb.Content:    msgdata,
-		xdb.State:      1,
-		xdb.CreateTime: xutils.Now(),
+	tb := xapp.DbQuery().XChat
+	itb := tb.WithContext(context.Background())
+	err = itb.Create(&model.XChat{
+		SellerID:   tokendata.SellerId,
+		IP:         tokendata.Ip,
+		IPLocation: iplocation,
+		RoomID:     xutils.ToInt32(roomid),
+		Account:    tokendata.Account,
+		Content:    msgdata,
+		State:      1,
+		CreateTime: carbon.Now().StdTime(),
 	})
-	if db.Error != nil {
-		logs.Error("Create chat data error:", db.Error.Error())
+	if err != nil {
+		logs.Error("Create chat data error:", err.Error())
 		return
 	}
-
 	chatdata := &ChatData{From: tokendata.Account, Msg: msgdata, Time: xutils.Now()}
 	bytes, _ := json.Marshal(chatdata)
 	for _, v := range users[roomid] {

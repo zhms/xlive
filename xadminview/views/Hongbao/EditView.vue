@@ -34,12 +34,12 @@ export default {
 	},
 	methods: {
 		commitData(next) {
-			this.$post('/v1/hongbao/send_hongbao', this.itemdata, { google: true }).then(() => {
+			this.$post('/v1/create_hongbao', this.itemdata, { google: true }).then(() => {
 				next(true)
 			})
 		},
 		onOpen() {
-			this.$post('/v1/live_room/get_live_room_id', {}).then((result) => {
+			this.$post('/v1/get_live_room_id', {}).then((result) => {
 				this.room_id = []
 				for (let i = 0; i < result.ids.length; i++) {
 					this.room_id.push({ id: result.ids[i], value: result.ids[i] })

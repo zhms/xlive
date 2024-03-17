@@ -34,6 +34,7 @@ func newXAdminUser(db *gorm.DB, opts ...gen.DOOption) xAdminUser {
 	_xAdminUser.RoleName = field.NewString(tableName, "role_name")
 	_xAdminUser.LoginGoogle = field.NewString(tableName, "login_google")
 	_xAdminUser.OptGoogle = field.NewString(tableName, "opt_google")
+	_xAdminUser.Agent = field.NewString(tableName, "agent")
 	_xAdminUser.State = field.NewInt32(tableName, "state")
 	_xAdminUser.Token = field.NewString(tableName, "token")
 	_xAdminUser.LoginCount = field.NewInt32(tableName, "login_count")
@@ -41,6 +42,7 @@ func newXAdminUser(db *gorm.DB, opts ...gen.DOOption) xAdminUser {
 	_xAdminUser.LoginIP = field.NewString(tableName, "login_ip")
 	_xAdminUser.Memo = field.NewString(tableName, "memo")
 	_xAdminUser.CreateTime = field.NewTime(tableName, "create_time")
+	_xAdminUser.RoomID = field.NewInt32(tableName, "room_id")
 
 	_xAdminUser.fillFieldMap()
 
@@ -58,6 +60,7 @@ type xAdminUser struct {
 	RoleName    field.String // 角色
 	LoginGoogle field.String // 登录谷歌验证码
 	OptGoogle   field.String // 渠道商
+	Agent       field.String // 上级代理
 	State       field.Int32  // 状态 1开启,2关闭
 	Token       field.String // 最后登录的token
 	LoginCount  field.Int32  // 登录次数
@@ -65,6 +68,7 @@ type xAdminUser struct {
 	LoginIP     field.String // 最后登录Ip
 	Memo        field.String // 备注
 	CreateTime  field.Time   // 创建时间
+	RoomID      field.Int32
 
 	fieldMap map[string]field.Expr
 }
@@ -88,6 +92,7 @@ func (x *xAdminUser) updateTableName(table string) *xAdminUser {
 	x.RoleName = field.NewString(table, "role_name")
 	x.LoginGoogle = field.NewString(table, "login_google")
 	x.OptGoogle = field.NewString(table, "opt_google")
+	x.Agent = field.NewString(table, "agent")
 	x.State = field.NewInt32(table, "state")
 	x.Token = field.NewString(table, "token")
 	x.LoginCount = field.NewInt32(table, "login_count")
@@ -95,6 +100,7 @@ func (x *xAdminUser) updateTableName(table string) *xAdminUser {
 	x.LoginIP = field.NewString(table, "login_ip")
 	x.Memo = field.NewString(table, "memo")
 	x.CreateTime = field.NewTime(table, "create_time")
+	x.RoomID = field.NewInt32(table, "room_id")
 
 	x.fillFieldMap()
 
@@ -111,7 +117,7 @@ func (x *xAdminUser) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (x *xAdminUser) fillFieldMap() {
-	x.fieldMap = make(map[string]field.Expr, 14)
+	x.fieldMap = make(map[string]field.Expr, 16)
 	x.fieldMap["id"] = x.ID
 	x.fieldMap["seller_id"] = x.SellerID
 	x.fieldMap["account"] = x.Account
@@ -119,6 +125,7 @@ func (x *xAdminUser) fillFieldMap() {
 	x.fieldMap["role_name"] = x.RoleName
 	x.fieldMap["login_google"] = x.LoginGoogle
 	x.fieldMap["opt_google"] = x.OptGoogle
+	x.fieldMap["agent"] = x.Agent
 	x.fieldMap["state"] = x.State
 	x.fieldMap["token"] = x.Token
 	x.fieldMap["login_count"] = x.LoginCount
@@ -126,6 +133,7 @@ func (x *xAdminUser) fillFieldMap() {
 	x.fieldMap["login_ip"] = x.LoginIP
 	x.fieldMap["memo"] = x.Memo
 	x.fieldMap["create_time"] = x.CreateTime
+	x.fieldMap["room_id"] = x.RoomID
 }
 
 func (x xAdminUser) clone(db *gorm.DB) xAdminUser {

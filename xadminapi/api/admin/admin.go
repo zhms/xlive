@@ -33,7 +33,6 @@ import (
 
 func Init(static *embed.FS) {
 	xapp.Db().Exec("call x_init_auth()")
-
 	if static != nil {
 		xglobal.Router.Use(Serve("/", EmbedFolder(*static, "www")))
 		xglobal.Router.NoRoute(func(c *gin.Context) {
@@ -45,20 +44,19 @@ func Init(static *embed.FS) {
 			c.Data(http.StatusOK, "text/html; charset=utf-8", data)
 		})
 	}
-
 	xglobal.ApiV1.POST("/admin_user_login", admin_user_login)
 	xglobal.ApiV1.POST("/admin_user_logout", admin_user_logout)
 	xglobal.ApiV1.POST("/admin_get_role", admin_get_role)
 	xglobal.ApiV1.POST("/admin_create_role", Auth("系统管理", "角色管理", "增", "创建角色"), admin_create_role)
 	xglobal.ApiV1.POST("/admin_update_role", Auth("系统管理", "角色管理", "改", "更新角色"), admin_update_role)
 	xglobal.ApiV1.POST("/admin_delete_role", Auth("系统管理", "角色管理", "删", "删除角色"), admin_delete_role)
-	xglobal.ApiV1.POST("/admin_get_user", Auth("系统管理", "后台账号", "查", ""), admin_get_user)
-	xglobal.ApiV1.POST("/admin_create_user", Auth("系统管理", "后台账号", "查", "创建管理员"), admin_create_user)
-	xglobal.ApiV1.POST("/admin_update_user", Auth("系统管理", "后台账号", "查", "更新管理员"), admin_update_user)
-	xglobal.ApiV1.POST("/admin_delete_user", Auth("系统管理", "后台账号", "查", "删除管理员"), admin_delete_user)
+	xglobal.ApiV1.POST("/admin_get_user", Auth("系统管理", "管理员账号", "查", ""), admin_get_user)
+	xglobal.ApiV1.POST("/admin_create_user", Auth("系统管理", "管理员账号", "查", "创建管理员"), admin_create_user)
+	xglobal.ApiV1.POST("/admin_update_user", Auth("系统管理", "管理员账号", "查", "更新管理员"), admin_update_user)
+	xglobal.ApiV1.POST("/admin_delete_user", Auth("系统管理", "管理员账号", "查", "删除管理员"), admin_delete_user)
 	xglobal.ApiV1.POST("/admin_get_login_log", Auth("系统管理", "登录日志", "查", ""), admin_get_login_log)
 	xglobal.ApiV1.POST("/admin_get_opt_log", Auth("系统管理", "操作日志", "查", ""), admin_get_opt_log)
-	if !xglobal.IsEnvPrd() {
+	if xglobal.IsEnvDev() {
 		xglobal.ApiV1.POST("/admin_tools", admin_tools)
 	}
 }
@@ -162,8 +160,9 @@ func (w bodyLogWriter) WriteString(s string) (int, error) {
 type TokenData struct {
 	SellerId     int32
 	Account      string
-	UserId       int32
+	UserId       int64
 	AuthData     string
+	RoleName     string
 	GoogleSecret string
 }
 
@@ -342,6 +341,7 @@ type admin_user_login_res struct {
 	LoginIp    string `json:"login_ip"`    // 登录Ip
 	LoginTime  string `json:"login_time"`  // 登录时间
 	Env        string `json:"env"`         // 环境
+	LiveUrl    string `json:"live_url"`    // 直播地址
 }
 
 // @Router /admin_user_login [post]
@@ -421,10 +421,11 @@ func admin_user_login(ctx *gin.Context) {
 	DelToken(adminuser.Token)
 	tokendata := new(TokenData)
 	tokendata.SellerId = adminuser.SellerID
-	tokendata.UserId = int32(adminuser.ID)
+	tokendata.UserId = adminuser.ID
 	tokendata.Account = reqdata.Account
 	tokendata.AuthData = roledata.RoleData
 	tokendata.GoogleSecret = adminuser.OptGoogle
+	tokendata.RoleName = adminuser.RoleName
 	token := uuid.New().String()
 	SetToken(token, tokendata)
 	response := new(admin_user_login_res)
@@ -436,6 +437,9 @@ func admin_user_login(ctx *gin.Context) {
 	response.LoginIp = ctx.ClientIP()
 	response.LoginTime = adminuser.LoginTime.Format("2006-01-02 15:04:05")
 	response.Env = xglobal.Env
+	tkv := xapp.DbQuery().XKv
+	itkv := tkv.WithContext(ctx)
+	itkv.Select(tkv.V).Where(tkv.K.Eq("client_url")).Scan(&response.LiveUrl)
 
 	tb = xapp.DbQuery().XAdminUser
 	itb = tb.WithContext(ctx)
@@ -520,6 +524,7 @@ func admin_get_role(ctx *gin.Context) {
 		itb = itb.Where(tb.RoleName.Eq(reqdata.RoleName))
 	}
 	var err error
+	itb = itb.Order(tb.ID.Desc())
 	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
 	if err != nil {
 		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
@@ -693,8 +698,9 @@ func admin_get_user(ctx *gin.Context) {
 	token := GetToken(ctx)
 	response := new(admin_get_user_res)
 	tb := xapp.DbQuery().XAdminUser
-	itb := tb.WithContext(ctx)
+	itb := tb.WithContext(ctx).Debug()
 	itb = itb.Where(tb.SellerID.Eq(token.SellerId))
+	itb = itb.Where(tb.Agent.Eq(""))
 	if reqdata.Account != "" {
 		itb = itb.Where(tb.Account.Eq(reqdata.Account))
 	}
@@ -702,10 +708,15 @@ func admin_get_user(ctx *gin.Context) {
 		itb = itb.Where(tb.RoleName.Eq(reqdata.RoleName))
 	}
 	var err error
+	itb = itb.Order(tb.ID.Desc())
 	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
 	if err != nil {
 		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
+	}
+	for _, v := range response.Data {
+		v.Password = ""
+		v.Token = ""
 	}
 	ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
 }
@@ -736,6 +747,7 @@ func admin_create_user(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
 		return
 	}
+	reqdata.RoleName = "超级管理员"
 	token := GetToken(ctx)
 	tb := xapp.DbQuery().XAdminUser
 	itb := tb.WithContext(ctx)
@@ -889,8 +901,8 @@ func admin_get_login_log(ctx *gin.Context) {
 		t, _ := time.Parse("2006-01-02 15:04:05", reqdata.EndTime)
 		itb = itb.Where(tb.CreateTime.Lt(t))
 	}
-	itb = itb.Order(tb.ID.Desc())
 	var err error
+	itb = itb.Order(tb.ID.Desc())
 	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
 	if err != nil {
 		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
@@ -950,6 +962,7 @@ func admin_get_opt_log(ctx *gin.Context) {
 		itb = itb.Where(tb.CreateTime.Lt(carbon.Parse(reqdata.EndTime).StdTime()))
 	}
 	var err error
+	itb = itb.Order(tb.ID.Desc())
 	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
 	if err != nil {
 		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))

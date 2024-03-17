@@ -2,12 +2,12 @@
 	<div class="container">
 		<div style="width: 700px">
 			<el-form label-width="120px">
-				<!-- <el-form-item label="数据库表名:">
+				<el-form-item label="数据库表名:">
 					<el-button type="primary" @click="copy_db_table">生成</el-button>
 				</el-form-item>
 				<el-form-item label="数据库字段名:">
 					<el-button type="primary" @click="copy_db_field">生成</el-button>
-				</el-form-item> -->
+				</el-form-item>
 				<el-form-item label="响应函数:">
 					<el-input v-model="funname" style="width: 200px; padding-right: 10px"></el-input>
 					<el-button type="primary" @click="copy_method(0)">原始</el-button>

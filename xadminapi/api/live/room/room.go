@@ -17,10 +17,11 @@ import (
 )
 
 func Init() {
-	xglobal.ApiV1.POST("/get_live_room", admin.Auth("系统管理", "角色管理", "查", ""), get_live_room)
-	xglobal.ApiV1.POST("/create_live_room", admin.Auth("系统管理", "角色管理", "增", "创建直播间"), create_live_room)
-	xglobal.ApiV1.POST("/update_live_room", admin.Auth("系统管理", "角色管理", "改", "更新直播间"), update_live_room)
-	xglobal.ApiV1.POST("/delete_live_room", admin.Auth("系统管理", "角色管理", "删", "删除直播间"), delete_live_room)
+	xglobal.ApiV1.POST("/get_live_room_id", get_live_room_id)
+	xglobal.ApiV1.POST("/get_live_room", admin.Auth("直播间", "直播间列表", "查", ""), get_live_room)
+	xglobal.ApiV1.POST("/create_live_room", admin.Auth("直播间", "直播间列表", "增", "创建直播间"), create_live_room)
+	xglobal.ApiV1.POST("/update_live_room", admin.Auth("直播间", "直播间列表", "改", "更新直播间"), update_live_room)
+	xglobal.ApiV1.POST("/delete_live_room", admin.Auth("直播间", "直播间列表", "删", "删除直播间"), delete_live_room)
 }
 
 func push_url(pushDomain, pushKey, appName, streamName string, expireTime int) string {
@@ -188,7 +189,7 @@ func update_live_room(ctx *gin.Context) {
 			clienturl := ""
 			appname := ""
 			tkv := xapp.DbQuery().XKv
-			itkv := tb.WithContext(ctx)
+			itkv := tkv.WithContext(ctx)
 			itkv.Select(tkv.V).Where(tkv.K.Eq("client_url")).Scan(&clienturl)
 			itkv.Select(tkv.V).Where(tkv.K.Eq("app_name")).Scan(&appname)
 			itkv.Select(tkv.V).Where(tkv.K.Eq("stream_url")).Scan(&streamurl)
@@ -261,10 +262,10 @@ func delete_live_room(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, xenum.Success)
 }
 
-type get_room_id_req struct {
+type get_live_room_id_req struct {
 }
 
-type get_room_id_res struct {
+type get_live_room_id_res struct {
 	Ids []int `json:"ids"` // 直播间Id
 }
 
@@ -272,10 +273,10 @@ type get_room_id_res struct {
 // @Tags 直播间 - 直播间
 // @Summary 获取直播间Id
 // @Param x-token header string true "token"
-// @Param body body get_room_id_req true "请求参数"
-// @Success 200  {object} get_room_id_res "响应数据"
-func get_room_id(ctx *gin.Context) {
-	var reqdata get_room_id_req
+// @Param body body get_live_room_id_req true "请求参数"
+// @Success 200  {object} get_live_room_id_res "响应数据"
+func get_live_room_id(ctx *gin.Context) {
+	var reqdata get_live_room_id_req
 	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
 		return
@@ -285,7 +286,7 @@ func get_room_id(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
 		return
 	}
-	response := new(get_room_id_res)
+	response := new(get_live_room_id_res)
 	token := admin.GetToken(ctx)
 	tb := xapp.DbQuery().XLiveRoom
 	itb := tb.WithContext(ctx)

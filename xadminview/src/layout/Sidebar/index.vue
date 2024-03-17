@@ -66,7 +66,7 @@ export default {
 						let b = routes[i].children[j].meta.title
 						if (AuthData[a] && AuthData[a][b] && AuthData[a][b]['查']) {
 							if (b == '系统工具') {
-								if (userinfo.env.indexOf('prd') < 0) {
+								if (userinfo.env.indexOf('dev') >= 0) {
 									m.children.push(routes[i].children[j])
 								}
 							} else {
