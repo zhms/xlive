@@ -59,15 +59,5 @@ export default {
 			}
 			return map
 		},
-		getStateName(item) {
-			return this.getMap(this.states)[item.State]
-		},
-		getchannel_name(channel_id) {
-			let map = {}
-			for (let i = 0; i < this.channels.length; i++) {
-				map[this.channels[i].channel_id] = this.channels[i].channel_name
-			}
-			return map[channel_id]
-		},
 	},
 }

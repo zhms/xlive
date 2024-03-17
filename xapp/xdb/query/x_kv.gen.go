@@ -27,6 +27,7 @@ func newXKv(db *gorm.DB, opts ...gen.DOOption) xKv {
 
 	tableName := _xKv.xKvDo.TableName()
 	_xKv.ALL = field.NewAsterisk(tableName)
+	_xKv.SellerID = field.NewInt32(tableName, "seller_id")
 	_xKv.K = field.NewString(tableName, "k")
 	_xKv.V = field.NewString(tableName, "v")
 
@@ -38,9 +39,10 @@ func newXKv(db *gorm.DB, opts ...gen.DOOption) xKv {
 type xKv struct {
 	xKvDo
 
-	ALL field.Asterisk
-	K   field.String
-	V   field.String
+	ALL      field.Asterisk
+	SellerID field.Int32
+	K        field.String
+	V        field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -57,6 +59,7 @@ func (x xKv) As(alias string) *xKv {
 
 func (x *xKv) updateTableName(table string) *xKv {
 	x.ALL = field.NewAsterisk(table)
+	x.SellerID = field.NewInt32(table, "seller_id")
 	x.K = field.NewString(table, "k")
 	x.V = field.NewString(table, "v")
 
@@ -75,7 +78,8 @@ func (x *xKv) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (x *xKv) fillFieldMap() {
-	x.fieldMap = make(map[string]field.Expr, 2)
+	x.fieldMap = make(map[string]field.Expr, 3)
+	x.fieldMap["seller_id"] = x.SellerID
 	x.fieldMap["k"] = x.K
 	x.fieldMap["v"] = x.V
 }

@@ -11,6 +11,7 @@ import (
 
 	"github.com/beego/beego/logs"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/spf13/cast"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -115,7 +116,7 @@ func dbgetone(rows *sql.Rows) *map[string]interface{} {
 	}
 	for i := range fields {
 		if scans[i] != nil {
-			data[fields[i]] = xutils.ToString(scans[i])
+			data[fields[i]] = cast.ToString(scans[i])
 		} else {
 			data[fields[i]] = nil
 		}

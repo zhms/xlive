@@ -1,20 +1,17 @@
 <template>
 	<div class="dialogBox">
 		<el-dialog style="margin-top: -100px" :title="title" :visible.sync="visable" width="630px" center @open="handleOpen">
-			<div v-if="title != '批量导入'">
+			<div v-if="title != '批量导入机器人'">
 				<el-form :inline="true" label-width="120px">
 					<el-form-item label="账号:">
-						<el-input v-model="itemdata.account" :disabled="title == '编辑会员'" style="width: 400px"></el-input>
-					</el-form-item>
-					<el-form-item label="密码:">
-						<el-input v-model="itemdata.password" show-password style="width: 400px"></el-input>
+						<el-input v-model="itemdata.account" style="width: 400px"></el-input>
 					</el-form-item>
 				</el-form>
 				<div class="dlg-footer">
 					<el-button type="primary" @click="handleCommit">确定</el-button>
 				</div>
 			</div>
-			<div v-if="title == '批量导入'" class="upload-container">
+			<div v-if="title == '批量导入机器人'" class="upload-container">
 				<el-upload ref="uploadRef" :show-file-list="false" action="/upload" :on-change="onUpload" :auto-upload="false" :accept="'.xlsx,.xls'">
 					<i class="el-icon-upload"></i>
 					<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -30,39 +27,28 @@ import XLSX from 'xlsx'
 export default {
 	extends: dlgbase,
 	data() {
-		return {
-			dlgroles: [],
-			dlgchannels: [],
-		}
+		return {}
 	},
 	methods: {
 		commitData(next) {
-			if (this.title == '编辑会员') {
-				if (!this.itemdata.password) return this.$message.error('请填写密码')
+			if (this.title == '编辑机器人') {
+				if (!this.itemdata.account) return this.$message.error('请填写账号')
 				let data = JSON.parse(JSON.stringify(this.itemdata))
-				this.$post('/v1/user_list/update_user', data, { google: true }).then(() => {
+				this.$post('/v1/update_robot', data, { google: true }).then(() => {
 					this.$message.success('修改成功')
 					next(true)
 				})
 			}
-			if (this.title == '添加会员') {
+			if (this.title == '添加机器人') {
 				if (!this.itemdata.account) return this.$message.error('请填写账号')
-				if (!this.itemdata.password) return this.$message.error('请填写密码')
 				let data = JSON.parse(JSON.stringify(this.itemdata))
-				this.$post('/v1/user_list/add_user', data, { google: true }).then(() => {
+				this.$post('/v1/create_robot', data, { google: true }).then(() => {
 					this.$message.success('添加成功')
 					next(true)
 				})
 			}
 		},
-		onOpen() {
-			this.itemdata.state = 1
-			this.dlgroles = []
-			this.dlgchannels = []
-			if (this.title == '编辑会员') {
-				delete this.itemdata.Password
-			}
-		},
+		onOpen() {},
 		onUpload(file) {
 			const reader = new FileReader()
 			reader.onload = async (event) => {
@@ -74,10 +60,9 @@ export default {
 				for (let i = 1; i < jsonData.length; i++) {
 					let data = {
 						account: `${jsonData[i][0]}`,
-						password: `${jsonData[i][1]}`,
 					}
-					if (data.account.length > 0 && data.password.length > 0) {
-						await this.$post('/v1/user_list/add_user', data, { google: false })
+					if (data.account.length > 0) {
+						await this.$post('/v1/create_robot', data, { google: false })
 					}
 				}
 				this.$message.success('上传成功')

@@ -36,7 +36,7 @@
 					<el-button type="text" @click="copy_live_url(scope.row)">复制</el-button>
 				</template>
 			</el-table-column>
-			<el-table-column align="center" prop="memo" label="备注" width="200"></el-table-column>
+			<!-- <el-table-column align="center" prop="memo" label="备注" width="200"></el-table-column> -->
 			<el-table-column label="操作" align="left" width="300">
 				<template slot-scope="scope">
 					<el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row, 0)">编辑</el-button>

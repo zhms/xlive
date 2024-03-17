@@ -4,49 +4,32 @@
 			<el-form-item label="">
 				<el-input v-model="filters.account" placeholder="账号" style="width: 150px" :clearable="true"></el-input>
 			</el-form-item>
-			<el-form-item label="">
-				<el-input v-model="filters.agent" placeholder="业务员" style="width: 150px" :clearable="true"></el-input>
-			</el-form-item>
-			<el-form-item label="">
-				<el-input v-model="filters.login_ip" placeholder="登录Ip" style="width: 150px" :clearable="true"></el-input>
-			</el-form-item>
 			<el-form-item>
 				<el-button type="primary" icon="el-icon-refresh" v-on:click="handleQuery">查询</el-button>
 				<el-button type="primary" icon="el-icon-plus" class="mr10" @click="handleAdd(0)">添加</el-button>
 				<el-button type="primary" icon="el-icon-upload2" class="mr10" @click="handleAdd(1)">批量导入</el-button>
-				<el-button type="primary" icon="el-icon-bottom" class="mr10" @click="ExportUser()">导出</el-button>
 				<el-button type="primary" icon="el-icon-download" class="mr10" @click="DownLoadExcelTemplate()">下载导入模板</el-button>
 			</el-form-item>
 		</el-form>
-		<el-table :data="table_data" style="margin-top: -15px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
-			<el-table-column align="center" prop="id" label="id" width="100"></el-table-column>
+		<el-row>
+			<el-col :span="24" style="margin-top: -13px">
+				<div class="grid-content">
+					<span style="margin-right: 30px">当前上线机器人 : {{ robot_count }}</span>
+					<el-button type="primary" icon="el-icon-arrow-up" @click="setRobotCount">上线机器人</el-button>
+				</div>
+			</el-col>
+		</el-row>
+		<el-table :data="table_data" style="margin-top: -17px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
+			<el-table-column align="center" prop="id" label="Id" width="100"></el-table-column>
 			<el-table-column align="center" prop="account" label="账号" width="200">
 				<template slot-scope="scope">
 					<span style="cursor: pointer" class="blue" @click="handleEdit(scope.row, 0)">{{ scope.row.account }}</span>
 				</template>
 			</el-table-column>
-			<el-table-column align="center" prop="agent" label="业务员" width="120"></el-table-column>
-			<el-table-column align="center" label="状态" width="100">
-				<template slot-scope="scope">
-					<span :class="scope.row.state != 1 ? 'red' : ''">{{ scope.row.state | 启用禁用 }}</span>
-				</template>
-			</el-table-column>
-			<el-table-column align="center" prop="login_count" label="登录次数" width="100"></el-table-column>
-			<el-table-column align="center" prop="login_ip" label="登录Ip" width="150"></el-table-column>
-			<el-table-column align="center" prop="login_ip_location" label="登录地区" width="200"></el-table-column>
-			<el-table-column align="center" prop="create_time" label="注册时间" width="160">
-				<template slot-scope="scope">
-					<span>{{ scope.row.create_time | 北京时间 }}</span>
-				</template>
-			</el-table-column>
-
 			<el-table-column label="操作" align="left" width="300">
 				<template slot-scope="scope">
-					<el-button type="text" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 3)" v-if="scope.row.state == 1">封号</el-button>
-					<el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row, 4)" v-if="scope.row.state != 1">解封</el-button>
-
-					<el-button type="text" class="red" icon="el-icon-edit" @click="handleEdit(scope.row, 2)" v-if="scope.row.chat_state == 1">禁言</el-button>
-					<el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row, 1)" v-if="scope.row.chat_state != 1">解除禁言</el-button>
+					<el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row, 0)">编辑</el-button>
+					<el-button type="text" class="red" icon="el-icon-edit" @click="handleDelete(scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -68,7 +51,9 @@ export default {
 	extends: base,
 	components: { EditView, vueqr },
 	data() {
-		return {}
+		return {
+			robot_count: 0,
+		}
 	},
 	created() {
 		this.getTableData()
@@ -76,47 +61,60 @@ export default {
 	methods: {
 		getTableData() {
 			let data = this.getQueryData()
-			this.$post('/v1/get_user', data).then((result) => {
+			this.$post('/v1/get_robot', data).then((result) => {
 				this.table_data = result.data
 				this.total = result.total
 			})
-		},
-		ExportUser() {
-			let data = this.getQueryData()
-			this.$download('/v1/get_user', data).then((result) => {
-				this.$message.success('导出成功')
+			this.$post('/v1/get_robot_count', data, { noloading: true }).then((result) => {
+				this.robot_count = result.data.robot_count
 			})
 		},
+		setRobotCount() {},
 		ModifyItem(index, next, item) {
-			if (index == 0) return next('编辑会员')
-			let reqdata = {
-				id: item.id,
-			}
-			if (index == 1) {
-				reqdata.chat_state = 1
-			} else if (index == 2) {
-				reqdata.chat_state = 2
-			} else if (index == 3) {
-				reqdata.state = 2
-			} else if (index == 4) {
-				reqdata.state = 1
-			}
-			this.$post('/v1/update_user', reqdata, { google: true }).then(() => {
-				this.$message.success('修改成功')
+			if (index == 0) return next('编辑机器人')
+		},
+		AddItem(index, next) {
+			if (index == 0) return next('添加机器人')
+			if (index == 1) return next('批量导入机器人')
+		},
+		DeleteItem(item) {
+			this.$post('/v1/delete_robot', item, { google: true }).then(() => {
+				this.$message.success('删除成功')
 				this.getTableData()
 			})
 		},
-		AddItem(index, next) {
-			if (index == 0) return next('添加会员')
-			if (index == 1) return next('批量导入')
-		},
 		DownLoadExcelTemplate() {
-			console.log('下载导入模板')
-			const data = XLSX.utils.aoa_to_sheet([['账号', '密码']])
+			const data = XLSX.utils.aoa_to_sheet([['账号']])
 			const wb = XLSX.utils.book_new()
 			XLSX.utils.book_append_sheet(wb, data, 'kalacloud-data')
-			XLSX.writeFile(wb, `导入会员模板_${moment().format('YYYY-MM-DD HH-mm-ss')}.xlsx`)
+			XLSX.writeFile(wb, `导入机器人模板_${moment().format('YYYY-MM-DD HH-mm-ss')}.xlsx`)
 		},
 	},
 }
 </script>
+
+<style>
+.el-row {
+	margin-bottom: 20px;
+}
+.el-col {
+	border-radius: 4px;
+}
+.bg-purple-dark {
+	background: #99a9bf;
+}
+.bg-purple {
+	background: #d3dce6;
+}
+.bg-purple-light {
+	background: #e5e9f2;
+}
+.grid-content {
+	border-radius: 4px;
+	min-height: 36px;
+}
+.row-bg {
+	padding: 10px 0;
+	background-color: #f9fafc;
+}
+</style>

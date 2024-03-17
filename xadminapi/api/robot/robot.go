@@ -10,6 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	val "github.com/go-playground/validator/v10"
+	"github.com/spf13/cast"
 )
 
 func Init() {
@@ -17,6 +18,8 @@ func Init() {
 	xglobal.ApiV1.POST("/create_robot", admin.Auth("机器人管理", "机器人管理", "增", "创建机器人"), create_robot)
 	xglobal.ApiV1.POST("/update_robot", admin.Auth("机器人管理", "机器人管理", "改", "更新机器人"), update_robot)
 	xglobal.ApiV1.POST("/delete_robot", admin.Auth("机器人管理", "机器人管理", "删", "删除机器人"), delete_robot)
+	xglobal.ApiV1.POST("/get_robot_count", admin.Auth("机器人管理", "机器人管理", "查", ""), get_robot_count)
+	xglobal.ApiV1.POST("/update_robot_count", admin.Auth("机器人管理", "机器人管理", "改", "更新机器人数量"), update_robot_count)
 }
 
 type get_robot_req struct {
@@ -31,8 +34,8 @@ type get_robot_res struct {
 }
 
 // @Router /get_robot [post]
-// @Tags a
-// @Summary b
+// @Tags 机器人管理
+// @Summary 获取机器人
 // @Param x-token header string true "token"
 // @Param body body get_robot_req true "请求参数"
 // @Success 200  {object} get_robot_res "响应数据"
@@ -68,7 +71,6 @@ func get_robot(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
-	ctx.JSON(http.StatusOK, xenum.Success)
 }
 
 type create_robot_req struct {
@@ -76,8 +78,8 @@ type create_robot_req struct {
 }
 
 // @Router /create_robot [post]
-// @Tags a
-// @Summary b
+// @Tags 机器人管理
+// @Summary 创建机器人
 // @Param x-token header string true "token"
 // @Param body body create_robot_req true "请求参数"
 // @Success 200 "响应数据"
@@ -93,12 +95,14 @@ func create_robot(ctx *gin.Context) {
 		return
 	}
 	token := admin.GetToken(ctx)
-	robot := new(model.XRobot)
-	robot.SellerID = token.SellerId
-	robot.Account = reqdata.Account
+	item := new(model.XRobot)
+	item.SellerID = token.SellerId
+	{
+		item.Account = reqdata.Account
+	}
 	tb := xapp.DbQuery().XRobot
 	itb := tb.WithContext(ctx)
-	err := itb.Omit(tb.CreateTime).Create(robot)
+	err := itb.Omit(tb.CreateTime).Create(item)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
@@ -107,11 +111,13 @@ func create_robot(ctx *gin.Context) {
 }
 
 type update_robot_req struct {
+	Id      int32  `json:"id" validate:"required"` // id
+	Account string `json:"account"`                // 账号
 }
 
 // @Router /update_robot [post]
-// @Tags a
-// @Summary b
+// @Tags 机器人管理
+// @Summary 更新机器人
 // @Param x-token header string true "token"
 // @Param body body update_robot_req true "请求参数"
 // @Success 200 "响应数据"
@@ -126,17 +132,34 @@ func update_robot(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
 		return
 	}
-	//response := new(update_robot_res)
-	//ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
-	//ctx.JSON(http.StatusOK, xenum.Success)
+	token := admin.GetToken(ctx)
+	tb := xapp.DbQuery().XRobot
+	itb := tb.WithContext(ctx)
+	itb = itb.Where(tb.SellerID.Eq(token.SellerId))
+	{
+		itb = itb.Where(tb.ID.Eq(reqdata.Id))
+	}
+	item := map[string]interface{}{}
+	{
+		if reqdata.Account != "" {
+			item[tb.Account.ColumnName().String()] = reqdata.Account
+		}
+	}
+	_, err := itb.Updates(item)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, xenum.Success)
 }
 
 type delete_robot_req struct {
+	Id int32 `json:"id" validate:"required"` // id
 }
 
 // @Router /delete_robot [post]
-// @Tags a
-// @Summary b
+// @Tags 机器人管理
+// @Summary 删除机器人
 // @Param x-token header string true "token"
 // @Param body body delete_robot_req true "请求参数"
 // @Success 200 "响应数据"
@@ -151,7 +174,98 @@ func delete_robot(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
 		return
 	}
-	//response := new(delete_robot_res)
-	//ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
-	//ctx.JSON(http.StatusOK, xenum.Success)
+	token := admin.GetToken(ctx)
+	tb := xapp.DbQuery().XRobot
+	itb := tb.WithContext(ctx)
+	itb = itb.Where(tb.SellerID.Eq(token.SellerId))
+	{
+		itb = itb.Where(tb.ID.Eq(reqdata.Id))
+	}
+	_, err := itb.Delete()
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, xenum.Success)
+}
+
+type get_robot_count_req struct {
+}
+
+type get_robot_count_res struct {
+	Count int32 `json:"count"` // 数量
+}
+
+// @Router /get_robot_count [post]
+// @Tags 机器人管理
+// @Summary 获取机器人数量
+// @Param x-token header string true "token"
+// @Param body body get_robot_count_req true "请求参数"
+// @Success 200  {object} get_robot_count_res "响应数据"
+func get_robot_count(ctx *gin.Context) {
+	var reqdata get_robot_count_req
+	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
+		return
+	}
+	validator := val.New()
+	if err := validator.Struct(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
+		return
+	}
+	response := new(get_robot_count_res)
+	token := admin.GetToken(ctx)
+	tb := xapp.DbQuery().XKv
+	itb := tb.WithContext(ctx)
+	itb = itb.Where(tb.SellerID.Eq(token.SellerId))
+	{
+		itb = itb.Where(tb.K.Eq("robot_count"))
+	}
+	pkv, err := itb.First()
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
+	response.Count = cast.ToInt32(pkv.V)
+	ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
+}
+
+type update_robot_count_req struct {
+	Count int32 `json:"count"` // 数量
+}
+
+// @Router /update_robot_count [post]
+// @Tags 机器人管理
+// @Summary 更新机器人数量
+// @Param x-token header string true "token"
+// @Param body body update_robot_count_req true "请求参数"
+// @Success 200 "响应数据"
+func update_robot_count(ctx *gin.Context) {
+	var reqdata update_robot_count_req
+	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
+		return
+	}
+	validator := val.New()
+	if err := validator.Struct(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
+		return
+	}
+	token := admin.GetToken(ctx)
+	tb := xapp.DbQuery().XKv
+	itb := tb.WithContext(ctx)
+	itb = itb.Where(tb.SellerID.Eq(token.SellerId))
+	{
+		itb = itb.Where(tb.K.Eq("robot_count"))
+	}
+	item := map[string]interface{}{}
+	{
+		item[tb.V.ColumnName().String()] = reqdata.Count
+	}
+	_, err := itb.Updates(item)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, xenum.Success)
 }

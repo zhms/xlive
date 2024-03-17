@@ -12,6 +12,7 @@ import (
 	"github.com/beego/beego/logs"
 	"github.com/redis/go-redis/v9"
 	"github.com/shopspring/decimal"
+	"github.com/spf13/cast"
 	"github.com/spf13/viper"
 )
 
@@ -137,7 +138,7 @@ func (this *XRedis) GetCacheInt(key string, cb func() (int64, error)) (int64, er
 		return 0, err
 	}
 	if data != nil {
-		return xutils.ToInt64(data), nil
+		return cast.ToInt64(data), nil
 	} else {
 		return cb()
 	}
@@ -186,7 +187,7 @@ func (this *XRedis) Lock(key string, expire_second int) bool {
 		if r == nil {
 			return false
 		}
-		ir := xutils.ToInt(r)
+		ir := cast.ToInt(r)
 		return ir == 1
 	} else {
 		r, err := this.client.Do(context.Background(), "set", key, "1", "EX", expire_second, "NX").Result()
@@ -196,7 +197,7 @@ func (this *XRedis) Lock(key string, expire_second int) bool {
 		if r == nil {
 			return false
 		}
-		ir := xutils.ToString(r)
+		ir := cast.ToString(r)
 		return ir == "OK"
 	}
 }

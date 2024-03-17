@@ -2,8 +2,8 @@ package main
 
 import (
 	"xapp/xapp"
-	api_app "xclientapi/api/app"
-	api_user "xclientapi/api/user"
+	"xclientapi/api/app"
+	"xclientapi/api/user"
 )
 
 // @title           xclientapi
@@ -20,7 +20,7 @@ import (
 func main() {
 	xapp.Init()
 	xapp.Run(func() {
-		api_app.Init()
-		api_user.Init()
+		app.Init()
+		user.Init()
 	})
 }

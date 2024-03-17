@@ -1,4 +1,4 @@
-package api_app
+package app
 
 import (
 	"context"
@@ -14,12 +14,13 @@ import (
 	"xapp/xdb/model"
 	"xapp/xglobal"
 	"xapp/xutils"
-	api_user "xclientapi/api/user"
+	"xclientapi/api/user"
 
 	"github.com/beego/beego/logs"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-module/carbon/v2"
 	"github.com/redis/go-redis/v9"
+	"github.com/spf13/cast"
 	"github.com/yinheli/qqwry"
 
 	"github.com/gorilla/websocket"
@@ -100,7 +101,7 @@ func socket_handler(ctx *gin.Context) {
 		conn.Close()
 		return
 	}
-	tokendata := &api_user.TokenData{}
+	tokendata := &user.TokenData{}
 	json.Unmarshal([]byte(value), tokendata)
 	user_come(conn, ids[1], tokendata)
 	for {
@@ -124,7 +125,7 @@ func socket_handler(ctx *gin.Context) {
 	user_leave(conn, ids[1], tokendata)
 }
 
-func user_come(conn *websocket.Conn, roomid string, tokendata *api_user.TokenData) {
+func user_come(conn *websocket.Conn, roomid string, tokendata *user.TokenData) {
 	locker.Lock()
 	defer locker.Unlock()
 
@@ -157,7 +158,7 @@ func user_come(conn *websocket.Conn, roomid string, tokendata *api_user.TokenDat
 	}
 }
 
-func user_leave(_ *websocket.Conn, roomid string, tokendata *api_user.TokenData) {
+func user_leave(_ *websocket.Conn, roomid string, tokendata *user.TokenData) {
 	locker.Lock()
 	defer locker.Unlock()
 
@@ -169,7 +170,7 @@ func user_leave(_ *websocket.Conn, roomid string, tokendata *api_user.TokenData)
 	}
 }
 
-func chat_msg(roomid string, tokendata *api_user.TokenData, msgdata string) {
+func chat_msg(roomid string, tokendata *user.TokenData, msgdata string) {
 	locker.Lock()
 	defer locker.Unlock()
 
@@ -223,7 +224,7 @@ func chat_msg(roomid string, tokendata *api_user.TokenData, msgdata string) {
 		SellerID:   tokendata.SellerId,
 		IP:         tokendata.Ip,
 		IPLocation: iplocation,
-		RoomID:     xutils.ToInt32(roomid),
+		RoomID:     cast.ToInt32(roomid),
 		Account:    tokendata.Account,
 		Content:    msgdata,
 		State:      1,

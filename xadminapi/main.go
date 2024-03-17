@@ -7,6 +7,7 @@ import (
 	live_ban "xadminapi/api/live/ban"
 	live_chat "xadminapi/api/live/chat"
 	live_room "xadminapi/api/live/room"
+	"xadminapi/api/robot"
 	"xadminapi/api/sales"
 
 	"xadminapi/api/user"
@@ -39,5 +40,6 @@ func main() {
 		live_chat.Init()
 		sales.Init()
 		hongbao.Init()
+		robot.Init()
 	})
 }

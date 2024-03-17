@@ -8,8 +8,9 @@ const TableNameXKv = "x_kv"
 
 // XKv mapped from table <x_kv>
 type XKv struct {
-	K string `gorm:"column:k" json:"k"`
-	V string `gorm:"column:v" json:"v"`
+	SellerID int32  `gorm:"column:seller_id;primaryKey" json:"seller_id"`
+	K        string `gorm:"column:k;primaryKey" json:"k"`
+	V        string `gorm:"column:v" json:"v"`
 }
 
 // TableName XKv's table name

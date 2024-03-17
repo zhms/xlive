@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/shopspring/decimal"
+	"github.com/spf13/cast"
 )
 
 type XMap struct {
@@ -53,7 +54,7 @@ func (this *XMap) Int(field string) int {
 	if data == nil {
 		return 0
 	}
-	return int(ToInt(data))
+	return int(cast.ToInt(data))
 }
 
 func (this *XMap) Int32(field string) int32 {
@@ -61,7 +62,7 @@ func (this *XMap) Int32(field string) int32 {
 	if data == nil {
 		return 0
 	}
-	return int32(ToInt(data))
+	return int32(cast.ToInt(data))
 }
 
 func (this *XMap) Int64(field string) int64 {
@@ -69,7 +70,7 @@ func (this *XMap) Int64(field string) int64 {
 	if data == nil {
 		return 0
 	}
-	return int64(ToInt(data))
+	return int64(cast.ToInt(data))
 }
 
 func (this *XMap) String(field string) string {
@@ -77,7 +78,7 @@ func (this *XMap) String(field string) string {
 	if data == nil {
 		return ""
 	}
-	return ToString(data)
+	return cast.ToString(data)
 }
 
 func (this *XMap) Decimal(field string) decimal.Decimal {
@@ -85,7 +86,7 @@ func (this *XMap) Decimal(field string) decimal.Decimal {
 	if data == nil {
 		return decimal.Zero
 	}
-	r, e := decimal.NewFromString(ToString(data))
+	r, e := decimal.NewFromString(cast.ToString(data))
 	if e != nil {
 		return decimal.Zero
 	}
@@ -97,7 +98,7 @@ func (this *XMap) Bytes(field string) []byte {
 	if data == nil {
 		return []byte{}
 	}
-	return []byte(ToString(data))
+	return []byte(cast.ToString(data))
 }
 
 func (this *XMap) Delete(field string) {

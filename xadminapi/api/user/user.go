@@ -13,6 +13,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	val "github.com/go-playground/validator/v10"
+	"github.com/golang-module/carbon/v2"
 )
 
 func Init() {
@@ -37,8 +38,8 @@ type get_user_res struct {
 }
 
 // @Router /get_user [post]
-// @Tags a
-// @Summary b
+// @Tags 会员列表
+// @Summary 获取会员列表
 // @Param x-token header string true "token"
 // @Param body body get_user_req true "请求参数"
 // @Success 200  {object} get_user_res "响应数据"
@@ -65,7 +66,7 @@ func get_user(ctx *gin.Context) {
 	}
 	response := new(get_user_res)
 	tb := xapp.DbQuery().XUser
-	itb := tb.WithContext(ctx)
+	itb := tb.WithContext(ctx).Order(tb.ID.Desc())
 	itb = itb.Where(tb.SellerID.Eq(int32(token.SellerId)))
 	if reqdata.Account != "" {
 		itb = itb.Where(tb.Account.Eq(reqdata.Account))
@@ -77,14 +78,13 @@ func get_user(ctx *gin.Context) {
 		itb = itb.Where(tb.LoginIP.Eq(reqdata.LoginIp))
 	}
 	var err error
-	itb = itb.Order(tb.ID.Desc())
 	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
 		return
 	}
 	if reqdata.Export == 1 {
-		e := excel.NewExcelBuilder("会员列表_" + fmt.Sprint(xutils.Now()))
+		e := excel.NewExcelBuilder("会员列表_" + fmt.Sprint(carbon.Now().ToDateTimeString()))
 		defer e.Close()
 		e.SetTitle(tb.ID.ColumnName().String(), "Id")
 		e.SetTitle(tb.Account.ColumnName().String(), "账号")
@@ -94,8 +94,8 @@ func get_user(ctx *gin.Context) {
 		e.SetTitle(tb.LoginIP.ColumnName().String(), "登录Ip")
 		e.SetTitle(tb.LoginIPLocation.ColumnName().String(), "登录地点")
 		e.SetTitle(tb.LoginCount.ColumnName().String(), "登录时间")
-		e.SetTitle(tb.LoginTime.CondError().Error(), "登录时间")
-		e.SetTitle(tb.CreateTime.CondError().Error(), "注册时间")
+		e.SetTitle(tb.LoginTime.ColumnName().String(), "登录时间")
+		e.SetTitle(tb.CreateTime.ColumnName().String(), "注册时间")
 		for i, v := range response.Data {
 			e.SetValue(tb.ID.ColumnName().String(), v.ID, int64(i+2))
 			e.SetValue(tb.Account.ColumnName().String(), v.Account, int64(i+2))
@@ -128,8 +128,8 @@ type create_user_req struct {
 }
 
 // @Router /create_user [post]
-// @Tags a
-// @Summary b
+// @Tags 会员列表
+// @Summary 创建会员
 // @Param x-token header string true "token"
 // @Param body body create_user_req true "请求参数"
 // @Success 200 "响应数据"
@@ -160,8 +160,8 @@ type update_user_req struct {
 }
 
 // @Router /update_user [post]
-// @Tags a
-// @Summary b
+// @Tags 会员列表
+// @Summary 更新会员
 // @Param x-token header string true "token"
 // @Param body body update_user_req true "请求参数"
 // @Success 200 "响应数据"

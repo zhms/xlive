@@ -10,13 +10,14 @@ require (
 	github.com/pquerna/otp v1.4.0
 	github.com/redis/go-redis/v9 v9.3.0
 	github.com/shopspring/decimal v1.3.1
+	github.com/spf13/cast v1.6.0
 	github.com/spf13/viper v1.18.2
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/xuri/excelize/v2 v2.8.0
 	gorm.io/driver/mysql v1.5.4
 	gorm.io/gen v0.3.25
-	gorm.io/gorm v1.25.7-0.20240204074919-46816ad31dde
+	gorm.io/gorm v1.25.7
 	gorm.io/plugin/dbresolver v1.5.0
 )
 
@@ -74,7 +75,6 @@ require (
 	github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
-	github.com/spf13/cast v1.6.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/swaggo/swag v1.8.12 // indirect
@@ -85,17 +85,18 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/arch v0.3.0 // indirect
-	golang.org/x/crypto v0.16.0 // indirect
-	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
-	golang.org/x/mod v0.14.0 // indirect
-	golang.org/x/net v0.19.0 // indirect
-	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/crypto v0.19.0 // indirect
+	golang.org/x/exp v0.0.0-20240314144324-c7f7c6466f7f // indirect
+	golang.org/x/mod v0.15.0 // indirect
+	golang.org/x/net v0.21.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
-	golang.org/x/tools v0.15.0 // indirect
+	golang.org/x/tools v0.18.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/datatypes v1.1.1-0.20230130040222-c43177d3cf8c // indirect
-	gorm.io/hints v1.1.0 // indirect
+	gorm.io/driver/postgres v1.5.2 // indirect
+	gorm.io/hints v1.1.2 // indirect
 )

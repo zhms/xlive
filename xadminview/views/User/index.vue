@@ -111,7 +111,6 @@ export default {
 			if (index == 1) return next('批量导入')
 		},
 		DownLoadExcelTemplate() {
-			console.log('下载导入模板')
 			const data = XLSX.utils.aoa_to_sheet([['账号', '密码']])
 			const wb = XLSX.utils.book_new()
 			XLSX.utils.book_append_sheet(wb, data, 'kalacloud-data')

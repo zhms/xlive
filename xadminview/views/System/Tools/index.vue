@@ -27,7 +27,7 @@ export default {
 	extends: base,
 	data() {
 		return {
-			funname: 'robot',
+			funname: '',
 		}
 	},
 	created() {
@@ -74,12 +74,13 @@ func get_${this.funname}(ctx *gin.Context) {
 	if reqdata.PageSize == 0 {
 		reqdata.PageSize = 15
 	}
-	response := new(get_robot_res)
+	response := new(get_${this.funname}_res)
 	token := admin.GetToken(ctx)
 	tb := xapp.DbQuery().
 	itb := tb.WithContext(ctx).Order(tb.ID.Desc())
 	itb = itb.Where(tb.SellerID.Eq(token.SellerId))
-	//add where conditions
+	{
+    }
 	var err error
 	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
 	if err != nil {
@@ -87,22 +88,170 @@ func get_${this.funname}(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
-	ctx.JSON(http.StatusOK, xenum.Success)
 }`)
 			}
 			if (idx == 2) {
 				//create
-				funname = 'create_' + funname
+				this.copy(`type create_${this.funname}_req struct {
+}
+
+// @Router /create_${this.funname} [post]
+// @Tags a
+// @Summary b
+// @Param x-token header string true "token"
+// @Param body body create_${this.funname}_req true "请求参数"
+// @Success 200 "响应数据"
+func create_${this.funname}(ctx *gin.Context) {
+	var reqdata create_${this.funname}_req
+	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
+		return
+	}
+	validator := val.New()
+	if err := validator.Struct(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
+		return
+	}
+	token := admin.GetToken(ctx)
+	item := new(model.)
+	item.SellerID = token.SellerId
+	{
+    }
+	tb := xapp.DbQuery().
+	itb := tb.WithContext(ctx)
+	err := itb.Omit(tb.CreateTime).Create(item)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, xenum.Success)
+}`)
 			}
 			if (idx == 3) {
 				//update
-				funname = 'update_' + funname
+				this.copy(`type update_${this.funname}_req struct {
+}
+
+// @Router /update_${this.funname} [post]
+// @Tags a
+// @Summary b
+// @Param x-token header string true "token"
+// @Param body body update_${this.funname}_req true "请求参数"
+// @Success 200 "响应数据"
+func update_${this.funname}(ctx *gin.Context) {
+	var reqdata update_${this.funname}_req
+	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
+		return
+	}
+	validator := val.New()
+	if err := validator.Struct(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
+		return
+	}
+	token := admin.GetToken(ctx)
+	tb := xapp.DbQuery().
+	itb := tb.WithContext(ctx)
+	itb = itb.Where(tb.SellerID.Eq(token.SellerId))
+	{
+	}
+	item := map[string]interface{}{}
+	{
+	}
+	_, err := itb.Updates(item)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, xenum.Success)
+}`)
 			}
 			if (idx == 4) {
 				//delete
-				funname = 'delete_' + funname
+				this.copy(`type delete_${this.funname}_req struct {
+}
+
+// @Router /delete_${this.funname} [post]
+// @Tags a
+// @Summary b
+// @Param x-token header string true "token"
+// @Param body body delete_${this.funname}_req true "请求参数"
+// @Success 200 "响应数据"
+func delete_${this.funname}(ctx *gin.Context) {
+	var reqdata delete_${this.funname}_req
+	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
+		return
+	}
+	validator := val.New()
+	if err := validator.Struct(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
+		return
+	}
+	token := admin.GetToken(ctx)
+	tb := xapp.DbQuery().
+	itb := tb.WithContext(ctx)
+	itb = itb.Where(tb.SellerID.Eq(token.SellerId))
+	{
+	}
+	_, err := itb.Delete()
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, xenum.Success)
+}
+`)
 			}
 			if (idx == 0) {
+				this.copy(`type ${this.funname}_req struct {
+	Page     int \`json:"page"\`      // 页码
+	PageSize int \`json:"page_size"\` // 每页数量
+}
+
+type ${this.funname}_res struct {
+	Total int64           \`json:"total"\` // 总数
+	Data  []*model. \`json:"data"\`  // 数据
+}
+
+// @Router /${this.funname} [post]
+// @Tags a
+// @Summary b
+// @Param x-token header string true "token"
+// @Param body body ${this.funname}_req true "请求参数"
+// @Success 200  {object} ${this.funname}_res "响应数据"
+func ${this.funname}(ctx *gin.Context) {
+	var reqdata ${this.funname}_req
+	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
+		return
+	}
+	validator := val.New()
+	if err := validator.Struct(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
+		return
+	}
+    if reqdata.Page == 0 {
+		reqdata.Page = 1
+	}
+	if reqdata.PageSize == 0 {
+		reqdata.PageSize = 15
+	}
+	response := new(${this.funname}_res)
+	token := admin.GetToken(ctx)
+	tb := xapp.DbQuery().
+	itb := tb.WithContext(ctx).Order(tb.ID.Desc())
+	itb = itb.Where(tb.SellerID.Eq(token.SellerId))
+	{
+    }
+	var err error
+	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, xenum.Success)
+}`)
 			}
 		},
 		copy_db_table() {
