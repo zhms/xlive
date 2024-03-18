@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"embed"
+	"encoding/json"
 	"xadminapi/api/admin"
 	"xadminapi/api/hongbao"
 	live_ban "xadminapi/api/live/ban"
@@ -41,5 +43,13 @@ func main() {
 		sales.Init()
 		hongbao.Init()
 		robot.Init()
+
+		tb := xapp.DbQuery().XTest
+		itb := tb.WithContext(context.Background())
+		itb = itb.Where(tb.A.Eq("1"))
+		itb = itb.Where(tb.A.Eq("3"))
+		a, _ := itb.First()
+		b, _ := json.Marshal(a)
+		println(string(b))
 	})
 }

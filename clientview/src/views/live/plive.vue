@@ -64,7 +64,7 @@ const isPlay = ref(false)
 const liveData = ref(getLiveData())
 let player
 const liveUrl = ref(liveData.value.data.pull_url)
-console.log('liveUrl', liveUrl.value)
+
 const playData = computed(() => ({
 	type: 'video/x-flv',
 	src: liveUrl.value,
@@ -108,8 +108,6 @@ watch(bodyWidth, () => {
 })
 
 let onlineData = ref({ data: { online_count: 0 } })
-// 在线人数
-// const { data: onlineData } = useMyFetch('/api/v1/app/get_online_info').get()
 
 onMounted(() => {
 	initPlayer()

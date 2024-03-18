@@ -189,6 +189,11 @@ func update_user(ctx *gin.Context) {
 	if reqdata.ChatState != 0 {
 		updatedata[tb.ChatState.ColumnName().String()] = reqdata.ChatState
 	}
-	itb.Where(tb.SellerID.Eq(int32(token.SellerId)), tb.ID.Eq(int32(reqdata.Id))).Updates(updatedata)
+	itb = itb.Where(tb.SellerID.Eq(int32(token.SellerId)), tb.ID.Eq(int32(reqdata.Id)))
+	_, err := itb.Updates(updatedata)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
 	ctx.JSON(http.StatusOK, xenum.Success)
 }

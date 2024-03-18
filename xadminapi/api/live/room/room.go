@@ -167,7 +167,8 @@ func update_live_room(ctx *gin.Context) {
 	token := admin.GetToken(ctx)
 	tb := xapp.DbQuery().XLiveRoom
 	itb := tb.WithContext(ctx)
-	roomdata, err := itb.Where(tb.SellerID.Eq(int32(token.SellerId))).Where(tb.ID.Eq(reqdata.Id)).First()
+	itb = itb.Where(tb.SellerID.Eq(int32(token.SellerId)), tb.ID.Eq(reqdata.Id))
+	roomdata, err := itb.First()
 	if err != nil {
 		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
@@ -201,7 +202,8 @@ func update_live_room(ctx *gin.Context) {
 	}
 	tb = xapp.DbQuery().XLiveRoom
 	itb = tb.WithContext(ctx)
-	_, err = itb.Where(tb.SellerID.Eq(int32(token.SellerId)), tb.ID.Eq(reqdata.Id)).Updates(updatedata)
+	itb = itb.Where(tb.SellerID.Eq(int32(token.SellerId)), tb.ID.Eq(reqdata.Id))
+	_, err = itb.Updates(updatedata)
 	if err != nil {
 		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
@@ -209,7 +211,8 @@ func update_live_room(ctx *gin.Context) {
 	if reqdata.State == 1 {
 		tb = xapp.DbQuery().XLiveRoom
 		itb = tb.WithContext(ctx)
-		roomdata, err := itb.Where(tb.SellerID.Eq(int32(token.SellerId)), tb.ID.Eq(reqdata.Id)).First()
+		itb = itb.Where(tb.SellerID.Eq(int32(token.SellerId)), tb.ID.Eq(reqdata.Id))
+		roomdata, err := itb.First()
 		if err != nil {
 			ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
 			return
@@ -254,7 +257,8 @@ func delete_live_room(ctx *gin.Context) {
 	token := admin.GetToken(ctx)
 	tb := xapp.DbQuery().XLiveRoom
 	itb := tb.WithContext(ctx)
-	_, err := itb.Where(tb.SellerID.Eq(int32(token.SellerId))).Where(tb.ID.Eq(reqdata.Id)).Delete()
+	itb = itb.Where(tb.SellerID.Eq(int32(token.SellerId)), tb.ID.Eq(reqdata.Id))
+	_, err := itb.Delete()
 	if err != nil {
 		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))
 		return

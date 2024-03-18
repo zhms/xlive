@@ -159,7 +159,7 @@ func user_login(ctx *gin.Context) {
 				ctx.JSON(http.StatusBadRequest, xenum.UserNotFound)
 				return
 			}
-			itb.Create(&model.XUser{
+			errx := xapp.DbQuery().XUser.Create(&model.XUser{
 				SellerID:   SellerId,
 				Account:    reqdata.Account,
 				Password:   reqdata.Password,
@@ -168,6 +168,10 @@ func user_login(ctx *gin.Context) {
 				LoginTime:  carbon.Now().StdTime(),
 				CreateTime: carbon.Now().StdTime(),
 			})
+			if errx != nil {
+				ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, errx.Error()))
+				return
+			}
 			continue
 		}
 		userdata = ud
@@ -187,18 +191,10 @@ func user_login(ctx *gin.Context) {
 	tokendata.Token = userdata.Token
 	tokendata.Ip = ctx.ClientIP()
 	SetToken(tokendata.Token, &tokendata)
-
-	// err := xapp.Db().Model(&xdb.XUser{}).Where(xdb.Id+xdb.EQ, userdata.Id).Updates(map[string]interface{}{
-	// 	xdb.LoginIp:         tokendata.Ip,
-	// 	xdb.LoginTime:       xutils.Now(),
-	// 	xdb.Token:           userdata.Token,
-	// 	xdb.LoginCount:      gorm.Expr(xdb.LoginCount+xdb.PLUS, 1),
-	// 	xdb.LoginIpLocation: GetLocation(tokendata.Ip),
-	// }).Error
-
 	tb := xapp.DbQuery().XUser
 	itb := tb.WithContext(ctx)
-	_, err := itb.Where(tb.ID.Eq(userdata.ID)).Updates(map[string]interface{}{
+	itb = itb.Where(tb.ID.Eq(userdata.ID))
+	_, err := itb.Updates(map[string]interface{}{
 		tb.LoginIP.ColumnName().String():         tokendata.Ip,
 		tb.LoginTime.ColumnName().String():       carbon.Now().StdTime(),
 		tb.Token.ColumnName().String():           userdata.Token,

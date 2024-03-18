@@ -184,12 +184,23 @@ function wsconn(token) {
 			interval: 5000,
 			pongTimeout: 30000,
 		},
-		onDisconnected: () => {},
+		onDisconnected: () => {
+			if (ws) {
+				ws = null
+				setTimeout(() => {
+					wsconn(token)
+				}, 1000)
+			}
+		},
 		onError: (res) => {
-			console.log('error', res)
+			if (ws) {
+				ws = null
+				wsconn(token)
+			}
 		},
 		onConnected: () => {
-			console.log('ws connected')
+			UserList.value = []
+			MsgList.value = []
 		},
 	})
 }

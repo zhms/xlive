@@ -12,10 +12,10 @@
 			</el-form-item>
 		</el-form>
 		<el-row>
-			<el-col :span="24" style="margin-top: -13px">
+			<el-col :span="24" style="margin-top: -10px">
 				<div class="grid-content">
 					<span style="margin-right: 30px">当前上线机器人 : {{ robot_count }}</span>
-					<el-button type="primary" icon="el-icon-arrow-up" @click="setRobotCount">上线机器人</el-button>
+					<el-button type="primary" size="mini" @click="setRobotCount">上线机器人</el-button>
 				</div>
 			</el-col>
 		</el-row>
@@ -47,6 +47,7 @@ import vueqr from 'vue-qr'
 import EditView from './EditView.vue'
 import XLSX from 'xlsx'
 import moment from 'moment'
+import { MessageBox } from 'element-ui'
 export default {
 	extends: base,
 	components: { EditView, vueqr },
@@ -66,10 +67,20 @@ export default {
 				this.total = result.total
 			})
 			this.$post('/v1/get_robot_count', data, { noloading: true }).then((result) => {
-				this.robot_count = result.data.robot_count
+				this.robot_count = result.count
 			})
 		},
-		setRobotCount() {},
+		async setRobotCount() {
+			try {
+				let ret = await MessageBox.prompt('请输入验证码', '身份验证', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+				})
+				await this.$post('/v1/update_robot_count', { count: Number(ret.value) || 0 })
+				let result = await this.$post('/v1/get_robot_count', {}, { noloading: true })
+				this.robot_count = result.count
+			} catch (e) {}
+		},
 		ModifyItem(index, next, item) {
 			if (index == 0) return next('编辑机器人')
 		},

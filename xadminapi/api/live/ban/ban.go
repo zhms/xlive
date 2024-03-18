@@ -44,18 +44,17 @@ func get_ip_ban(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
 		return
 	}
-	token := admin.GetToken(ctx)
-
 	if reqdata.Page <= 0 {
 		reqdata.Page = 1
 	}
 	if reqdata.PageSize <= 0 {
 		reqdata.PageSize = 15
 	}
+	token := admin.GetToken(ctx)
 	response := new(get_ip_ban_res)
 	tb := xapp.DbQuery().XChatBanIP
 	itb := tb.WithContext(ctx)
-	itb.Where(tb.SellerID.Eq(int32(token.SellerId)))
+	itb = itb.Where(tb.SellerID.Eq(int32(token.SellerId)))
 	var err error
 	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
 	if err != nil {
@@ -89,7 +88,7 @@ func delete_ip_ban(ctx *gin.Context) {
 	token := admin.GetToken(ctx)
 	tb := xapp.DbQuery().XChatBanIP
 	itb := tb.WithContext(ctx)
-	itb.Where(tb.SellerID.Eq(int32(token.SellerId)))
+	itb = itb.Where(tb.SellerID.Eq(int32(token.SellerId)))
 	banip, err := itb.First()
 	if err != nil {
 		ctx.JSON(http.StatusOK, xenum.MakeError(xenum.InternalError, err.Error()))

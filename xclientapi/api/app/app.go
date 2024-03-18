@@ -26,9 +26,17 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+var users map[string]map[string]*UserData = make(map[string]map[string]*UserData)
+var maxconn map[string]int = make(map[string]int)
+var locker sync.Mutex = sync.Mutex{}
+var robots map[string]string = make(map[string]string)
+var robot_count int = 0
+
 func Init() {
 	xglobal.ApiV1.GET("/ws/:id", socket_handler)
 	go audit_chat()
+	go flush_robot_count()
+	go flush_robot()
 }
 
 type UserData struct {
@@ -42,10 +50,6 @@ type ChatData struct {
 	Msg  string `json:"msg"`
 	Time string `json:"time"`
 }
-
-var users map[string]map[string]*UserData = make(map[string]map[string]*UserData)
-var maxconn map[string]int = make(map[string]int)
-var locker sync.Mutex = sync.Mutex{}
 
 func send_msg(conn *websocket.Conn, msgid string, data interface{}) {
 	msgdata := map[string]interface{}{"msg_id": msgid, "msg_data": data}
@@ -145,16 +149,23 @@ func user_come(conn *websocket.Conn, roomid string, tokendata *user.TokenData) {
 			v = make(map[string]*UserData)
 			users[roomid] = v
 		}
+
 		keys := make([]string, 0, len(v))
 		for k := range v {
 			keys = append(keys, k)
 			send_msg(v[k].Conn, "user_come", tokendata.Account)
-			send_msg(v[k].Conn, "user_count", maxconn[roomid])
+			send_msg(v[k].Conn, "user_count", maxconn[roomid]+len(robots))
+		}
+		for k := range robots {
+			if len(keys) < 100 {
+				keys = append(keys, k)
+			}
 		}
 		send_msg(conn, "user_list", keys)
 		v[tokendata.Account] = &UserData{ConnTime: time.Now().Unix(), Conn: conn, Account: tokendata.Account}
 		send_msg(conn, "user_come", tokendata.Account)
-		send_msg(conn, "user_count", maxconn[roomid])
+		send_msg(conn, "user_count", maxconn[roomid]+len(robots))
+
 	}
 }
 
@@ -166,7 +177,7 @@ func user_leave(_ *websocket.Conn, roomid string, tokendata *user.TokenData) {
 	maxconn[roomid]--
 	for _, v := range users[roomid] {
 		send_msg(v.Conn, "user_leave", tokendata.Account)
-		send_msg(v.Conn, "user_count", maxconn[roomid])
+		send_msg(v.Conn, "user_count", maxconn[roomid]+len(robots))
 	}
 }
 
@@ -234,7 +245,7 @@ func chat_msg(roomid string, tokendata *user.TokenData, msgdata string) {
 		logs.Error("Create chat data error:", err.Error())
 		return
 	}
-	chatdata := &ChatData{From: tokendata.Account, Msg: msgdata, Time: xutils.Now()}
+	chatdata := &ChatData{From: tokendata.Account, Msg: msgdata, Time: carbon.Now().ToDateTimeString()}
 	bytes, _ := json.Marshal(chatdata)
 	for _, v := range users[roomid] {
 		if v.Account == tokendata.Account {
@@ -270,5 +281,46 @@ func audit_chat() {
 				send_msg(v.Conn, "chat", string(bytes))
 			}
 		}
+	}
+}
+
+func flush_robot_count() {
+	for {
+		tb := xapp.DbQuery().XKv
+		itb := tb.WithContext(context.Background())
+		itb = itb.Where(tb.SellerID.Eq(1))
+		itb = itb.Where(tb.K.Eq("robot_count"))
+		data, err := itb.First()
+		if err != nil {
+			logs.Error("Get robot count error:", err.Error())
+			return
+		}
+		robot_count = cast.ToInt(data.V)
+		time.Sleep(time.Second * 1)
+	}
+}
+
+func flush_robot() {
+	for {
+		locker.Lock()
+		if len(robots) >= robot_count {
+			locker.Unlock()
+			time.Sleep(time.Second * 1)
+			continue
+		}
+		locker.Unlock()
+
+		account := ""
+		xapp.Db().Raw("SELECT account FROM x_robot WHERE seller_id = 1 ORDER BY RAND() LIMIT 1").Scan(&account)
+
+		locker.Lock()
+		robots[account] = account
+
+		for k := range users["1"] {
+			send_msg(users["1"][k].Conn, "user_come", account)
+			send_msg(users["1"][k].Conn, "user_count", maxconn["1"]+len(robots))
+		}
+
+		locker.Unlock()
 	}
 }

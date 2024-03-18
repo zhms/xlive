@@ -651,7 +651,8 @@ func admin_delete_role(ctx *gin.Context) {
 	token := GetToken(ctx)
 	tb := xapp.DbQuery().XAdminRole
 	itb := tb.WithContext(ctx)
-	_, err := itb.Where(tb.SellerID.Eq(token.SellerId), tb.ID.Eq(reqdata.Id)).Delete()
+	itb = itb.Where(tb.SellerID.Eq(token.SellerId), tb.ID.Eq(reqdata.Id))
+	_, err := itb.Delete()
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
