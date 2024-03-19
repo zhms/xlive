@@ -3,7 +3,7 @@
 		<div class="message-list" ref="messageListDom">
 			<template v-for="item in MsgList" :key="item.k">
 				<div class="message-item">
-					<div class="time">{{ item.time }} {{ item.from }} :</div>
+					<div class="time">{{ moment(item.time).format('YYYY-MM-DD HH:mm:ss') }} {{ item.from }} :</div>
 					<div class="message-content">
 						<span>{{ item.msg }}</span>
 					</div>
@@ -25,6 +25,7 @@ import SDK from '@yxim/nim-web-sdk'
 import { Button, Icon, showConfirmDialog, Popup, Field, showToast } from 'vant'
 import { sleep, checkFetchError, MsgList, setScoll, sendChatMsg } from '@/script/base'
 import { useStorage, useIntervalFn } from '@vueuse/core'
+import moment from 'moment'
 
 const inputMessage = ref('')
 const messages = ref([])
