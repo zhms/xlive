@@ -25,6 +25,7 @@ type XUser struct {
 	LoginCount      int32     `gorm:"column:login_count;comment:登录次数" json:"login_count"`                           // 登录次数
 	LoginTime       time.Time `gorm:"column:login_time;comment:登录时间" json:"login_time"`                             // 登录时间
 	ChatState       int32     `gorm:"column:chat_state;default:1;comment:禁言 1是,2否" json:"chat_state"`               // 禁言 1是,2否
+	IsOnline        int32     `gorm:"column:is_online;default:2;comment:是否在线" json:"is_online"`                     // 是否在线
 	CreateTime      time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time"` // 创建时间
 }
 

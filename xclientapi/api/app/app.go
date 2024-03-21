@@ -167,6 +167,11 @@ func user_come(conn *websocket.Conn, roomid string, tokendata *user.TokenData) {
 		send_msg(conn, "user_count", maxconn[roomid]+len(robots))
 
 	}
+	tb := xapp.DbQuery().XUser
+	itb := tb.WithContext(context.Background())
+	itb = itb.Where(tb.SellerID.Eq(tokendata.SellerId))
+	itb = itb.Where(tb.Account.Eq(tokendata.Account))
+	itb.Update(tb.IsOnline, 1)
 }
 
 func user_leave(_ *websocket.Conn, roomid string, tokendata *user.TokenData) {
@@ -179,6 +184,11 @@ func user_leave(_ *websocket.Conn, roomid string, tokendata *user.TokenData) {
 		send_msg(v.Conn, "user_leave", tokendata.Account)
 		send_msg(v.Conn, "user_count", maxconn[roomid]+len(robots))
 	}
+	tb := xapp.DbQuery().XUser
+	itb := tb.WithContext(context.Background())
+	itb = itb.Where(tb.SellerID.Eq(tokendata.SellerId))
+	itb = itb.Where(tb.Account.Eq(tokendata.Account))
+	itb.Update(tb.IsOnline, 2)
 }
 
 func chat_msg(roomid string, tokendata *user.TokenData, msgdata string) {

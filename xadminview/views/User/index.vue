@@ -10,6 +10,11 @@
 			<el-form-item label="">
 				<el-input v-model="filters.login_ip" placeholder="登录Ip" style="width: 150px" :clearable="true"></el-input>
 			</el-form-item>
+			<el-form-item label="">
+				<el-select v-model="filters.is_online" placeholder="在线状态" style="width: 100px" clearable>
+					<el-option v-for="item in online_options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+				</el-select>
+			</el-form-item>
 			<el-form-item>
 				<el-button type="primary" icon="el-icon-refresh" v-on:click="handleQuery">查询</el-button>
 				<el-button type="primary" icon="el-icon-plus" class="mr10" @click="handleAdd(0)">添加</el-button>
@@ -18,7 +23,16 @@
 				<el-button type="primary" icon="el-icon-download" class="mr10" @click="DownLoadExcelTemplate()">下载导入模板</el-button>
 			</el-form-item>
 		</el-form>
-		<el-table :data="table_data" style="margin-top: -15px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
+		<el-row>
+			<el-col :span="24" style="margin-top: -10px; padding-bottom: 10px">
+				<div class="grid-content">
+					<span style="margin-right: 30px; color: #909399">总人数 : {{ total }}</span>
+					<span style="margin-right: 30px; color: #909399">在线人数 : {{ online_count }}</span>
+					<span style="margin-right: 30px; color: #909399">合并Ip数 : {{ ip_total }}</span>
+				</div>
+			</el-col>
+		</el-row>
+		<el-table :data="table_data" style="margin-top: -10px" border class="table" max-height="670px" :cell-style="{ padding: '0px' }" :highlight-current-row="true">
 			<el-table-column align="center" prop="id" label="id" width="100"></el-table-column>
 			<el-table-column align="center" prop="account" label="账号" width="200">
 				<template slot-scope="scope">
@@ -29,6 +43,11 @@
 			<el-table-column align="center" label="状态" width="100">
 				<template slot-scope="scope">
 					<span :class="scope.row.state != 1 ? 'red' : ''">{{ scope.row.state | 启用禁用 }}</span>
+				</template>
+			</el-table-column>
+			<el-table-column align="center" label="在线状态" width="100">
+				<template slot-scope="scope">
+					<span>{{ scope.row.is_online == 1 ? '在线' : '离线' }}</span>
 				</template>
 			</el-table-column>
 			<el-table-column align="center" prop="login_count" label="登录次数" width="100"></el-table-column>
@@ -68,7 +87,14 @@ export default {
 	extends: base,
 	components: { EditView, vueqr },
 	data() {
-		return {}
+		return {
+			online_options: [
+				{ value: 1, label: '在线' },
+				{ value: 2, label: '离线' },
+			],
+			online_count: 0,
+			ip_total: 0,
+		}
 	},
 	created() {
 		this.getTableData()
@@ -76,9 +102,12 @@ export default {
 	methods: {
 		getTableData() {
 			let data = this.getQueryData()
+			data.is_online = data.is_online == '' ? 0 : data.is_online
 			this.$post('/v1/get_user', data).then((result) => {
 				this.table_data = result.data
 				this.total = result.total
+				this.online_count = result.online_count
+				this.ip_total = result.ip_total
 			})
 		},
 		ExportUser() {

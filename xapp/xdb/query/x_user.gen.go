@@ -40,6 +40,7 @@ func newXUser(db *gorm.DB, opts ...gen.DOOption) xUser {
 	_xUser.LoginCount = field.NewInt32(tableName, "login_count")
 	_xUser.LoginTime = field.NewTime(tableName, "login_time")
 	_xUser.ChatState = field.NewInt32(tableName, "chat_state")
+	_xUser.IsOnline = field.NewInt32(tableName, "is_online")
 	_xUser.CreateTime = field.NewTime(tableName, "create_time")
 
 	_xUser.fillFieldMap()
@@ -64,6 +65,7 @@ type xUser struct {
 	LoginCount      field.Int32  // 登录次数
 	LoginTime       field.Time   // 登录时间
 	ChatState       field.Int32  // 禁言 1是,2否
+	IsOnline        field.Int32  // 是否在线
 	CreateTime      field.Time   // 创建时间
 
 	fieldMap map[string]field.Expr
@@ -94,6 +96,7 @@ func (x *xUser) updateTableName(table string) *xUser {
 	x.LoginCount = field.NewInt32(table, "login_count")
 	x.LoginTime = field.NewTime(table, "login_time")
 	x.ChatState = field.NewInt32(table, "chat_state")
+	x.IsOnline = field.NewInt32(table, "is_online")
 	x.CreateTime = field.NewTime(table, "create_time")
 
 	x.fillFieldMap()
@@ -111,7 +114,7 @@ func (x *xUser) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (x *xUser) fillFieldMap() {
-	x.fieldMap = make(map[string]field.Expr, 14)
+	x.fieldMap = make(map[string]field.Expr, 15)
 	x.fieldMap["id"] = x.ID
 	x.fieldMap["seller_id"] = x.SellerID
 	x.fieldMap["account"] = x.Account
@@ -125,6 +128,7 @@ func (x *xUser) fillFieldMap() {
 	x.fieldMap["login_count"] = x.LoginCount
 	x.fieldMap["login_time"] = x.LoginTime
 	x.fieldMap["chat_state"] = x.ChatState
+	x.fieldMap["is_online"] = x.IsOnline
 	x.fieldMap["create_time"] = x.CreateTime
 }
 

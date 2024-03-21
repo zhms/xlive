@@ -19,7 +19,18 @@ let routers = [
 			},
 		],
 	},
-
+	{
+		path: '/user',
+		component: Layout,
+		meta: { title: '会员管理', icon: 'el-icon-user-solid' },
+		children: [
+			{
+				path: 'user_list',
+				component: () => import('../../views/User/index'),
+				meta: { title: '会员管理', icon: 'el-icon-user-solid' },
+			},
+		],
+	},
 	{
 		path: '/live',
 		component: Layout,
@@ -39,18 +50,6 @@ let routers = [
 				path: 'banip_list',
 				component: () => import('../../views/Live/BanIp/index'),
 				meta: { title: 'Ip封禁', icon: 'el-icon-close' },
-			},
-		],
-	},
-	{
-		path: '/user',
-		component: Layout,
-		meta: { title: '会员管理', icon: 'el-icon-user-solid' },
-		children: [
-			{
-				path: 'user_list',
-				component: () => import('../../views/User/index'),
-				meta: { title: '会员管理', icon: 'el-icon-user-solid' },
 			},
 		],
 	},

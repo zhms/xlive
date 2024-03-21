@@ -26,15 +26,18 @@ type get_user_req struct {
 	Page     int `json:"page"`      // 页码
 	PageSize int `json:"page_size"` // 每页数量
 
-	Account string `json:"account"`  // 账号
-	Agent   string `json:"agent"`    // 代理
-	LoginIp string `json:"login_ip"` // 登录Ip
-	Export  int    `json:"export"`   // 导出
+	Account  string `json:"account"`   // 账号
+	Agent    string `json:"agent"`     // 代理
+	LoginIp  string `json:"login_ip"`  // 登录Ip
+	IsOnline int    `json:"is_online"` // 在线
+	Export   int    `json:"export"`    // 导出
 }
 
 type get_user_res struct {
-	Total int64          `json:"total"` // 总数
-	Data  []*model.XUser `json:"data"`  // 数据
+	OnLineCount int64          `json:"online_count"` // 在线人数
+	IpTotal     int64          `json:"ip_total"`     // 总数
+	Total       int64          `json:"total"`        // 总数
+	Data        []*model.XUser `json:"data"`         // 数据
 }
 
 // @Router /get_user [post]
@@ -68,14 +71,19 @@ func get_user(ctx *gin.Context) {
 	tb := xapp.DbQuery().XUser
 	itb := tb.WithContext(ctx).Order(tb.ID.Desc())
 	itb = itb.Where(tb.SellerID.Eq(int32(token.SellerId)))
-	if reqdata.Account != "" {
-		itb = itb.Where(tb.Account.Eq(reqdata.Account))
-	}
-	if reqdata.Agent != "" {
-		itb = itb.Where(tb.Agent.Eq(reqdata.Agent))
-	}
-	if reqdata.LoginIp != "" {
-		itb = itb.Where(tb.LoginIP.Eq(reqdata.LoginIp))
+	{
+		if reqdata.Account != "" {
+			itb = itb.Where(tb.Account.Eq(reqdata.Account))
+		}
+		if reqdata.Agent != "" {
+			itb = itb.Where(tb.Agent.Eq(reqdata.Agent))
+		}
+		if reqdata.LoginIp != "" {
+			itb = itb.Where(tb.LoginIP.Eq(reqdata.LoginIp))
+		}
+		if reqdata.IsOnline == 1 || reqdata.IsOnline == 2 {
+			itb = itb.Where(tb.IsOnline.Eq(int32(reqdata.IsOnline)))
+		}
 	}
 	var err error
 	response.Data, response.Total, err = itb.FindByPage((reqdata.Page-1)*reqdata.PageSize, reqdata.PageSize)
@@ -83,6 +91,8 @@ func get_user(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
 		return
 	}
+	itb.Select(tb.LoginIP.Distinct().Count()).Scan(&response.IpTotal)
+	itb.Where(tb.IsOnline.Eq(1)).Select(tb.ID.Count()).Scan(&response.OnLineCount)
 	if reqdata.Export == 1 {
 		e := excel.NewExcelBuilder("会员列表_" + fmt.Sprint(carbon.Now().ToDateTimeString()))
 		defer e.Close()

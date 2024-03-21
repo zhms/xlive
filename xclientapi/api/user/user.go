@@ -36,6 +36,18 @@ type TokenData struct {
 	Ip        string
 }
 
+func GetLocation(ip string) string {
+	ipdata := qqwry.NewQQwry("./config/qqwry.dat")
+	if ipdata == nil {
+		ipdata = qqwry.NewQQwry("./qqwry.dat")
+	}
+	if ipdata != nil && strings.Index(ip, ".") > 0 {
+		ipdata.Find(ip)
+		return fmt.Sprintf("%s %s", ipdata.Country, ipdata.City)
+	}
+	return ""
+}
+
 func DelToken(token string) {
 	if token == "" {
 		return
@@ -90,6 +102,7 @@ type user_login_req struct {
 	Account   string `validate:"required" json:"account"`
 	Password  string `json:"password"`
 	IsVisitor int    `json:"is_visitor"`
+	SaleId    string `json:"sale_id"`
 }
 
 type user_login_res struct {
@@ -97,18 +110,6 @@ type user_login_res struct {
 	Token     string `json:"token"`
 	IsVisitor int32  `json:"is_visitor"`
 	LiveData  string `json:"live_data"`
-}
-
-func GetLocation(ip string) string {
-	ipdata := qqwry.NewQQwry("./config/qqwry.dat")
-	if ipdata == nil {
-		ipdata = qqwry.NewQQwry("./qqwry.dat")
-	}
-	if ipdata != nil && strings.Index(ip, ".") > 0 {
-		ipdata.Find(ip)
-		return fmt.Sprintf("%s %s", ipdata.Country, ipdata.City)
-	}
-	return ""
 }
 
 // @Router /user_login [post]
@@ -165,6 +166,7 @@ func user_login(ctx *gin.Context) {
 				Password:   reqdata.Password,
 				IsVisitor:  1,
 				State:      1,
+				Agent:      reqdata.SaleId,
 				LoginTime:  carbon.Now().StdTime(),
 				CreateTime: carbon.Now().StdTime(),
 			})
