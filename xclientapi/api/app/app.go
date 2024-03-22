@@ -22,6 +22,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	"github.com/spf13/cast"
 	"github.com/yinheli/qqwry"
+	"gorm.io/gorm"
 
 	"github.com/gorilla/websocket"
 )
@@ -32,11 +33,18 @@ var locker sync.Mutex = sync.Mutex{}
 var robots map[string]string = make(map[string]string)
 var robot_count int = 0
 
+func get_time_key() string {
+	t := carbon.Now().TimestampMilli()
+	ft := t / (5 * 60 * 1000)
+	return carbon.CreateFromTimestampMilli(ft * 5 * 60 * 1000).ToDateTimeString()
+}
+
 func Init() {
 	xglobal.ApiV1.GET("/ws/:id", socket_handler)
 	go audit_chat()
 	go flush_robot_count()
 	go flush_robot()
+	go tongji()
 }
 
 type UserData struct {
@@ -132,7 +140,29 @@ func socket_handler(ctx *gin.Context) {
 func user_come(conn *websocket.Conn, roomid string, tokendata *user.TokenData) {
 	locker.Lock()
 	defer locker.Unlock()
-
+	fmt.Println("user_come", tokendata.Account)
+	{
+		roomusers, ok := users[roomid]
+		if !ok {
+			roomusers = make(map[string]*UserData)
+			users[roomid] = roomusers
+		}
+		keys := make([]string, 0, len(roomusers))
+		for k := range roomusers {
+			keys = append(keys, k)
+			send_msg(roomusers[k].Conn, "user_come", tokendata.Account)
+			send_msg(roomusers[k].Conn, "user_count", maxconn[roomid]+len(robots))
+		}
+		for k := range robots {
+			if len(keys) < 100 {
+				keys = append(keys, k)
+			}
+		}
+		send_msg(conn, "user_list", keys)
+		roomusers[tokendata.Account] = &UserData{ConnTime: time.Now().Unix(), Conn: conn, Account: tokendata.Account}
+		send_msg(conn, "user_come", tokendata.Account)
+		send_msg(conn, "user_count", maxconn[roomid]+len(robots))
+	}
 	{
 		v, ok := maxconn[roomid]
 		if !ok {
@@ -143,41 +173,60 @@ func user_come(conn *websocket.Conn, roomid string, tokendata *user.TokenData) {
 	{
 		maxconn[roomid]++
 	}
-	{
-		v, ok := users[roomid]
-		if !ok {
-			v = make(map[string]*UserData)
-			users[roomid] = v
-		}
-
-		keys := make([]string, 0, len(v))
-		for k := range v {
-			keys = append(keys, k)
-			send_msg(v[k].Conn, "user_come", tokendata.Account)
-			send_msg(v[k].Conn, "user_count", maxconn[roomid]+len(robots))
-		}
-		for k := range robots {
-			if len(keys) < 100 {
-				keys = append(keys, k)
-			}
-		}
-		send_msg(conn, "user_list", keys)
-		v[tokendata.Account] = &UserData{ConnTime: time.Now().Unix(), Conn: conn, Account: tokendata.Account}
-		send_msg(conn, "user_come", tokendata.Account)
-		send_msg(conn, "user_count", maxconn[roomid]+len(robots))
-
-	}
 	tb := xapp.DbQuery().XUser
 	itb := tb.WithContext(context.Background())
 	itb = itb.Where(tb.SellerID.Eq(tokendata.SellerId))
 	itb = itb.Where(tb.Account.Eq(tokendata.Account))
 	itb.Update(tb.IsOnline, 1)
+	allcount := 0
+	for _, v := range maxconn {
+		allcount += v
+	}
+	{
+		tbs := xapp.DbQuery().XStatistic
+		itbs := tbs.WithContext(context.Background())
+		itbs = itbs.Where(tbs.SellerID.Eq(tokendata.SellerId))
+		itbs = itbs.Where(tbs.RecordType.Eq("mx"))
+		t, _ := time.Parse("2006-01-02 15:04:05", get_time_key())
+		itbs = itbs.Where(tbs.CreateTime.Eq(t))
+		_, err := itbs.First()
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			xapp.DbQuery().XStatistic.Create(&model.XStatistic{
+				SellerID:   tokendata.SellerId,
+				RecordType: "mx",
+				CreateTime: t,
+				V1:         int32(allcount),
+			})
+		} else {
+			itbs = itbs.Where(tbs.V1.Lt(int32(allcount)))
+			itbs.Updates(map[string]interface{}{"v1": cast.ToString(allcount)})
+		}
+	}
+	{
+		tbs := xapp.DbQuery().XStatistic
+		itbs := tbs.WithContext(context.Background())
+		itbs = itbs.Where(tbs.SellerID.Eq(tokendata.SellerId))
+		itbs = itbs.Where(tbs.RecordType.Eq("el"))
+		t, _ := time.Parse("2006-01-02 15:04:05", get_time_key())
+		itbs = itbs.Where(tbs.CreateTime.Eq(t))
+		_, err := itbs.First()
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			xapp.DbQuery().XStatistic.Create(&model.XStatistic{
+				SellerID:   tokendata.SellerId,
+				RecordType: "el",
+				CreateTime: t,
+				V1:         1,
+			})
+		} else {
+			itbs.Updates(map[string]interface{}{"v1": gorm.Expr("v1 + 1")})
+		}
+	}
 }
 
 func user_leave(_ *websocket.Conn, roomid string, tokendata *user.TokenData) {
 	locker.Lock()
 	defer locker.Unlock()
-
+	fmt.Println("user_leave", tokendata.Account)
 	delete(users[roomid], tokendata.Account)
 	maxconn[roomid]--
 	for _, v := range users[roomid] {
@@ -189,6 +238,15 @@ func user_leave(_ *websocket.Conn, roomid string, tokendata *user.TokenData) {
 	itb = itb.Where(tb.SellerID.Eq(tokendata.SellerId))
 	itb = itb.Where(tb.Account.Eq(tokendata.Account))
 	itb.Update(tb.IsOnline, 2)
+	{
+		tbs := xapp.DbQuery().XStatistic
+		itbs := tbs.WithContext(context.Background())
+		itbs = itbs.Where(tbs.SellerID.Eq(tokendata.SellerId))
+		itbs = itbs.Where(tbs.RecordType.Eq("el"))
+		t, _ := time.Parse("2006-01-02 15:04:05", get_time_key())
+		itbs = itbs.Where(tbs.CreateTime.Eq(t))
+		itbs.Updates(map[string]interface{}{"v2": gorm.Expr("v2 + 1")})
+	}
 }
 
 func chat_msg(roomid string, tokendata *user.TokenData, msgdata string) {
@@ -332,5 +390,51 @@ func flush_robot() {
 		}
 
 		locker.Unlock()
+	}
+}
+
+func tongji() {
+	for {
+		allcount := 0
+		for _, v := range maxconn {
+			allcount += v
+		}
+		{
+			tbs := xapp.DbQuery().XStatistic
+			itbs := tbs.WithContext(context.Background())
+			itbs = itbs.Where(tbs.SellerID.Eq(1))
+			itbs = itbs.Where(tbs.RecordType.Eq("mx"))
+			t, _ := time.Parse("2006-01-02 15:04:05", get_time_key())
+			itbs = itbs.Where(tbs.CreateTime.Eq(t))
+			_, err := itbs.First()
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				xapp.DbQuery().XStatistic.Create(&model.XStatistic{
+					SellerID:   1,
+					RecordType: "mx",
+					CreateTime: t,
+					V1:         int32(allcount),
+					V2:         0,
+				})
+			}
+		}
+		{
+			tbs := xapp.DbQuery().XStatistic
+			itbs := tbs.WithContext(context.Background())
+			itbs = itbs.Where(tbs.SellerID.Eq(1))
+			itbs = itbs.Where(tbs.RecordType.Eq("el"))
+			t, _ := time.Parse("2006-01-02 15:04:05", get_time_key())
+			itbs = itbs.Where(tbs.CreateTime.Eq(t))
+			_, err := itbs.First()
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				xapp.DbQuery().XStatistic.Create(&model.XStatistic{
+					SellerID:   1,
+					RecordType: "el",
+					CreateTime: t,
+					V1:         0,
+					V2:         0,
+				})
+			}
+		}
+		time.Sleep(time.Second * 1)
 	}
 }

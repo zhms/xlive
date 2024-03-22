@@ -30,6 +30,7 @@ var (
 	XLiveRoom      *xLiveRoom
 	XRobot         *xRobot
 	XSeller        *xSeller
+	XStatistic     *xStatistic
 	XTest          *xTest
 	XUser          *xUser
 )
@@ -49,6 +50,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	XLiveRoom = &Q.XLiveRoom
 	XRobot = &Q.XRobot
 	XSeller = &Q.XSeller
+	XStatistic = &Q.XStatistic
 	XTest = &Q.XTest
 	XUser = &Q.XUser
 }
@@ -69,6 +71,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		XLiveRoom:      newXLiveRoom(db, opts...),
 		XRobot:         newXRobot(db, opts...),
 		XSeller:        newXSeller(db, opts...),
+		XStatistic:     newXStatistic(db, opts...),
 		XTest:          newXTest(db, opts...),
 		XUser:          newXUser(db, opts...),
 	}
@@ -90,6 +93,7 @@ type Query struct {
 	XLiveRoom      xLiveRoom
 	XRobot         xRobot
 	XSeller        xSeller
+	XStatistic     xStatistic
 	XTest          xTest
 	XUser          xUser
 }
@@ -112,6 +116,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		XLiveRoom:      q.XLiveRoom.clone(db),
 		XRobot:         q.XRobot.clone(db),
 		XSeller:        q.XSeller.clone(db),
+		XStatistic:     q.XStatistic.clone(db),
 		XTest:          q.XTest.clone(db),
 		XUser:          q.XUser.clone(db),
 	}
@@ -141,6 +146,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		XLiveRoom:      q.XLiveRoom.replaceDB(db),
 		XRobot:         q.XRobot.replaceDB(db),
 		XSeller:        q.XSeller.replaceDB(db),
+		XStatistic:     q.XStatistic.replaceDB(db),
 		XTest:          q.XTest.replaceDB(db),
 		XUser:          q.XUser.replaceDB(db),
 	}
@@ -160,6 +166,7 @@ type queryCtx struct {
 	XLiveRoom      IXLiveRoomDo
 	XRobot         IXRobotDo
 	XSeller        IXSellerDo
+	XStatistic     IXStatisticDo
 	XTest          IXTestDo
 	XUser          IXUserDo
 }
@@ -179,6 +186,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		XLiveRoom:      q.XLiveRoom.WithContext(ctx),
 		XRobot:         q.XRobot.WithContext(ctx),
 		XSeller:        q.XSeller.WithContext(ctx),
+		XStatistic:     q.XStatistic.WithContext(ctx),
 		XTest:          q.XTest.WithContext(ctx),
 		XUser:          q.XUser.WithContext(ctx),
 	}
