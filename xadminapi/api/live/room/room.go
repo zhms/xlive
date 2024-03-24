@@ -40,12 +40,12 @@ func push_url(pushDomain, pushKey, appName, streamName string, expireTime int) s
 
 func pull_url(playDomain, playKey, appName, streamName string, expireTime int) (flvPlayURL string) {
 	if playKey == "" {
-		flvPlayURL = fmt.Sprintf("https://%s/%s/%s.flv", playDomain, appName, streamName)
+		flvPlayURL = fmt.Sprintf("https://%s/%s/%s.m3u8", playDomain, appName, streamName)
 	} else {
 		timeStamp := time.Now().Unix() + int64(expireTime)
-		flvSString := fmt.Sprintf("/%s/%s.flv-%d-0-0-%s", appName, streamName, timeStamp, playKey)
+		flvSString := fmt.Sprintf("/%s/%s.m3u8-%d-0-0-%s", appName, streamName, timeStamp, playKey)
 		flvMD5Hash := fmt.Sprintf("%x", md5.Sum([]byte(flvSString)))
-		flvPlayURL = fmt.Sprintf("https://%s/%s/%s.flv?auth_key=%d-0-0-%s", playDomain, appName, streamName, timeStamp, flvMD5Hash)
+		flvPlayURL = fmt.Sprintf("https://%s/%s/%s.m3u8?auth_key=%d-0-0-%s", playDomain, appName, streamName, timeStamp, flvMD5Hash)
 	}
 	return flvPlayURL
 }
