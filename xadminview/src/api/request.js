@@ -53,11 +53,11 @@ service.interceptors.response.use(
 
 async function getGoogleCode() {
 	try {
-		let ret = await MessageBox.prompt('请输入验证码', '身份验证', {
+		let ret = await MessageBox.confirm('确认操作', '', {
 			confirmButtonText: '确定',
 			cancelButtonText: '取消',
 		})
-		return ret.value
+		return '123'
 	} catch (e) {}
 	return null
 }

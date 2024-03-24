@@ -6,7 +6,7 @@
 					<div class="time">{{ moment(item.time).format('YYYY-MM-DD HH:mm:ss') }} {{ isHongbao(item.msg) ? '' : item.from }}</div>
 					<div class="message-content">
 						<span v-if="!isHongbao(item.msg)">{{ item.msg }}</span>
-						<img v-if="isHongbao(item.msg)" src="https://static.lotterybox.com/game/live/hongbao/2.png" @click="openHongbao(item.msg)" style="cursor: pointer" />
+						<img v-if="isHongbao(item.msg)" src="@/images/hongbao1.png" @click="openHongbao(item.msg)" style="cursor: pointer" />
 					</div>
 				</div>
 			</template>
@@ -147,7 +147,7 @@ setScoll(scroll)
 .hongbao-box {
 	width: 290px;
 	height: 354px;
-	background: url('https://static.lotterybox.com/game/live/hongbao/1.png');
+	background: url('@/images/hongbao2.png');
 	text-align: center;
 	padding-top: 80px;
 	background-color: blueviolet;
