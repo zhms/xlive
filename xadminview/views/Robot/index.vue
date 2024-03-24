@@ -72,7 +72,7 @@ export default {
 		},
 		async setRobotCount() {
 			try {
-				let ret = await MessageBox.prompt('请输入验证码', '身份验证', {
+				let ret = await MessageBox.prompt('', '机器人数量', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
 				})

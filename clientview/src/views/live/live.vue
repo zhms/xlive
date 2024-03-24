@@ -14,7 +14,7 @@
 				<Tab title="Chat">
 					<Chat></Chat>
 				</Tab>
-				<Tab :title="'Online User(' + (onlineData?.data.online_count || '0') + ')'">
+				<Tab :title="'Online User(' + (OnlineCount || 0) + ')'">
 					<User></User>
 				</Tab>
 			</Tabs>
@@ -24,7 +24,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import useMyFetch from '@/script/fetch.js'
-import { rootScale, bodyWidth, bodyHeight, sleep, wsconn } from '@/script/base'
+import { rootScale, bodyWidth, bodyHeight, sleep, wsconn, getLiveData, OnlineCount } from '@/script/base'
 import { Button, Icon, NoticeBar, Tab, Tabs, showToast } from 'vant'
 import Chat from './chat.vue'
 import User from './user.vue'
@@ -50,20 +50,18 @@ const playerHeight = computed(() => {
 })
 const playerId = ref('e' + +new Date())
 const isPlay = ref(false)
-
+const liveData = ref(getLiveData())
 let player
-const liveUrl = ref('')
+const liveUrl = ref(liveData.value.data.pull_url)
+
 const playData = computed(() => ({
-	type: 'video/flv',
+	type: 'video/x-flv',
 	src: liveUrl.value,
 	isLive: true,
 }))
 
-const { data: liveData } = useMyFetch('/api/v1/app/get_live_info', {
-	afterFetch: async (res) => {
-		liveUrl.value = res.data.data.live_url
-	},
-}).get()
+const user = JSON.parse(useStorage('user').value)
+const isVisitor = computed(() => user.is_visitor == 1)
 
 function play() {
 	if (liveUrl.value == '') {
@@ -103,9 +101,6 @@ function initPlayer(data) {
 watch(bodyWidth, () => {
 	player.resize(playerWidth.value, playerHeight.value)
 })
-
-// 在线人数
-const { data: onlineData } = useMyFetch('/api/v1/app/get_online_info').get()
 
 onMounted(() => {
 	initPlayer()

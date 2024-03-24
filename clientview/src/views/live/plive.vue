@@ -2,7 +2,7 @@
 	<div class="live">
 		<div class="user-box">
 			<div class="logo">
-				<img src="https://static.lotterybox.com/game/live/logo111.jpg" />
+				<img src="@/images/logo.jpg" />
 			</div>
 			<div class="user-head flex flex-center">
 				<div>Online({{ OnlineCount || 0 }})</div>
@@ -19,7 +19,7 @@
 			<video :id="playerId" webkit-playsinline="true" playsinline="true" preload="auto" @click="play" :poster="poster" class="video-js"></video>
 
 			<div class="course">
-				<img src="https://static.lotterybox.com/game/live/2023-12-30 10.54.47.jpg" />
+				<img src="@/images/timetable.jpg" />
 			</div>
 		</div>
 
@@ -38,7 +38,12 @@ import { useStorage, useIntervalFn } from '@vueuse/core'
 import Chat from './chat.vue'
 import User from './user.vue'
 
-const posterList = ref(['https://static.lotterybox.com/game/live/2023-12-31 20.21.45.jpg', 'https://static.lotterybox.com/game/live/2023-12-31 20.21.53.jpg', 'https://static.lotterybox.com/game/live/2023-12-31 20.21.57.jpg', 'https://static.lotterybox.com/game/live/2023-12-31 20.22.02.jpg'])
+let a = 'https://oss.abutest.xyz/livebg/a.jpg'
+let b = 'https://oss.abutest.xyz/livebg/b.jpg'
+let c = 'https://oss.abutest.xyz/livebg/c.jpg'
+let d = 'https://oss.abutest.xyz/livebg/d.jpg'
+
+const posterList = ref([a, b, c, d])
 const currentPosterIndex = ref(0)
 const poster = computed(() => posterList.value[currentPosterIndex.value])
 useIntervalFn(() => {

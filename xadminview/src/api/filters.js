@@ -19,3 +19,10 @@ export function 启用禁用(value) {
 	if (value == 1) return '启用'
 	return '禁用'
 }
+
+export function amount2(value) {
+	if (!value) return '0.00'
+	value = parseFloat(value)
+	value = Math.floor(value * 100) / 100
+	return value
+}

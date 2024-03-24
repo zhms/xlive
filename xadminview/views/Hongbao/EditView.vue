@@ -39,6 +39,7 @@ export default {
 			})
 		},
 		onOpen() {
+			this.itemdata.memo = '恭喜发财 大吉大利'
 			this.$post('/v1/get_live_room_id', {}).then((result) => {
 				this.room_id = []
 				for (let i = 0; i < result.ids.length; i++) {

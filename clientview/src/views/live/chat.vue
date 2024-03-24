@@ -3,9 +3,10 @@
 		<div class="message-list" ref="messageListDom">
 			<template v-for="item in MsgList" :key="item.k">
 				<div class="message-item">
-					<div class="time">{{ moment(item.time).format('YYYY-MM-DD HH:mm:ss') }} {{ item.from }} :</div>
+					<div class="time">{{ moment(item.time).format('YYYY-MM-DD HH:mm:ss') }} {{ isHongbao(item.msg) ? '' : item.from }}</div>
 					<div class="message-content">
-						<span>{{ item.msg }}</span>
+						<span v-if="!isHongbao(item.msg)">{{ item.msg }}</span>
+						<img v-if="isHongbao(item.msg)" src="@/images/hongbao1.png" @click="openHongbao(item.msg)" style="cursor: pointer" />
 					</div>
 				</div>
 			</template>
@@ -16,12 +17,18 @@
 			</div>
 			<Button type="success" @click="sendMessage" :disabled="inputMessage == ''"> Send </Button>
 		</div>
+		<Popup v-model:show="hongbaoShow" closeable :close-on-click-overlay="false">
+			<div class="hongbao-box">
+				<div class="title">Congratulations</div>
+				<div class="title">{{ user.account }}</div>
+				<div class="money">₹ {{ hongbaoAmount }}</div>
+			</div>
+		</Popup>
 	</div>
 </template>
 <script setup>
 import { ref, nextTick, computed } from 'vue'
 import useMyFetch from '@/script/fetch.js'
-import SDK from '@yxim/nim-web-sdk'
 import { Button, Icon, showConfirmDialog, Popup, Field, showToast } from 'vant'
 import { sleep, checkFetchError, MsgList, setScoll, sendChatMsg } from '@/script/base'
 import { useStorage, useIntervalFn } from '@vueuse/core'
@@ -31,6 +38,9 @@ const inputMessage = ref('')
 const messages = ref([])
 const messageListDom = ref(null)
 const user = JSON.parse(useStorage('user').value)
+
+const hongbaoShow = ref(false)
+const hongbaoAmount = ref(0)
 
 async function scroll() {
 	await nextTick()
@@ -42,6 +52,39 @@ function sendMessage() {
 	const text = inputMessage.value
 	sendChatMsg(text)
 	inputMessage.value = ''
+}
+
+function isHongbao(msg) {
+	return msg.indexOf('__hongbao__') >= 0
+}
+
+function openHongbao(id) {
+	id = id.replace('__hongbao__', '')
+	useMyFetch('/api/v1/open_hongbao', {
+		immediate: true,
+		afterFetch: (res) => {
+			if (res.data.data.amount == -1) {
+				showToast('bonus has been opened')
+				return
+			}
+			if (res.data.data.amount == -2) {
+				showToast('bonus not found')
+				return
+			}
+			if (res.data.data.amount == -3) {
+				showToast('bonus has been expired')
+				return
+			}
+			if (res.data.data.amount == -4) {
+				showToast('bonus finished')
+				return
+			}
+			hongbaoAmount.value = Math.floor(res.data.data.amount * 100) / 100
+			hongbaoShow.value = !hongbaoShow.value
+		},
+	}).post(() => ({
+		id: Number(id),
+	}))
 }
 
 setScoll(scroll)
@@ -99,5 +142,25 @@ setScoll(scroll)
 
 .message-item {
 	margin-left: 5px;
+}
+
+.hongbao-box {
+	width: 290px;
+	height: 354px;
+	background: url('@/images/hongbao2.png');
+	text-align: center;
+	padding-top: 80px;
+	background-color: blueviolet;
+	.title {
+		font-weight: bold;
+		color: #a56e2d;
+		line-height: 19px;
+	}
+	.money {
+		font-size: 40px;
+		font-weight: bold;
+		color: #956122;
+		margin-top: 20px;
+	}
 }
 </style>
