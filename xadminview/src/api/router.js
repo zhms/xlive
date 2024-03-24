@@ -71,18 +71,13 @@ let routers = [
 		meta: { title: '数据分析', icon: 'el-icon-cpu' },
 		children: [
 			{
-				path: 'online_list',
-				component: () => import('../../views/User/index'),
-				meta: { title: '在线管理', icon: 'el-icon-document' },
-			},
-			{
 				path: 'online_chart',
-				component: () => import('../../views/User/index'),
+				component: () => import('../../views/Data/Inout/index'),
 				meta: { title: '在线图表', icon: 'el-icon-location' },
 			},
 			{
 				path: 'peak_chart',
-				component: () => import('../../views/User/index'),
+				component: () => import('../../views/Data/Online/index'),
 				meta: { title: '峰值图表', icon: 'el-icon-location-outline' },
 			},
 		],

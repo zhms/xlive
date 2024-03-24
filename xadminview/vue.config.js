@@ -12,7 +12,7 @@ module.exports = {
 	devServer: {
 		proxy: {
 			'/api': {
-				target: 'http://127.0.0.1:6500', //https://admin.f6921k.live  http://192.168.2.33:4534
+				target: 'http://10.10.234.82:6500', //https://admin.f6921k.live  http://192.168.2.33:4534
 				changeOrigin: true,
 				pathRewrite: {
 					'^/api': '/api',

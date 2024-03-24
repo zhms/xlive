@@ -12,6 +12,7 @@ import 'normalize.css/normalize.css'
 import './styles/element-variables.scss'
 import '@/styles/index.scss'
 import './icons'
+import { BarChart, LineChart, PieChart } from 'dr-vue-echarts'
 
 Vue.prototype.$moment = moment
 Vue.prototype.$md5 = md5
@@ -34,6 +35,9 @@ router.afterEach(() => {})
 Vue.use(Element, {
 	size: 'small',
 })
+Vue.use(BarChart)
+Vue.use(LineChart)
+Vue.use(PieChart)
 Object.keys(filters).forEach((key) => {
 	Vue.filter(key, filters[key])
 })
