@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 	"xapp/xapp"
 	"xapp/xdb/model"
@@ -21,11 +22,15 @@ import (
 	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"
 	"github.com/yinheli/qqwry"
+	"golang.org/x/exp/rand"
 	"gorm.io/gorm"
 )
 
+var locker sync.Mutex
+
 func Init() {
 	xglobal.ApiV1.POST("/user_login", user_login)
+	xglobal.ApiV1.POST("/open_hongbao", open_hongbao)
 }
 
 type TokenData struct {
@@ -212,5 +217,104 @@ func user_login(ctx *gin.Context) {
 	response.IsVisitor = userdata.IsVisitor
 	response.LiveData = livingdata
 
+	ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
+}
+
+type open_hongbao_req struct {
+	Id int32 `validate:"required" json:"id"`
+}
+
+type open_hongbao_res struct {
+	Amount float64 `json:"amount"`
+}
+
+// @Router /open_hongbao [post]
+// @Tags a
+// @Summary b
+// @Param x-token header string true "token"
+// @Param body body open_hongbao_req true "请求参数"
+// @Success 200  {object} open_hongbao_res "响应数据"
+func open_hongbao(ctx *gin.Context) {
+	locker.Lock()
+	defer locker.Unlock()
+
+	var reqdata open_hongbao_req
+	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
+		return
+	}
+	validator := val.New()
+	if err := validator.Struct(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
+		return
+	}
+	token := GetToken(ctx)
+	response := new(open_hongbao_res)
+	{
+		tb := xapp.DbQuery().XHongbaoex
+		itb := tb.WithContext(ctx)
+		itb1 := itb.Where(tb.SellerID.Eq(token.SellerId))
+		itb1 = itb1.Where(tb.HongbaoID.Eq(reqdata.Id))
+		itb1 = itb1.Where(tb.Account.Eq(token.Account))
+		recorddata, err := itb1.First()
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+			ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
+			return
+		}
+		if recorddata != nil {
+			response.Amount = -1
+			ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
+			return
+		}
+	}
+	var hongbao *model.XHongbao
+	var err error
+	{
+		tb := xapp.DbQuery().XHongbao
+		itb := tb.WithContext(ctx)
+		itb1 := itb.Where(tb.SellerID.Eq(token.SellerId))
+		itb1 = itb1.Where(tb.ID.Eq(reqdata.Id))
+		hongbao, err = itb1.First()
+		if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+			response.Amount = -2
+			ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
+			return
+		}
+		now := carbon.Now()
+		timedif := carbon.CreateFromStdTime(hongbao.CreateTime).DiffInMinutes(now)
+		if timedif > 30000 {
+			response.Amount = -3
+			ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
+			return
+		}
+	}
+	if hongbao.UsedCount >= hongbao.TotalCount || hongbao.UsedAmount >= hongbao.TotalAmount {
+		response.Amount = -4
+		ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
+		return
+	}
+	avage := hongbao.TotalAmount / float64(hongbao.TotalCount)
+	max_amount := avage * 1.3
+	min_amount := avage * 0.5
+	response.Amount = float64(rand.Float64()*(max_amount-min_amount) + min_amount)
+	_, err = xapp.DbQuery().XHongbao.Where(xapp.DbQuery().XHongbao.ID.Eq(reqdata.Id)).Updates(map[string]interface{}{
+		xapp.DbQuery().XHongbao.UsedCount.ColumnName().String():  hongbao.UsedCount + 1,
+		xapp.DbQuery().XHongbao.UsedAmount.ColumnName().String(): hongbao.UsedAmount + response.Amount,
+	})
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
+	err = xapp.DbQuery().XHongbaoex.Create(&model.XHongbaoex{
+		SellerID:   token.SellerId,
+		HongbaoID:  reqdata.Id,
+		Account:    token.Account,
+		Amount:     response.Amount,
+		CreateTime: carbon.Now().StdTime(),
+	})
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
 	ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
 }

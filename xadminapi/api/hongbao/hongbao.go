@@ -1,7 +1,10 @@
 package hongbao
 
 import (
+	"encoding/json"
+	"fmt"
 	"net/http"
+	"time"
 	"xadminapi/api/admin"
 	"xapp/xapp"
 	"xapp/xdb/model"
@@ -14,6 +17,7 @@ import (
 
 func Init() {
 	xglobal.ApiV1.POST("/get_hongbao", admin.Auth("红包管理", "红包管理", "查", ""), get_hongbao)
+	xglobal.ApiV1.POST("/get_hongbao_detail", admin.Auth("红包管理", "红包管理", "查", ""), get_hongbao_detail)
 	xglobal.ApiV1.POST("/create_hongbao", admin.Auth("红包管理", "红包管理", "发红包", "发红包"), create_hongbao)
 }
 
@@ -94,18 +98,68 @@ func create_hongbao(ctx *gin.Context) {
 	token := admin.GetToken(ctx)
 	tb := xapp.DbQuery().XHongbao
 	itb := tb.WithContext(ctx)
-	err := itb.Omit(tb.CreateTime).Create(&model.XHongbao{
+	item := &model.XHongbao{
 		SellerID:    token.SellerId,
 		RoomID:      reqdata.RoomId,
 		TotalCount:  reqdata.TotalCount,
 		TotalAmount: reqdata.TotalAmount,
 		Memo:        reqdata.Memo,
 		Sender:      token.Account,
-	})
+	}
+	err := itb.Omit(tb.CreateTime).Create(item)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
 		return
 	}
-
+	chatdata := new(model.XChat)
+	chatdata.SellerID = token.SellerId
+	chatdata.RoomID = reqdata.RoomId
+	chatdata.Content = fmt.Sprintf("__hongbao__%v", item.ID)
+	chatdata.CreateTime = time.Now()
+	bytes, _ := json.Marshal(chatdata)
+	xapp.Redis().Client().RPush(ctx, "chat_audit", string(bytes)).Result()
 	ctx.JSON(http.StatusOK, xenum.Success)
+}
+
+type get_hongbao_detail_req struct {
+	Id int32 `validate:"required" json:"id"`
+}
+
+type get_hongbao_detail_res struct {
+	Total int64               `json:"total"` // 总数
+	Data  []*model.XHongbaoex `json:"data"`  // 数据
+}
+
+// @Router /get_hongbao_detail [post]
+// @Tags a
+// @Summary b
+// @Param x-token header string true "token"
+// @Param body body get_hongbao_detail_req true "请求参数"
+// @Success 200  {object} get_hongbao_detail_res "响应数据"
+func get_hongbao_detail(ctx *gin.Context) {
+	var reqdata get_hongbao_detail_req
+	if err := ctx.ShouldBindJSON(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
+		return
+	}
+	validator := val.New()
+	if err := validator.Struct(&reqdata); err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.BadParams, err.Error()))
+		return
+	}
+	response := new(get_hongbao_detail_res)
+	token := admin.GetToken(ctx)
+	tb := xapp.DbQuery().XHongbaoex
+	itb := tb.WithContext(ctx).Order(tb.ID.Desc())
+	itb = itb.Where(tb.SellerID.Eq(token.SellerId))
+	{
+		itb = itb.Where(tb.HongbaoID.Eq(reqdata.Id))
+	}
+	var err error
+	response.Data, response.Total, err = itb.FindByPage(0, 1000)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, xenum.MakeSucess(response))
 }

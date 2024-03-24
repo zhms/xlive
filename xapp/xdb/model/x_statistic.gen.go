@@ -12,7 +12,7 @@ const TableNameXStatistic = "x_statistic"
 
 // XStatistic mapped from table <x_statistic>
 type XStatistic struct {
-	ID         int32     `gorm:"column:id;primaryKey" json:"id"`
+	ID         int32     `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
 	SellerID   int32     `gorm:"column:seller_id" json:"seller_id"`
 	RecordType string    `gorm:"column:record_type" json:"record_type"`
 	CreateTime time.Time `gorm:"column:create_time" json:"create_time"`

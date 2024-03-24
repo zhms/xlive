@@ -36,6 +36,7 @@ var robot_count int = 0
 func get_time_key() string {
 	t := carbon.Now().TimestampMilli()
 	ft := t / (5 * 60 * 1000)
+	//fmt.Println(t, ft*5*60*1000, carbon.CreateFromTimestampMilli(ft*5*60*1000).ToDateTimeString())
 	return carbon.CreateFromTimestampMilli(ft * 5 * 60 * 1000).ToDateTimeString()
 }
 
@@ -187,7 +188,7 @@ func user_come(conn *websocket.Conn, roomid string, tokendata *user.TokenData) {
 		itbs := tbs.WithContext(context.Background())
 		itbs = itbs.Where(tbs.SellerID.Eq(tokendata.SellerId))
 		itbs = itbs.Where(tbs.RecordType.Eq("mx"))
-		t, _ := time.Parse("2006-01-02 15:04:05", get_time_key())
+		t, _ := time.ParseInLocation("2006-01-02 15:04:05", get_time_key(), time.Local)
 		itbs = itbs.Where(tbs.CreateTime.Eq(t))
 		_, err := itbs.First()
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -207,7 +208,7 @@ func user_come(conn *websocket.Conn, roomid string, tokendata *user.TokenData) {
 		itbs := tbs.WithContext(context.Background())
 		itbs = itbs.Where(tbs.SellerID.Eq(tokendata.SellerId))
 		itbs = itbs.Where(tbs.RecordType.Eq("el"))
-		t, _ := time.Parse("2006-01-02 15:04:05", get_time_key())
+		t, _ := time.ParseInLocation("2006-01-02 15:04:05", get_time_key(), time.Local)
 		itbs = itbs.Where(tbs.CreateTime.Eq(t))
 		_, err := itbs.First()
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -220,6 +221,13 @@ func user_come(conn *websocket.Conn, roomid string, tokendata *user.TokenData) {
 		} else {
 			itbs.Updates(map[string]interface{}{"v1": gorm.Expr("v1 + 1")})
 		}
+	}
+	chatlist, err := xapp.Redis().Client().LRange(context.Background(), "chat_queue:"+roomid, 0, 30).Result()
+	if err != nil {
+		return
+	}
+	for i := len(chatlist) - 1; i >= 0; i-- {
+		send_msg(conn, "chat", chatlist[i])
 	}
 }
 
@@ -243,7 +251,7 @@ func user_leave(_ *websocket.Conn, roomid string, tokendata *user.TokenData) {
 		itbs := tbs.WithContext(context.Background())
 		itbs = itbs.Where(tbs.SellerID.Eq(tokendata.SellerId))
 		itbs = itbs.Where(tbs.RecordType.Eq("el"))
-		t, _ := time.Parse("2006-01-02 15:04:05", get_time_key())
+		t, _ := time.ParseInLocation("2006-01-02 15:04:05", get_time_key(), time.Local)
 		itbs = itbs.Where(tbs.CreateTime.Eq(t))
 		itbs.Updates(map[string]interface{}{"v2": gorm.Expr("v2 + 1")})
 	}
@@ -252,6 +260,9 @@ func user_leave(_ *websocket.Conn, roomid string, tokendata *user.TokenData) {
 func chat_msg(roomid string, tokendata *user.TokenData, msgdata string) {
 	locker.Lock()
 	defer locker.Unlock()
+	if strings.Index(msgdata, "__hongbao__") >= 0 {
+		return
+	}
 
 	// locker := "locker:chatmsg:" + tokendata.Account
 	// if !server.Redis().Lock(locker, 10) {
@@ -404,7 +415,7 @@ func tongji() {
 			itbs := tbs.WithContext(context.Background())
 			itbs = itbs.Where(tbs.SellerID.Eq(1))
 			itbs = itbs.Where(tbs.RecordType.Eq("mx"))
-			t, _ := time.Parse("2006-01-02 15:04:05", get_time_key())
+			t, _ := time.ParseInLocation("2006-01-02 15:04:05", get_time_key(), time.Local)
 			itbs = itbs.Where(tbs.CreateTime.Eq(t))
 			_, err := itbs.First()
 			if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -422,7 +433,7 @@ func tongji() {
 			itbs := tbs.WithContext(context.Background())
 			itbs = itbs.Where(tbs.SellerID.Eq(1))
 			itbs = itbs.Where(tbs.RecordType.Eq("el"))
-			t, _ := time.Parse("2006-01-02 15:04:05", get_time_key())
+			t, _ := time.ParseInLocation("2006-01-02 15:04:05", get_time_key(), time.Local)
 			itbs = itbs.Where(tbs.CreateTime.Eq(t))
 			_, err := itbs.First()
 			if errors.Is(err, gorm.ErrRecordNotFound) {

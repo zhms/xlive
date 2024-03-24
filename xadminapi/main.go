@@ -3,6 +3,8 @@ package main
 import (
 	"embed"
 	"xadminapi/api/admin"
+	"xadminapi/api/data/inout_chart"
+	"xadminapi/api/data/online_chart"
 	"xadminapi/api/hongbao"
 	live_ban "xadminapi/api/live/ban"
 	live_chat "xadminapi/api/live/chat"
@@ -41,5 +43,7 @@ func main() {
 		sales.Init()
 		hongbao.Init()
 		robot.Init()
+		inout_chart.Init()
+		online_chart.Init()
 	})
 }

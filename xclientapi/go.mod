@@ -11,6 +11,7 @@ require (
 	github.com/redis/go-redis/v9 v9.3.0
 	github.com/spf13/cast v1.6.0
 	github.com/yinheli/qqwry v0.0.0-20160229183603-f50680010f4a
+	golang.org/x/exp v0.0.0-20240314144324-c7f7c6466f7f
 	gorm.io/gorm v1.25.7
 )
 
@@ -57,7 +58,6 @@ require (
 	github.com/yinheli/mahonia v0.0.0-20131226213531-0eef680515cc // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
-	golang.org/x/exp v0.0.0-20240314144324-c7f7c6466f7f // indirect
 	golang.org/x/mod v0.15.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gorm.io/datatypes v1.1.1-0.20230130040222-c43177d3cf8c // indirect

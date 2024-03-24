@@ -24,6 +24,7 @@ var (
 	XChat          *xChat
 	XChatBanIP     *xChatBanIP
 	XHongbao       *xHongbao
+	XHongbaoex     *xHongbaoex
 	XHostSeller    *xHostSeller
 	XKv            *xKv
 	XLiveProvider  *xLiveProvider
@@ -44,6 +45,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	XChat = &Q.XChat
 	XChatBanIP = &Q.XChatBanIP
 	XHongbao = &Q.XHongbao
+	XHongbaoex = &Q.XHongbaoex
 	XHostSeller = &Q.XHostSeller
 	XKv = &Q.XKv
 	XLiveProvider = &Q.XLiveProvider
@@ -65,6 +67,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		XChat:          newXChat(db, opts...),
 		XChatBanIP:     newXChatBanIP(db, opts...),
 		XHongbao:       newXHongbao(db, opts...),
+		XHongbaoex:     newXHongbaoex(db, opts...),
 		XHostSeller:    newXHostSeller(db, opts...),
 		XKv:            newXKv(db, opts...),
 		XLiveProvider:  newXLiveProvider(db, opts...),
@@ -87,6 +90,7 @@ type Query struct {
 	XChat          xChat
 	XChatBanIP     xChatBanIP
 	XHongbao       xHongbao
+	XHongbaoex     xHongbaoex
 	XHostSeller    xHostSeller
 	XKv            xKv
 	XLiveProvider  xLiveProvider
@@ -110,6 +114,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		XChat:          q.XChat.clone(db),
 		XChatBanIP:     q.XChatBanIP.clone(db),
 		XHongbao:       q.XHongbao.clone(db),
+		XHongbaoex:     q.XHongbaoex.clone(db),
 		XHostSeller:    q.XHostSeller.clone(db),
 		XKv:            q.XKv.clone(db),
 		XLiveProvider:  q.XLiveProvider.clone(db),
@@ -140,6 +145,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		XChat:          q.XChat.replaceDB(db),
 		XChatBanIP:     q.XChatBanIP.replaceDB(db),
 		XHongbao:       q.XHongbao.replaceDB(db),
+		XHongbaoex:     q.XHongbaoex.replaceDB(db),
 		XHostSeller:    q.XHostSeller.replaceDB(db),
 		XKv:            q.XKv.replaceDB(db),
 		XLiveProvider:  q.XLiveProvider.replaceDB(db),
@@ -160,6 +166,7 @@ type queryCtx struct {
 	XChat          IXChatDo
 	XChatBanIP     IXChatBanIPDo
 	XHongbao       IXHongbaoDo
+	XHongbaoex     IXHongbaoexDo
 	XHostSeller    IXHostSellerDo
 	XKv            IXKvDo
 	XLiveProvider  IXLiveProviderDo
@@ -180,6 +187,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		XChat:          q.XChat.WithContext(ctx),
 		XChatBanIP:     q.XChatBanIP.WithContext(ctx),
 		XHongbao:       q.XHongbao.WithContext(ctx),
+		XHongbaoex:     q.XHongbaoex.WithContext(ctx),
 		XHostSeller:    q.XHostSeller.WithContext(ctx),
 		XKv:            q.XKv.WithContext(ctx),
 		XLiveProvider:  q.XLiveProvider.WithContext(ctx),

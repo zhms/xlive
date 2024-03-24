@@ -1,6 +1,8 @@
 package main
 
 import (
+	"math/rand"
+	"time"
 	"xapp/xapp"
 	"xclientapi/api/app"
 	"xclientapi/api/user"
@@ -18,6 +20,7 @@ import (
 // swag init -g main.go
 
 func main() {
+	rand.Seed(time.Now().UnixNano())
 	xapp.Init()
 	xapp.Run(func() {
 		app.Init()
