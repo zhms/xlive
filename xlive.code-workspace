@@ -14,6 +14,9 @@
 		},
 		{
 			"path": "xzadminapi"
+		},
+		{
+			"path": "xzadminview"
 		}
 	]
 }

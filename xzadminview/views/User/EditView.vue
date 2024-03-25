@@ -40,7 +40,7 @@ export default {
 			if (this.title == '编辑会员') {
 				if (!this.itemdata.password) return this.$message.error('请填写密码')
 				let data = JSON.parse(JSON.stringify(this.itemdata))
-				this.$post('/v1/user_list/update_user', data, { google: true }).then(() => {
+				this.$post('/v1/update_user', data, { google: true }).then(() => {
 					this.$message.success('修改成功')
 					next(true)
 				})
@@ -49,7 +49,7 @@ export default {
 				if (!this.itemdata.account) return this.$message.error('请填写账号')
 				if (!this.itemdata.password) return this.$message.error('请填写密码')
 				let data = JSON.parse(JSON.stringify(this.itemdata))
-				this.$post('/v1/user_list/add_user', data, { google: true }).then(() => {
+				this.$post('/v1/create_user', data, { google: true }).then(() => {
 					this.$message.success('添加成功')
 					next(true)
 				})
@@ -77,7 +77,7 @@ export default {
 						password: `${jsonData[i][1]}`,
 					}
 					if (data.account.length > 0 && data.password.length > 0) {
-						await this.$post('/v1/user_list/add_user', data, { google: false })
+						await this.$post('/v1/create_user', data, { google: false })
 					}
 				}
 				this.$message.success('上传成功')
