@@ -28,13 +28,13 @@ export default defineConfig({
 			'/api': {
 				// target: "https://blackrock.bochats.com",
 				//target: 'http://blackrock-13.232.26.141.nip.io ',
-				target: 'http://10.10.234.82:3400',
+				target: 'http://127.0.0.1:3400',
 				changeOrigin: true,
 				ws: true,
 			},
 			'/ws': {
 				//target: 'ws://qa-13.232.26.141.nip.io',
-				target: 'ws://10.10.234.82:2740',
+				target: 'ws://127.0.0.1:2740',
 				changeOrigin: true,
 				ws: true,
 			},

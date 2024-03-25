@@ -9,13 +9,15 @@
 			"path": "xclientapi"
 		},
 		{
-			"name": "clientview",
-			"path": "clientview"
+			"name": "xclientview",
+			"path": "xclientview"
 		},
 		{
+			"name": "xzadminapi",
 			"path": "xzadminapi"
 		},
 		{
+			"name": "xzadminview",
 			"path": "xzadminview"
 		}
 	]
