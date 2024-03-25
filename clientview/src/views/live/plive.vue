@@ -71,7 +71,7 @@ let player
 const liveUrl = ref(liveData.value.data.pull_url)
 
 const playData = computed(() => ({
-	type: 'video/x-flv',
+	// type: 'video/x-flv',
 	src: liveUrl.value,
 	isLive: true,
 }))

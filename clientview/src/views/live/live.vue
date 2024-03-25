@@ -1,13 +1,10 @@
 <template>
-	<div class="live">
-		<div class="player">
-			<Icon name="play-circle-o" class="play-icon" @click="play" size="100" :style="{ left: (playerWidth - 100) / 2 + 'px', top: (playerHeight - 60) / 2 + 'px' }" v-if="!isPlay"></Icon>
-			<div class="teacher-info flex flex-center">
-				<div>{{ liveData?.data.name }} | Current Lecturer: {{ liveData?.data.account }}</div>
-			</div>
-			<canvas id="canvas" :style="{ width: playerWidth + 'px', height: playerHeight + 'px' }"></canvas>
-			<video :id="playerId" x-webkit-airplay="allow" webkit-playsinline playsinline preload="auto" :width="playerWidth" :height="playerHeight" @click="play" :poster="poster" class="video-js"></video>
+	<div class="box" :style="{ width: bodyWidth + 'px', height: bodyHeight + 'px' }">
+		<div class="teacher-info flex flex-center">
+			<div>{{ liveData?.data.name }} | Current Lecturer: {{ liveData?.data.account }}</div>
 		</div>
+		<Icon name="play-circle-o" class="play-icon" @click="play" size="100" v-if="!isPlay" :style="{ left: (playerWidth - 100) / 2 + 'px' }"></Icon>
+		<video :id="playerId" x-webkit-airplay="allow" webkit-playsinline playsinline @click="play" :poster="poster" class="video-js video"></video>
 		<div class="chat-box">
 			<NoticeBar :text="liveData?.data.title" left-icon="volume-o"></NoticeBar>
 			<Tabs>
@@ -53,9 +50,9 @@ const isPlay = ref(false)
 const liveData = ref(getLiveData())
 let player
 const liveUrl = ref(liveData.value.data.pull_url)
-
+console.log('liveUrl', liveUrl.value)
 const playData = computed(() => ({
-	type: 'video/x-flv',
+	//type: 'video/x-flv',
 	src: liveUrl.value,
 	isLive: true,
 }))
@@ -68,6 +65,7 @@ function play() {
 		showToast('The live is not ready yet, please try again later')
 		return
 	}
+	console.log('playData', playData.value)
 	player.setDataSource(playData.value)
 	isPlay.value = true
 }
@@ -110,48 +108,51 @@ setTimeout(() => wsconn(), 1000)
 </script>
 
 <style lang="scss" scoped>
-.player {
-	position: relative;
-	#canvas {
-		display: none;
-		position: absolute;
-		top: 0;
-		left: 0;
-		z-index: 10;
-	}
-	.teacher-info {
-		height: 40px;
-		background: #2e4068;
-		color: #fff;
-		font-weight: bold;
-	}
+.box {
+	position: absolute;
+	background-color: #2e4068;
+	widows: 100%;
+	//height: 100%;
 }
+.video {
+	width: 100%;
+	height: 250px;
+}
+
+.teacher-info {
+	height: 40px;
+	background: #2e4068;
+	color: #fff;
+	font-weight: bold;
+}
+
 .play-icon {
 	position: absolute;
 	z-index: 10;
 	color: #fff;
+	top: 100px;
 }
+
+.van-notice-bar {
+	background: #2e4068 !important;
+	color: #fff !important;
+}
+
 .chat-box {
 	position: fixed;
-	bottom: 0;
 	width: 100%;
 	z-index: 100;
-	padding: 0 4px;
 	box-sizing: border-box;
-
+	bottom: 0;
 	:deep(.chat) {
 		.message-list {
-			height: calc(100vh - 100vw - 42px - 90px - 44px);
+			height: calc(100vh - 100vw - 100px);
 			overflow: auto;
 		}
 	}
 	:deep(.users) {
-		height: calc(100vh - 100vw - 90px - 42px);
+		height: calc(100vh - 100vw - 80px);
 		overflow: auto;
 	}
-}
-.van-notice-bar {
-	background: #2e4068 !important;
-	color: #fff !important;
 }
 </style>

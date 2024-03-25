@@ -3,7 +3,7 @@
 	<div class="login-container">
 		<el-form ref="loginForm" :model="form_data" class="login-form" autocomplete="on" label-position="left">
 			<div class="title-container">
-				<h3 class="title">演示系统</h3>
+				<h3 class="title">直播管理</h3>
 			</div>
 			<el-form-item prop="Account">
 				<span class="svg-container">

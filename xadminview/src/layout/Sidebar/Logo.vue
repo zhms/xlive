@@ -24,7 +24,7 @@ export default {
 	},
 	data() {
 		return {
-			title: '演示系统',
+			title: '直播管理',
 			logo: 'favicon.ico',
 		}
 	},

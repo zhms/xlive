@@ -23,7 +23,7 @@ Vue.prototype.$delete = request.delete
 Vue.prototype.$download = request.download
 
 router.beforeEach(async (to, from, next) => {
-	document.title = '演示系统'
+	document.title = '直播管理'
 	if (to.path == '/login') return next()
 	if (to.path == '/') return next(`/login`)
 	let token = sessionStorage.getItem('x-token')
