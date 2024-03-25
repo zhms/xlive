@@ -18,7 +18,7 @@
 					<input type="password" placeholder="Enter Password" v-model="pwd" v-scrollInto />
 				</div>
 
-				<Button type="primary" block :disabled="btnDisabled" @click="login"> Login </Button>
+				<Button type="primary" block @click="login"> Login </Button>
 				<div class="visitor" @click="visitorLogin">Visitor Login</div>
 			</div>
 		</div>
@@ -26,7 +26,7 @@
 </template>
 <script setup>
 import { ref, computed } from 'vue'
-import { Button } from 'vant'
+import { Button, showToast } from 'vant'
 import { useStorage } from '@vueuse/core'
 import useMyFetch from '@/script/fetch.js'
 import { useRouter } from 'vue-router'
@@ -38,8 +38,6 @@ const router = useRouter()
 
 const mediaWidth = ref(640)
 const isMobile = computed(() => mediaWidth.value > bodyWidth.value)
-
-const btnDisabled = computed(() => !name.value.trim() || !pwd.value || loginIsFetching.value)
 
 const { execute: loginExecute, isFetching: loginIsFetching } = useMyFetch('/api/v1/user_login', {
 	immediate: false,
@@ -64,6 +62,10 @@ function loginCallback(res) {
 }
 
 function login() {
+	if (name.value == '' || pwd.value == '') {
+		showToast('Please enter account and password')
+		return
+	}
 	loginExecute()
 }
 
