@@ -1,5 +1,5 @@
 @echo off
-cd clientview
+cd xclientview
 rd /s /q dist
 call npm run build
 xcopy /D /I /F /Y /E "dist/*"  "../xclientapi/www/"
@@ -25,3 +25,5 @@ del clientapi
 
 
 ssh root@47.238.161.17 "./client.sh"
+
+pause

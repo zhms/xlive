@@ -1,6 +1,0 @@
-#!/bin/bash
-rm -rf source/gen.txt
-git add *
-git commit -m'auto commit'
-git pull
-git push

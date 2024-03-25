@@ -1,0 +1,7 @@
+#!/bin/bash
+rm -rf source/gen.txt
+rm -rf package-lock.json
+git add *
+git commit -m'auto commit'
+git pull
+git push

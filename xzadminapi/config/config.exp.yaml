@@ -1,0 +1,18 @@
+server:
+  id: 1
+  env: dev
+  project: xadminapi
+  host: 127.0.0.1
+http:
+  port: 6500
+db:
+  host: 127.0.0.1
+  port: 3306
+  user: root
+  password: Bo5zcd*2ozsvtjss0
+  database: x_live
+redis:
+  host: 127.0.0.1
+  port: 6379
+  db: 0
+  password: root

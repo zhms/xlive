@@ -1,0 +1,1081 @@
+basePath: /api/v1
+definitions:
+  admin.XAdminOptLog:
+    properties:
+      account:
+        description: 账号
+        type: string
+      create_time:
+        description: 创建时间
+        type: string
+      id:
+        description: 自增Id
+        type: integer
+      opt_name:
+        description: 请求路径
+        type: string
+      req_data:
+        description: 请求参数
+        type: string
+      req_ip:
+        description: 请求的Ip
+        type: string
+      req_ip_location:
+        description: 请求Ip地理位置
+        type: string
+      req_path:
+        description: 请求路径
+        type: string
+      seller_id:
+        description: 运营商
+        type: integer
+    type: object
+  admin.XAdminRole:
+    properties:
+      create_time:
+        description: 创建时间
+        type: string
+      id:
+        description: 自增Id
+        type: integer
+      memo:
+        description: 备注
+        type: string
+      parent:
+        description: 上级角色
+        type: string
+      role_data:
+        description: 权限数据
+        type: string
+      role_name:
+        description: 角色名
+        type: string
+      seller_id:
+        description: 运营商
+        type: integer
+      state:
+        description: 状态 1开启,2关闭
+        type: integer
+    type: object
+  admin.XAdminUser:
+    properties:
+      account:
+        description: 账号
+        type: string
+      create_time:
+        description: 创建时间
+        type: string
+      id:
+        description: 自增Id
+        type: integer
+      login_count:
+        description: 登录次数
+        type: integer
+      login_ip:
+        description: 最后登录Ip
+        type: string
+      login_time:
+        description: 最后登录时间
+        type: string
+      memo:
+        description: 备注
+        type: string
+      role_name:
+        description: 角色
+        type: string
+      seller_id:
+        description: 运营商
+        type: integer
+      state:
+        description: 状态 1开启,2关闭
+        type: integer
+    type: object
+  admin.admin_create_role_req:
+    properties:
+      memo:
+        description: 备注
+        type: string
+      parent:
+        description: 上级角色
+        type: string
+      role_data:
+        description: 权限数据
+        type: string
+      role_name:
+        description: 角色
+        type: string
+      state:
+        description: 状态 1开启,2关闭
+        type: integer
+    required:
+    - parent
+    - role_data
+    - role_name
+    - state
+    type: object
+  admin.admin_create_user_req:
+    properties:
+      account:
+        description: 账号
+        type: string
+      memo:
+        description: 备注
+        type: string
+      password:
+        description: 密码
+        type: string
+      role_name:
+        description: 角色
+        type: string
+      state:
+        description: 状态 1开启,2关闭
+        type: integer
+    required:
+    - account
+    - password
+    - role_name
+    - state
+    type: object
+  admin.admin_delete_role_req:
+    properties:
+      id:
+        description: 角色Id
+        type: integer
+    required:
+    - id
+    type: object
+  admin.admin_delete_user_req:
+    properties:
+      id:
+        description: 管理员Id
+        type: integer
+    required:
+    - id
+    type: object
+  admin.admin_get_opt_log_req:
+    properties:
+      account:
+        description: 操作人
+        type: string
+      end_time:
+        description: 结束时间
+        type: string
+      opt_name:
+        description: 操作名
+        type: string
+      page:
+        description: 页码
+        type: integer
+      page_size:
+        description: 每页数量
+        type: integer
+      start_time:
+        description: 开始时间
+        type: string
+    type: object
+  admin.admin_get_opt_log_res:
+    properties:
+      data:
+        description: 数据
+        items:
+          $ref: '#/definitions/admin.XAdminOptLog'
+        type: array
+      total:
+        description: 总数
+        type: integer
+    type: object
+  admin.admin_get_role_req:
+    properties:
+      page:
+        description: 页码
+        type: integer
+      page_size:
+        description: 每页数量
+        type: integer
+      role_name:
+        description: 角色名
+        type: string
+    type: object
+  admin.admin_get_role_res:
+    properties:
+      data:
+        description: 数据
+        items:
+          $ref: '#/definitions/admin.XAdminRole'
+        type: array
+      total:
+        description: 总数
+        type: integer
+    type: object
+  admin.admin_get_user_req:
+    properties:
+      account:
+        description: 账号
+        type: string
+      page:
+        description: 页码
+        type: integer
+      page_size:
+        description: 每页数量
+        type: integer
+      role_name:
+        description: 角色名
+        type: string
+    type: object
+  admin.admin_get_user_res:
+    properties:
+      data:
+        description: 数据
+        items:
+          $ref: '#/definitions/admin.XAdminUser'
+        type: array
+      total:
+        description: 总数
+        type: integer
+    type: object
+  admin.admin_update_role_req:
+    properties:
+      memo:
+        description: 备注
+        type: string
+      parent:
+        description: 上级角色
+        type: string
+      role_data:
+        description: 权限数据
+        type: string
+      role_name:
+        description: 角色
+        type: string
+      state:
+        description: 状态 1开启,2关闭
+        type: integer
+    required:
+    - parent
+    - role_data
+    - role_name
+    - state
+    type: object
+  admin.admin_update_user_req:
+    properties:
+      id:
+        description: 管理员Id
+        type: integer
+      memo:
+        description: 备注
+        type: string
+      password:
+        description: 密码
+        type: string
+      role_name:
+        description: 角色
+        type: string
+      state:
+        description: 状态 1开启,2关闭
+        type: integer
+    required:
+    - id
+    type: object
+  admin.admin_user_login_req:
+    properties:
+      account:
+        description: 账号
+        type: string
+      password:
+        description: 密码
+        type: string
+    required:
+    - account
+    - password
+    type: object
+  admin.admin_user_login_res:
+    properties:
+      account:
+        description: 账号
+        type: string
+      auth_data:
+        description: 权限数据
+        type: string
+      env:
+        description: 环境
+        type: string
+      login_count:
+        description: 登录次数
+        type: integer
+      login_ip:
+        description: 登录Ip
+        type: string
+      login_time:
+        description: 登录时间
+        type: string
+      seller_id:
+        description: 运营商
+        type: integer
+      token:
+        description: token
+        type: string
+      utc_offset:
+        description: 当地时区与utc的偏移量
+        type: integer
+    type: object
+  live_ban.delete_ip_ban_req:
+    properties:
+      id:
+        type: integer
+    type: object
+  live_ban.get_ip_ban_req:
+    properties:
+      page:
+        type: integer
+      size:
+        type: integer
+    type: object
+  live_ban.get_ip_ban_res:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/xdb.XChatBanIp'
+        type: array
+      total:
+        type: integer
+    type: object
+  live_chat.get_chat_data_req:
+    properties:
+      page:
+        description: 页码
+        type: integer
+      page_size:
+        description: 每页数量
+        type: integer
+      room_id:
+        description: 房间Id
+        type: integer
+    type: object
+  live_chat.get_chat_data_res:
+    properties:
+      data:
+        description: 数据
+        items:
+          $ref: '#/definitions/xdb.XChatData'
+        type: array
+      total:
+        description: 总数
+        type: integer
+    type: object
+  live_chat.update_chat_data_req:
+    properties:
+      id:
+        description: id
+        type: integer
+      state:
+        description: 状态 2通过,3拒绝,4封ip
+        type: integer
+    type: object
+  live_room.create_live_room_req:
+    properties:
+      account:
+        description: 直播间账号
+        type: string
+      name:
+        description: 直播间名称
+        type: string
+      state:
+        description: 直播间状态
+        type: integer
+      title:
+        description: 直播间标题
+        type: string
+    type: object
+  live_room.delete_live_room_req:
+    properties:
+      id:
+        description: 直播间Id
+        type: integer
+    required:
+    - id
+    type: object
+  live_room.get_live_room_req:
+    properties:
+      page:
+        description: 页码
+        type: integer
+      page_size:
+        description: 每页数量
+        type: integer
+    type: object
+  live_room.get_live_room_res:
+    properties:
+      data:
+        description: 数据
+        items:
+          $ref: '#/definitions/xdb.XLiveRoom'
+        type: array
+      total:
+        description: 总数
+        type: integer
+    type: object
+  live_room.get_room_id_req:
+    type: object
+  live_room.get_room_id_res:
+    properties:
+      ids:
+        description: 直播间Id
+        items:
+          type: integer
+        type: array
+    type: object
+  live_room.update_live_room_req:
+    properties:
+      account:
+        description: 直播间账号
+        type: string
+      id:
+        description: 直播间Id
+        type: integer
+      name:
+        description: 直播间名称
+        type: string
+      state:
+        description: 直播间状态
+        type: integer
+      title:
+        description: 直播间标题
+        type: string
+    type: object
+  user.create_user_req:
+    type: object
+  user.get_user_req:
+    properties:
+      account:
+        description: 账号
+        type: string
+      agent:
+        description: 代理
+        type: string
+      export:
+        description: 导出
+        type: integer
+      login_ip:
+        description: 登录Ip
+        type: string
+      page:
+        description: 页码
+        type: integer
+      page_size:
+        description: 每页数量
+        type: integer
+    type: object
+  user.get_user_res:
+    properties:
+      data:
+        description: 数据
+        items:
+          $ref: '#/definitions/xdb.XUser'
+        type: array
+      total:
+        description: 总数
+        type: integer
+    type: object
+  user.update_user_req:
+    type: object
+  xdb.XChatBanIp:
+    properties:
+      admin_account:
+        type: string
+      create_time:
+        type: string
+      id:
+        type: integer
+      ip:
+        type: string
+    type: object
+  xdb.XChatData:
+    properties:
+      account:
+        type: string
+      content:
+        type: string
+      create_time:
+        type: string
+      id:
+        type: integer
+      ip:
+        type: string
+      ip_location:
+        type: string
+      room_id:
+        type: integer
+      seller_id:
+        type: integer
+      state:
+        type: integer
+    type: object
+  xdb.XLiveRoom:
+    properties:
+      account:
+        description: 主播账号
+        type: string
+      create_time:
+        description: 创建时间
+        type: string
+      id:
+        description: id
+        type: integer
+      live_url:
+        description: 前端地址
+        type: string
+      name:
+        description: 直播间名称
+        type: string
+      pull_url:
+        description: 拉流地址
+        type: string
+      push_url:
+        description: 推流地址
+        type: string
+      seller_id:
+        description: 运营商
+        type: integer
+      state:
+        description: 状态 1正在直播,2未直播
+        type: integer
+      title:
+        description: 直播间标题
+        type: string
+    type: object
+  xdb.XUser:
+    properties:
+      account:
+        type: string
+      agent:
+        type: string
+      chat_state:
+        type: integer
+      create_time:
+        type: string
+      id:
+        type: integer
+      is_visitor:
+        type: integer
+      login_count:
+        type: integer
+      login_ip:
+        type: string
+      login_ip_location:
+        type: string
+      login_time:
+        type: string
+      password:
+        type: string
+      seller_id:
+        type: integer
+      state:
+        type: integer
+      token:
+        type: string
+    type: object
+info:
+  contact: {}
+  title: adminapi
+  version: "1.0"
+paths:
+  /admin_create_role:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/admin.admin_create_role_req'
+      responses:
+        "200":
+          description: 成功
+      summary: 创建角色
+      tags:
+      - 系统管理 - 角色管理
+  /admin_create_user:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/admin.admin_create_user_req'
+      responses:
+        "200":
+          description: 成功
+      summary: 创建账号
+      tags:
+      - 系统管理 - 账号管理
+  /admin_delete_role:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/admin.admin_delete_role_req'
+      responses:
+        "200":
+          description: 成功
+      summary: 删除角色
+      tags:
+      - 系统管理 - 角色管理
+  /admin_delete_user:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/admin.admin_delete_user_req'
+      responses:
+        "200":
+          description: 成功
+      summary: 删除账号
+      tags:
+      - 系统管理 - 账号管理
+  /admin_get_login_log:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/admin.admin_get_opt_log_req'
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/admin.admin_get_opt_log_res'
+      summary: 获取登录日志
+      tags:
+      - 系统管理 - 登录日志
+  /admin_get_opt_log:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/admin.admin_get_opt_log_req'
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/admin.admin_get_opt_log_res'
+      summary: 获取操作日志
+      tags:
+      - 系统管理 - 操作日志
+  /admin_get_role:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/admin.admin_get_role_req'
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/admin.admin_get_role_res'
+      summary: 获取角色
+      tags:
+      - 系统管理 - 角色管理
+  /admin_get_user:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/admin.admin_get_user_req'
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/admin.admin_get_user_res'
+      summary: 获取账号
+      tags:
+      - 系统管理 - 账号管理
+  /admin_update_role:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/admin.admin_update_role_req'
+      responses:
+        "200":
+          description: 成功
+      summary: 更新角色
+      tags:
+      - 系统管理 - 角色管理
+  /admin_update_user:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/admin.admin_update_user_req'
+      responses:
+        "200":
+          description: 成功
+      summary: 更新账号
+      tags:
+      - 系统管理 - 账号管理
+  /admin_user_login:
+    post:
+      parameters:
+      - description: 验证码
+        in: header
+        name: VerifyCode
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/admin.admin_user_login_req'
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/admin.admin_user_login_res'
+      summary: 登录
+      tags:
+      - 管理员
+  /admin_user_logout:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: 成功
+      summary: 退出
+      tags:
+      - 管理员
+  /create_live_room:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/live_room.create_live_room_req'
+      responses:
+        "200":
+          description: 响应数据
+      summary: 创建直播间
+      tags:
+      - 直播间 - 直播间
+  /create_user:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/user.create_user_req'
+      responses:
+        "200":
+          description: 响应数据
+      summary: b
+      tags:
+      - a
+  /delete_ip_ban:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/live_ban.delete_ip_ban_req'
+      responses:
+        "200":
+          description: 响应数据
+      summary: 解封Ip
+      tags:
+      - 直播间 - Ip封禁
+  /delete_live_room:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/live_room.delete_live_room_req'
+      responses:
+        "200":
+          description: 响应数据
+      summary: 删除直播间
+      tags:
+      - 直播间 - 直播间
+  /get_chat_data:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/live_chat.get_chat_data_req'
+      responses:
+        "200":
+          description: 响应数据
+          schema:
+            $ref: '#/definitions/live_chat.get_chat_data_res'
+      summary: 获取互动列表
+      tags:
+      - 直播间 - 互动列表
+  /get_ip_ban:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/live_ban.get_ip_ban_req'
+      responses:
+        "200":
+          description: 响应数据
+          schema:
+            $ref: '#/definitions/live_ban.get_ip_ban_res'
+      summary: 获取封禁Ip
+      tags:
+      - 直播间 - Ip封禁
+  /get_live_room:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/live_room.get_live_room_req'
+      responses:
+        "200":
+          description: 响应数据
+          schema:
+            $ref: '#/definitions/live_room.get_live_room_res'
+      summary: 获取直播间
+      tags:
+      - 直播间 - 直播间
+  /get_room_id:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/live_room.get_room_id_req'
+      responses:
+        "200":
+          description: 响应数据
+          schema:
+            $ref: '#/definitions/live_room.get_room_id_res'
+      summary: 获取直播间Id
+      tags:
+      - 直播间 - 直播间
+  /get_user:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/user.get_user_req'
+      responses:
+        "200":
+          description: 响应数据
+          schema:
+            $ref: '#/definitions/user.get_user_res'
+      summary: b
+      tags:
+      - a
+  /update_chat_data:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/live_chat.update_chat_data_req'
+      responses:
+        "200":
+          description: 响应数据
+      summary: 审核互动列表
+      tags:
+      - 直播间 - 互动列表
+  /update_live_room:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/live_room.update_live_room_req'
+      responses:
+        "200":
+          description: 响应数据
+      summary: 更新直播间
+      tags:
+      - 直播间 - 直播间
+  /update_user:
+    post:
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/user.update_user_req'
+      responses:
+        "200":
+          description: 响应数据
+      summary: b
+      tags:
+      - a
+securityDefinitions:
+  "":
+    in: header
+    name: x-token
+    type: apiKey
+swagger: "2.0"
