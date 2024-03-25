@@ -44,7 +44,7 @@ const hongbaoAmount = ref(0)
 
 async function scroll() {
 	await nextTick()
-	messageListDom.value.scrollTop = 100000000
+	if (messageListDom.value) messageListDom.value.scrollTop = 100000000
 }
 
 function sendMessage() {

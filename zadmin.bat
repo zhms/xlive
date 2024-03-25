@@ -12,9 +12,18 @@ go env -w GOOS=linux
 go build -o adminapi -ldflags "-s -w" main.go
 go env -w GOOS=windows
 
-
 @REM go build -o adminapi.exe main.go
 
 xcopy /D /I /F /Y "adminapi"  "../"
 
 del adminapi
+
+cd ..
+call ossutil rm oss://bblive/app/adminapi
+call ossutil cp adminapi oss://bblive/app/
+
+del adminapi
+
+ssh root@47.238.161.17 "./admin.sh"
+
+@rem x5!X6d48.6v9fNP

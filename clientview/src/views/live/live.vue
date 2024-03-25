@@ -21,7 +21,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import useMyFetch from '@/script/fetch.js'
-import { rootScale, bodyWidth, bodyHeight, sleep, wsconn, getLiveData, OnlineCount } from '@/script/base'
+import { rootScale, bodyWidth, bodyHeight, sleep, wsconn, getLiveData, OnlineCount, logout } from '@/script/base'
 import { Button, Icon, NoticeBar, Tab, Tabs, showToast } from 'vant'
 import Chat from './chat.vue'
 import User from './user.vue'
@@ -56,6 +56,12 @@ const playData = computed(() => ({
 	src: liveUrl.value,
 	isLive: true,
 }))
+
+let enter = useStorage('enter').value
+if (!enter) {
+	logout()
+}
+useStorage('enter').value = null
 
 const user = JSON.parse(useStorage('user').value)
 const isVisitor = computed(() => user.is_visitor == 1)

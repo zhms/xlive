@@ -239,11 +239,13 @@ function getToken() {
 }
 
 function logout() {
-	ws.close()
-	ws = null
-	useStorage('token').value = ''
-	useStorage('user').value = ''
-	router.push('/index')
+	if (ws) {
+		ws.close()
+		ws = null
+	}
+	useStorage('user').value = null
+	useStorage('token').value = null
+	router.push('/')
 }
 
 function login() {

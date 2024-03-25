@@ -36,7 +36,7 @@ var robot_count int = 0
 func get_time_key() string {
 	t := carbon.Now().TimestampMilli()
 	ft := t / (5 * 60 * 1000)
-	//fmt.Println(t, ft*5*60*1000, carbon.CreateFromTimestampMilli(ft*5*60*1000).ToDateTimeString())
+	fmt.Println(t, ft*5*60*1000, carbon.CreateFromTimestampMilli(ft*5*60*1000).ToDateTimeString())
 	return carbon.CreateFromTimestampMilli(ft * 5 * 60 * 1000).ToDateTimeString()
 }
 

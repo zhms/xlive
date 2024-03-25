@@ -59,6 +59,7 @@ function loginCallback(res) {
 	setTimeout(() => wsconn(res.data.data.token), 1000)
 
 	useStorage('user').value = JSON.stringify(res.data.data)
+	useStorage('enter').value = 1
 	router.push(isMobile.value ? '/live' : 'plive')
 }
 
@@ -86,6 +87,13 @@ function visitorLogin() {
 			user = JSON.parse(user)
 			if (user.is_visitor == 1) {
 				account = user.account
+			}
+		} else {
+			let v = useStorage('visitor').value
+			if (v) {
+				account = v
+			} else {
+				useStorage('visitor').value = account
 			}
 		}
 	} catch (e) {}

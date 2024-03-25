@@ -17,3 +17,8 @@ go env -w GOOS=windows
 xcopy /D /I /F /Y "clientapi"  "../"
 
 del clientapi
+cd ..
+call ossutil rm oss://bblive/app/clientapi
+call ossutil cp clientapi oss://bblive/app/
+
+del clientapi

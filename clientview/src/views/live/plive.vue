@@ -53,6 +53,12 @@ useIntervalFn(() => {
 	}
 }, 3000)
 
+let enter = useStorage('enter').value
+if (!enter) {
+	logout()
+}
+useStorage('enter').value = null
+
 const user = JSON.parse(useStorage('user').value)
 const isVisitor = computed(() => user.is_visitor == 1)
 
