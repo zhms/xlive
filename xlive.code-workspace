@@ -5,20 +5,15 @@
 			"path": "xapp"
 		},
 		{
-			"name": "xadminapi",
-			"path": "xadminapi"
-		},
-		{
-			"name": "xadminview",
-			"path": "xadminview"
-		},
-		{
 			"name": "xclientapi",
 			"path": "xclientapi"
 		},
 		{
 			"name": "clientview",
 			"path": "clientview"
+		},
+		{
+			"path": "xzadminapi"
 		}
 	]
 }

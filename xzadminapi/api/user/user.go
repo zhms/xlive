@@ -11,6 +11,7 @@ import (
 	"xapp/xglobal"
 	"xapp/xutils"
 
+	"github.com/beego/beego/logs"
 	"github.com/gin-gonic/gin"
 	val "github.com/go-playground/validator/v10"
 	"github.com/golang-module/carbon/v2"
@@ -158,7 +159,18 @@ func create_user(ctx *gin.Context) {
 	reqdata.Password = xutils.Md5(reqdata.Password)
 	tb := xapp.DbQuery().XUser
 	itb := tb.WithContext(ctx)
-	itb.Create(&model.XUser{SellerID: int32(token.SellerId), Account: reqdata.Account, Password: reqdata.Password})
+	err := itb.Create(&model.XUser{
+		SellerID:   int32(token.SellerId),
+		Account:    reqdata.Account,
+		Password:   reqdata.Password,
+		CreateTime: carbon.Now().StdTime(),
+		LoginTime:  carbon.Now().StdTime(),
+	})
+	if err != nil {
+		logs.Error("create_user", err.Error())
+		ctx.JSON(http.StatusBadRequest, xenum.MakeError(xenum.InternalError, err.Error()))
+		return
+	}
 	ctx.JSON(http.StatusOK, xenum.Success)
 }
 
