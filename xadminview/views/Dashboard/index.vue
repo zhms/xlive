@@ -10,7 +10,7 @@
 							<div>{{ userinfo.role }}</div>
 						</div>
 					</div>
-					<div class="user-info-list"><span style="margin-left: 59px">账号：</span> {{ userinfo.account }}</div>
+					<div class="user-info-list"><span style="margin-left: 59px">账号a：</span> {{ userinfo.account }}</div>
 					<div class="user-info-list"><span style="margin-left: 43px">登录IP：</span> {{ userinfo.login_ip }}</div>
 					<div class="user-info-list"><span style="margin-left: 27px">登录次数：</span> {{ userinfo.login_count }}</div>
 					<div class="user-info-list"><span>上次登录时间：</span> {{ userinfo.login_time }}</div>

@@ -25,5 +25,3 @@ call ossutil cp adminapi oss://bblive/app/
 del adminapi
 
 ssh root@47.238.161.17 "./admin.sh"
-
-@rem x5!X6d48.6v9fNP

@@ -22,3 +22,6 @@ call ossutil rm oss://bblive/app/clientapi
 call ossutil cp clientapi oss://bblive/app/
 
 del clientapi
+
+
+ssh root@47.238.161.17 "./client.sh"
