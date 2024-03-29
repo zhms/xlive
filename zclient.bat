@@ -24,6 +24,6 @@ call ossutil cp clientapi oss://bblive/app/
 del clientapi
 
 
-ssh root@47.238.161.17 "./client.sh"
+ssh root@47.91.109.211 "./client.sh"
 
 pause
